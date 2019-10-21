@@ -215,7 +215,7 @@ class DynamicContentController extends Controller
         $item->setTranslations('description', (array) $data->description);
         $item->date     = $data->date;
         $item->featured = $data->featured;
-        $item->tags     = $data->tags;
+        // $item->tags     = @$data->tags;
         $item->save();
 
         //$item->updateMeta($request);

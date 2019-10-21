@@ -71,7 +71,7 @@ if (!function_exists('__config_var')) {
      * */
     function __config_var($key)
     {
-        $var = Cache::remember('config_var', 60, function () {
+        $var = Cache::remember('config_var', 0, function () {
             return AporteWeb\Dashboard\Models\ConfigVar::get()->pluck('config_value', 'config_key');
         })->toArray();
 
