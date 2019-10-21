@@ -1,0 +1,50 @@
+$theme-color-1:  #493627 !default;
+$theme-color-2:  #93252B !default;
+$theme-color-3:  #F1EEE9 !default;
+
+$primary:       darken($theme-color-3, 50%) !default;
+$warning:       $theme-color-2 !default;
+@import 'app';
+.bg-gradient-primary {
+    background-color: $theme-color-1;
+    background: linear-gradient(180deg, $theme-color-3 10%, darken($theme-color-3, 15%) 100%);
+    background-size: cover;
+}
+.sidebar-dark {
+    .sidebar-heading {
+        color: darken($theme-color-3, 25%);
+    }
+    .sidebar-brand {
+        color: $primary;
+    }
+    hr.sidebar-divider {
+        border-top: 1px solid darken($theme-color-3, 25%);
+    }
+    .nav-item {
+        .nav-link {
+            & {
+                color: $theme-color-1;
+            }
+            & > i,
+            &[data-toggle=collapse]::after {
+                color: darken($theme-color-3, 25%);
+            }
+            &:hover, &:focus {
+                &,
+                & > i,
+                &[data-toggle=collapse]::after {
+                    color: $theme-color-2;
+                }
+            }
+        }
+        &.active {
+            .nav-link {
+                &,
+                & > i,
+                &[data-toggle=collapse]::after {
+                    color: $theme-color-2;
+                }
+            }
+        }
+    }
+}

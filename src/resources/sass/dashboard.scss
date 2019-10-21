@@ -1,0 +1,53 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+//@import '~bootstrap/scss/bootstrap';
+
+@import '../../../../../../node_modules/startbootstrap-sb-admin-2/scss/sb-admin-2';
+@import '../../../../../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css';
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.09);
+}
+th.text-center {
+    text-align: center !important;
+}
+.bootstrap-select {
+    flex: 1;
+}
+.selectpicker-form-group {
+    display: flex;
+    width: 100%;
+}
+
+fieldset {
+    border: 1px solid #dedede;
+    padding: 16px;
+    margin-top: 3px;
+    legend {
+        font-size: 16px;
+        text-transform: uppercase;
+        width: auto;
+        padding: 0 10px;
+        background-color: #fafafa;
+        border: 1px solid #f3f1f9;
+        color: $primary;
+    }
+}
+.table-legend {
+    width: 100%;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #868e96;
+    background-color: #FFFFFF;
+    border: 1px solid #EDEDED;
+    padding: 8px 12px;
+}
+.img-profile {
+    font-size: 32px;
+}
