@@ -56,4 +56,31 @@ if (!function_exists('__meta')) {
     }
 }
 
+if (!function_exists('__config_var')) {
+    /**
+     * Returns a human readable file size
+     *
+     * @param integer $bytes
+     * Bytes contains the size of the bytes to convert
+     *
+     * @param integer $decimals
+     * Number of decimal places to be returned
+     *
+     * @return string a string in human readable format
+     *
+     * */
+    function __config_var($key)
+    {
+        $var = Cache::remember('config_var', 60, function () {
+            return AporteWeb\Dashboard\Models\ConfigVar::get()->pluck('config_value', 'config_key');
+        })->toArray();
+
+        if (is_array($var) && array_key_exists($key, $var)) {
+            return $var[$key];
+        }
+
+        return null;
+    }
+}
+
 ?>

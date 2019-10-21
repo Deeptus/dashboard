@@ -3,7 +3,6 @@ window.Vue = require('vue');
 Vue.component('form-pedido', require('./components/modules/Baccarelli/FormPedidoComponent.vue').default);
 Vue.component('invoice-form', require('./components/modules/SOsole/InvoiceFormComponent.vue').default);
 Vue.component('dynamic-content-form', require('./components/dynamic-content/DynamicContentFormComponent.vue').default);
-Vue.component('company-data-form', require('./components/company-data/CompanyDataFormComponent.vue').default);
 require('../../../../../../resources/js/custom-dashboard');
 Vue.filter('toCurrency', function (numero) {
     let decimales = 2

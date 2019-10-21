@@ -193,6 +193,7 @@
         },
         created() {
             this.$nextTick(() => {
+                console.log(this.urlData)
                 axios.get(this.urlData).then((response) => {
                     this.languages = response.data.languages
                     if (response.data.content != null) {

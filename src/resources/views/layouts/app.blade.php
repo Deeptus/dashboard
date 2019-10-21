@@ -28,7 +28,7 @@
         document.__API_URL = '{{ url('/') }}';
     </script>
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?{{ $assets_version }}" rel="stylesheet">
+    <link href="{{ asset(config('admin.theme.styles', 'css/app.css')) }}?{{ $assets_version }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -113,6 +113,6 @@
         </main>
     </div>
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?{{ $assets_version }}" defer></script>
+     <script src="{{ asset('js/dashboard.js') }}?{{ $assets_version }}" defer></script>
 </body>
 </html>
