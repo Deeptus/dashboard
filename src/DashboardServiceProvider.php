@@ -72,7 +72,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         config(['admin.theme.styles' => 'css/dashboard.css']);
         config(['admin.text.footer' => 'Todos los derechos reservados © Dashboard 2019']);
         view()->share([
-            'active' => 'web.home',
+            '__admin_active' => 'admin',
         ]);
         view()->composer('*', function ($view)
         {

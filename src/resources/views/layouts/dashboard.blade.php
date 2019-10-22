@@ -11,20 +11,15 @@
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/png" />
+        <link rel="shortcut icon" href="{{ asset(Storage::url(__config_var('admin_favicon'))) }}" type="image/png" />
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="public-path" content="{{ asset('/') }}">
         <meta name="storage-path" content="{{ asset(Storage::url('/')) }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="dns-prefetch" href="//fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
-        <!-- Styles -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('fonts/nunito/nunito.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('fonts/fontawesome/css/all.min.css') }}">
         <link href="{{ asset(config('admin.theme.styles', 'css/theme-02.css')) }}?{{ $assets_version }}" rel="stylesheet">
 </head>
 
@@ -39,21 +34,21 @@
                     @include($__admin_menu)
                 @endif
                 @if (auth()->user()->root)
-                <li class="nav-item">
+                <li class="nav-item {{ __active($__admin_active, 'admin.user') }}">
                     <a class="nav-link" href="{{ route('admin.user') }}">
                         <i class="fas fa-fw fa-users"></i>
                         <span>Usuarios</span>
                     </a>
                 </li>
                 <!-- Nav Item - Tables -->
-                <li class="nav-item">
+                <li class="nav-item {{ __active($__admin_active, 'admin.grupo') }}">
                     <a class="nav-link" href="{{ route('admin.grupo') }}">
                         <i class="fas fa-fw fa-user-tag"></i>
                         <span>Grupos</span>
                     </a>
                 </li>
                 <!-- Nav Item - Tables -->
-                <li class="nav-item">
+                <li class="nav-item {{ __active($__admin_active, 'admin.permission') }}">
                     <a class="nav-link" href="{{ route('admin.permission') }}">
                         <i class="fas fa-fw fa-key"></i>
                         <span>Permisos</span>

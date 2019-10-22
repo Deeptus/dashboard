@@ -22,6 +22,7 @@ class UserController extends Controller
         $data = User::get();
         return view('Dashboard::admin.users.index', [
             'data' => $data,
+            '__admin_active' => 'admin.user'
         ]);
     }
 
@@ -41,6 +42,7 @@ class UserController extends Controller
         return view('Dashboard::admin.users.create', [
             'groups' => $groups,
             'sucursales' => $sucursales,
+            '__admin_active' => 'admin.user'
         ]);
     }
 
@@ -94,6 +96,7 @@ class UserController extends Controller
             'sucursales' => $sucursales,
             'element' => $element,
             'user_groups' => $user_groups,
+            '__admin_active' => 'admin.user'
         ]);
     }
 
@@ -137,6 +140,7 @@ class UserController extends Controller
         return view('Dashboard::admin.users.index', [
             'data' => $data,
             'trash'=> true,
+            '__admin_active' => 'admin.user'
         ]);
     }
     public function restore($id)
@@ -158,6 +162,7 @@ class UserController extends Controller
         return view('Dashboard::admin.users.permission', [
             'element' => User::with('permissions')->find($id),
             'permissions' => Permission::get(),
+            '__admin_active' => 'admin.user'
         ]);
     }
 

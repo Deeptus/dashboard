@@ -17,7 +17,8 @@ class PermissionController extends Controller
     {
         $data = Permission::get();
         return view('Dashboard::admin.permissions.index', [
-            'data' => $data,
+            'data'           => $data,
+            '__admin_active' => 'admin.permission'
         ]);
     }
 
@@ -28,7 +29,9 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        return view('Dashboard::admin.permissions.create');
+        return view('Dashboard::admin.permissions.create', [
+            '__admin_active' => 'admin.permission'
+        ]);
     }
 
     /**

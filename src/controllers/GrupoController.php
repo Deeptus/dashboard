@@ -3,8 +3,8 @@
 namespace AporteWeb\Dashboard\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\GroupCreateRequest;
-use App\Http\Requests\GroupEditRequest;
+use AporteWeb\Dashboard\Requests\GroupCreateRequest;
+use AporteWeb\Dashboard\Requests\GroupEditRequest;
 use App\Http\Controllers\Controller;
 use AporteWeb\Dashboard\Models\User;
 use Junges\ACL\Http\Models\Group;
@@ -22,7 +22,8 @@ class GrupoController extends Controller
     {
         $data = Group::get();
         return view('Dashboard::admin.grupos.index', [
-            'data' => $data,
+            'data'           => $data,
+            '__admin_active' => 'admin.grupo'
         ]);
     }
 
@@ -33,7 +34,9 @@ class GrupoController extends Controller
      */
     public function create()
     {
-        return view('Dashboard::admin.grupos.create');
+        return view('Dashboard::admin.grupos.create', [
+            '__admin_active' => 'admin.grupo'
+        ]);
     }
 
     /**
@@ -70,7 +73,8 @@ class GrupoController extends Controller
     public function edit($id)
     {
         return view('Dashboard::admin.grupos.edit', [
-            'element' => Group::find($id),
+            'element'        => Group::find($id),
+            '__admin_active' => 'admin.grupo'
         ]);
     }
 
@@ -106,8 +110,9 @@ class GrupoController extends Controller
     {
         $data = Group::onlyTrashed()->get();
         return view('Dashboard::admin.grupos.index', [
-            'data' => $data,
-            'trash'=> true,
+            'data'           => $data,
+            'trash'          => true,
+            '__admin_active' => 'admin.grupo'
         ]);
     }
     public function restore($id)
@@ -127,8 +132,9 @@ class GrupoController extends Controller
     public function permission($id)
     {
         return view('Dashboard::admin.grupos.permission', [
-            'element' => Group::with('permissions')->find($id),
-            'permissions' => Permission::get(),
+            'element'        => Group::with('permissions')->find($id),
+            'permissions'    => Permission::get(),
+            '__admin_active' => 'admin.grupo'
         ]);
     }
 

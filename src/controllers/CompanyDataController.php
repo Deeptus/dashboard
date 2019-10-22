@@ -39,7 +39,9 @@ class CompanyDataController extends Controller
      */
     public function index()
     {
-        return view('Dashboard::admin.companydata.index');
+        return view('Dashboard::admin.companydata.index', [
+            '__admin_active' => 'admin.companydata',
+        ]);
     }
     public function update(Request $request, $id)
     {

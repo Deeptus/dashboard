@@ -22,7 +22,7 @@
 						<h6 class="m-0 font-weight-bold text-primary">Añadir un Grupo</h6>
 					</div>
 					<!-- Card Body -->
-					@include('admin.grupos.form')
+					@include('Dashboard::admin.grupos.form')
 				</div>
 			</div>
 		</div>

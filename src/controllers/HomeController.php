@@ -23,7 +23,9 @@ class HomeController extends \AporteWeb\Dashboard\Controllers\Controller
      */
     public function index()
     {
-        return view('Dashboard::admin.home');
+        return view('Dashboard::admin.home', [
+            '__admin_active' => 'admin.home'
+        ]);
     }
     public function home()
     {
