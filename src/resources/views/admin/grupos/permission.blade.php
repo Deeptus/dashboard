@@ -22,7 +22,7 @@
 						<h6 class="m-0 font-weight-bold text-primary">Cambiar permisos a Grupo</h6>
 					</div>
 					<!-- Card Body -->
-					@include('admin.grupos.form-permissions')
+					@include('Dashboard::admin.grupos.form-permissions')
 				</div>
 			</div>
 		</div>

@@ -65,10 +65,10 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         if(file_exists(__DIR__.'/config/seo.php')) {
             config(['seo' => include __DIR__.'/config/seo.php']);
         }
+        */
         if(file_exists(__DIR__.'/config/permissions.php')) {
             config(['permissions' => include __DIR__.'/config/permissions.php']);
         }
-        */
         config(['admin.theme.styles' => 'css/dashboard.css']);
         config(['admin.text.footer' => 'Todos los derechos reservados © Dashboard 2019']);
         view()->share([
