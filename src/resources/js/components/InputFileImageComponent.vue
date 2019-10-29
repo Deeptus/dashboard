@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label :id="id">{{ label }}</label>
+        <label :for="id">{{ label }}</label>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <label class="input-group-text" :for="id"><i class="fas fa-2x fa-images"></i></label>
@@ -10,7 +10,7 @@
             </div>
             <div class="custom-file">
                 <input type="file" class="custom-file-input" :id="id"  @change="onFileChange($event)">
-                <label class="custom-file-label" :for="id" aria-label="test">
+                <label class="custom-file-label2" :for="id">
                     <img :src="getPreviewImage()" v-if="displayImage" style="max-height: 100%;">
                 </label>
             </div>
@@ -49,7 +49,6 @@
                 this.image.path = ''
                 this.image.type = ''
                 this.image.remove = true
-                console.log(this.getPreviewImage())
             },
             onFileChange(e) {
                 this.displayImage = false
@@ -57,30 +56,63 @@
                 this.image = file
                 this.displayImage = true
             },
+            getFileIcon(file) {
+                // Este metodo deberia encargarse se sacar las preview de imagenes y pdf
+                // Este metodo deberia ser global o una libreria independiente
+                let icon = false
+                let fileIcon = [
+                    {
+                        ext: [
+                            'application/zip',
+                            'application/x-zip-compressed'
+                        ],
+                        icon: publicPATH + '/icons/zip.svg'
+                    },
+                    {
+                        ext: [
+                            'application/pdf'
+                        ],
+                        icon: publicPATH + '/icons/pdf.svg'
+                    },
+                    {
+                        ext: [
+                            'text/csv',
+                            'text/xml',
+                            'text/plain'
+                        ],
+                        icon: publicPATH + '/icons/txt.svg'
+                    },
+                    {
+                        ext: [
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        ],
+                        icon: publicPATH + '/icons/xls.svg'
+                    },
+                    {
+                        ext: [
+                            'application/msword'
+                        ],
+                        icon: publicPATH + '/icons/doc.svg'
+                    },
+                ]
+                fileIcon.forEach(item => {
+                    if (item.ext.includes(file.type)) {
+                        icon = item.icon
+                    }
+                });
+                return icon
+            },
             getPreviewImage() {
                 let file = this.image
                 if (!file.type) {
                     return ''
                 }
-                if (file.type == 'application/pdf') {
-                    return publicPATH + '/icons/pdf.svg'
+
+                let icon = this.getFileIcon(file)
+                if (icon) {
+                    return icon
                 }
-                if (file.type == 'application/zip') {
-                    return publicPATH + '/icons/zip.svg'
-                }
-                let txtExt = ['text/csv', 'text/xml', 'text/plain']
-                if (txtExt.includes(file.type)) {
-                    return publicPATH + '/icons/txt.svg'
-                }
-                
-                let xlsExt = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
-                if (xlsExt.includes(file.type)) {
-                    return publicPATH + '/icons/xls.svg'
-                }
-                let docExt = ['application/msword']
-                if (docExt.includes(file.type)) {
-                    return publicPATH + '/icons/doc.svg'
-                }
+
                 let imgExt = ['image/jpeg', 'image/png']
                 if (imgExt.includes(file.type)) {
                     if (file && file instanceof File) {
@@ -102,12 +134,33 @@
   }
 </script>
 <style lang="scss" scoped>
-    .custom-file-label {
+    .custom-file-label2 {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        padding: 0.375rem 0.75rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #444;
+        background-color: #fff;
+        border: 1px solid #cbc8d0;
         height: 100px;
         display: flex;
         justify-content: flex-start;
     }
-    .custom-file-label::after {
+    .custom-file-label2::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        color: #444;
+        background-color: #F9F8FC;
+        border-left: inherit;
         content: "Seleccione Archivo" !important;
         height: auto !important;
         justify-content: center;
@@ -158,5 +211,10 @@
         &:active {
             background-color: #e0e0e0;
         }
+    }
+    label {
+        font-size: 13px;
+        color: #495057;
+        font-weight: 800;
     }
 </style>
