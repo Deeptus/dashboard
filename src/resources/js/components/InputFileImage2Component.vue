@@ -73,23 +73,23 @@
                     return ''
                 }
                 if (file.type == 'application/pdf') {
-                    return publicPATH + '/icons/pdf.svg'
+                    return publicPATH + '/images/icons/pdf.svg'
                 }
                 if (file.type == 'application/zip') {
-                    return publicPATH + '/icons/zip.svg'
+                    return publicPATH + '/images/icons/zip.svg'
                 }
                 let txtExt = ['text/csv', 'text/xml', 'text/plain']
                 if (txtExt.includes(file.type)) {
-                    return publicPATH + '/icons/txt.svg'
+                    return publicPATH + '/images/icons/txt.svg'
                 }
                 
                 let xlsExt = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
                 if (xlsExt.includes(file.type)) {
-                    return publicPATH + '/icons/xls.svg'
+                    return publicPATH + '/images/icons/xls.svg'
                 }
                 let docExt = ['application/msword']
                 if (docExt.includes(file.type)) {
-                    return publicPATH + '/icons/doc.svg'
+                    return publicPATH + '/images/icons/doc.svg'
                 }
                 let imgExt = ['image/jpeg', 'image/png']
                 if (imgExt.includes(file.type)) {
@@ -100,7 +100,7 @@
                         return file.url
                     }
                 }
-                return publicPATH + '/icons/raw.svg'
+                return publicPATH + '/images/icons/raw.svg'
                 if (typeof file === 'string' || file instanceof String) {
                     return this.storage_path(file)
                 }

@@ -66,13 +66,13 @@
                             'application/zip',
                             'application/x-zip-compressed'
                         ],
-                        icon: publicPATH + '/icons/zip.svg'
+                        icon: publicPATH + '/images/icons/zip.svg'
                     },
                     {
                         ext: [
                             'application/pdf'
                         ],
-                        icon: publicPATH + '/icons/pdf.svg'
+                        icon: publicPATH + '/images/icons/pdf.svg'
                     },
                     {
                         ext: [
@@ -80,19 +80,19 @@
                             'text/xml',
                             'text/plain'
                         ],
-                        icon: publicPATH + '/icons/txt.svg'
+                        icon: publicPATH + '/images/icons/txt.svg'
                     },
                     {
                         ext: [
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                         ],
-                        icon: publicPATH + '/icons/xls.svg'
+                        icon: publicPATH + '/images/icons/xls.svg'
                     },
                     {
                         ext: [
                             'application/msword'
                         ],
-                        icon: publicPATH + '/icons/doc.svg'
+                        icon: publicPATH + '/images/icons/doc.svg'
                     },
                 ]
                 fileIcon.forEach(item => {
@@ -122,7 +122,7 @@
                         return file.url
                     }
                 }
-                return publicPATH + '/icons/raw.svg'
+                return publicPATH + '/images/icons/raw.svg'
                 if (typeof file === 'string' || file instanceof String) {
                     return this.storage_path(file)
                 }
