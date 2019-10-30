@@ -5,7 +5,7 @@ namespace AporteWeb\Dashboard\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use AporteWeb\Dashboard\Models\User;
-use App\Modules\Baccarelli\Models\Sucursal;
+use App\Models\Sucursal;
 use Junges\ACL\Http\Models\Group;
 use Junges\ACL\Http\Models\Permission;
 use Illuminate\Support\Str;
@@ -34,7 +34,7 @@ class UserController extends Controller
     public function create()
     {
         $groups  = Group::get();
-        if (class_exists('App\Modules\Baccarelli\Models\Sucursal')) {
+        if (class_exists('App\Models\Sucursal')) {
             $sucursales = Sucursal::with('tienda')->get();
         } else {
             $sucursales = [];
@@ -84,7 +84,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $groups  = Group::get();
-        if (class_exists('App\Modules\Baccarelli\Models\Sucursal')) {
+        if (class_exists('App\Models\Sucursal')) {
             $sucursales = Sucursal::get();
         } else {
             $sucursales = [];

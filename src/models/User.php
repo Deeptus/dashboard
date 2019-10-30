@@ -40,6 +40,6 @@ class User extends Authenticatable
     ];
 
     public function sucursal() {
-        return $this->belongsTo('App\Modules\Baccarelli\Models\Sucursal', 'sucursal_id');
+        return $this->belongsTo('App\Models\Sucursal', 'sucursal_id');
     }
 }

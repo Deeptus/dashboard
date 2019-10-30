@@ -86,7 +86,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
+                        <li class="nav-item {{ __active($__admin_active, 'presupuesto') }}">
                             <a class="nav-link" href="{{ route('presupuesto') }}">
                                 PRESUPUESTOS
                             </a>
@@ -98,7 +98,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                        <li class="nav-item active">
+                        <li class="nav-item {{ __active($__admin_active, 'pedido') }}">
                             <a class="nav-link" href="{{ route('pedido') }}">
                                 PEDIDOS
                             </a>
