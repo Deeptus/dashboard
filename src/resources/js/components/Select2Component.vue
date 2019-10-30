@@ -40,11 +40,19 @@
         }
     }
 </script>
-<style lang="scss" scoped>
-    html, body {
-      font: 13px/18px sans-serif;
+<style>
+    .select2-container {
+        width: 100% !important;
     }
-    select {
-      width: 100%;
+    .select2-container .select2-selection--single {
+        width: 100%;
+        height: calc(1.5em + 0.75rem + 2px);
+        display: flex;
+        align-items: center;
+        border-radius: 0;
+        border: 1px solid #cbc8d0;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 100%;
     }
 </style>
