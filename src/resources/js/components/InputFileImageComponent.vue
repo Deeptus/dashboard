@@ -84,7 +84,8 @@
                     },
                     {
                         ext: [
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel'
                         ],
                         icon: publicPATH + '/images/icons/xls.svg'
                     },

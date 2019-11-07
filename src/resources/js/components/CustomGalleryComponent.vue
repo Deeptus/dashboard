@@ -107,26 +107,63 @@
                 }
                 return true
             },
+            getFileIcon(file) {
+                // Este metodo deberia encargarse se sacar las preview de imagenes y pdf
+                // Este metodo deberia ser global o una libreria independiente
+                let icon = false
+                let fileIcon = [
+                    {
+                        ext: [
+                            'application/zip',
+                            'application/x-zip-compressed'
+                        ],
+                        icon: publicPATH + '/images/icons/zip.svg'
+                    },
+                    {
+                        ext: [
+                            'application/pdf'
+                        ],
+                        icon: publicPATH + '/images/icons/pdf.svg'
+                    },
+                    {
+                        ext: [
+                            'text/csv',
+                            'text/xml',
+                            'text/plain'
+                        ],
+                        icon: publicPATH + '/images/icons/txt.svg'
+                    },
+                    {
+                        ext: [
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel'
+                        ],
+                        icon: publicPATH + '/images/icons/xls.svg'
+                    },
+                    {
+                        ext: [
+                            'application/msword'
+                        ],
+                        icon: publicPATH + '/images/icons/doc.svg'
+                    },
+                ]
+                fileIcon.forEach(item => {
+                    if (item.ext.includes(file.type)) {
+                        icon = item.icon
+                    }
+                });
+                return icon
+            },
             createImageURL(file){
-                if (file.type == 'application/pdf') {
-                    return publicPATH + '/images/icons/pdf.svg'
+                if (!file.type) {
+                    return ''
                 }
-                if (file.type == 'application/zip') {
-                    return publicPATH + '/images/icons/zip.svg'
+
+                let icon = this.getFileIcon(file)
+                if (icon) {
+                    return icon
                 }
-                let txtExt = ['text/csv', 'text/xml', 'text/plain']
-                if (txtExt.includes(file.type)) {
-                    return publicPATH + '/images/icons/txt.svg'
-                }
-                
-                let xlsExt = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
-                if (xlsExt.includes(file.type)) {
-                    return publicPATH + '/images/icons/xls.svg'
-                }
-                let docExt = ['application/msword']
-                if (docExt.includes(file.type)) {
-                    return publicPATH + '/images/icons/doc.svg'
-                }
+
                 let imgExt = ['image/jpeg', 'image/png']
                 if (imgExt.includes(file.type)) {
                     if (file && file instanceof File) {
@@ -152,15 +189,6 @@
                     if(file.url) {
                         return file.url.split('/').pop()
                     }
-                }
-            },
-            getPreviewImage(languageKey) {
-                let image = this.image[languageKey]
-                if (image && image instanceof File) {
-                    return URL.createObjectURL(image)
-                }
-                if (typeof image === 'string' || image instanceof String) {
-                    return image
                 }
             },
             deleteFileGallery(index) {
