@@ -22,7 +22,7 @@
 						<h6 class="m-0 font-weight-bold text-primary">Editar un seo</h6>
 					</div>
 					<!-- Card Body -->
-					@include('admin.seo.form')
+					@include('Dashboard::admin.seo.form')
 				</div>
 			</div>
 		</div>
