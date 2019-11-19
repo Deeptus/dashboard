@@ -1,5 +1,6 @@
 require('./bootstrap');
 import "../../../../../../node_modules/startbootstrap-sb-admin-2/js/sb-admin-2";
+import Swal from 'sweetalert2'
 
 require('bootstrap-select');
 
@@ -83,3 +84,27 @@ $('.custom-file input').change(function (e) {
   });
 
 })(jQuery); // End of use strict
+
+
+var elems = document.getElementsByClassName('btn-confirm-delete');
+
+var confirmBtn = function (e) {
+  e.preventDefault();
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.value) {
+      window.location.href = this.href;
+    }
+  })
+
+};
+for (var i = 0, l = elems.length; i < l; i++) {
+    elems[i].addEventListener('click', confirmBtn, false);
+}
