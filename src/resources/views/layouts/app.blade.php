@@ -10,25 +10,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/png" />
-
+    <link rel="shortcut icon" href="{{ asset(Storage::url(__config_var('admin_favicon'))) }}" type="image/png" />
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="public-path" content="{{ asset('/') }}">
+    <meta name="storage-path" content="{{ asset(Storage::url('/')) }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
-
-    <script>
-        document.__API_URL = '{{ url('/') }}';
-    </script>
-    <!-- Styles -->
-    <link href="{{ asset(config('admin.theme.styles', 'css/app.css')) }}?{{ $assets_version }}" rel="stylesheet">
+    <title>{{ config('app.name', 'Panel') }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/nunito/nunito.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/fontawesome/css/all.min.css') }}">
+    <link href="{{ asset(config('admin.theme.styles', 'css/theme-02.css')) }}?{{ $assets_version }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
