@@ -11,6 +11,10 @@
 @import '../../../../../../node_modules/startbootstrap-sb-admin-2/scss/sb-admin-2';
 @import '../../../../../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css';
 @import 'sidebar';
+body {
+    height: 100%;
+    overflow-x: hidden;
+}
 .navbar-nav {
     .nav-item {
         &.active {
