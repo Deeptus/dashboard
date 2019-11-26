@@ -1,8 +1,10 @@
 @php
-    if (config('app.debug')){
-        $assets_version = hash('md5', rand());
-    } else {
-        $assets_version = '2';
+    if (!$assets_version) {
+        if (config('app.debug')){
+            $assets_version = hash('md5', rand());
+        } else {
+            $assets_version = '2';
+        }
     }
 @endphp
 <!DOCTYPE html>
