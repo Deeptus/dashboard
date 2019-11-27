@@ -80,3 +80,11 @@ fieldset {
     font-size: 22px;
     font-weight: 600;
 }
+.btn-group-flex {
+	.btn {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+}

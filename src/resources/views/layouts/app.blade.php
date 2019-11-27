@@ -86,7 +86,7 @@
                         </li>
                     </ul>
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <img src="{{ asset('images/logo-header_10.png') }}" style="width: 90px; transform: scale(1.4);">
+                        <img src="{{ $__logo }}" class="rounded-circle" style="width: 90px; transform: scale(1.4);border: 10px solid white;">
                     </a>
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
