@@ -35,6 +35,7 @@
 </div>
  --></template>
 <script>
+    var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
         props: ['model','id', 'labelText'],
         data(){

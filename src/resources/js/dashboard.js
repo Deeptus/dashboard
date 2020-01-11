@@ -91,13 +91,14 @@ var elems = document.getElementsByClassName('btn-confirm-delete');
 var confirmBtn = function (e) {
   e.preventDefault();
   Swal.fire({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
+    title: 'Esta seguro de eliminar este elemento?',
+    text: "",
     icon: 'warning',
     showCancelButton: true,
+    confirmButtonText: 'Si, borrar!',
     confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
+    cancelButtonText: 'Cancelar',
+    cancelButtonColor: '#d33'
   }).then((result) => {
     if (result.value) {
       window.location.href = this.href;
