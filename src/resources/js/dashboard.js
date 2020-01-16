@@ -85,7 +85,7 @@ $('.custom-file input').change(function (e) {
 
 })(jQuery); // End of use strict
 
-
+// Btn delete
 var elems = document.getElementsByClassName('btn-confirm-delete');
 
 var confirmBtn = function (e) {
@@ -96,6 +96,31 @@ var confirmBtn = function (e) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Si, borrar!',
+    confirmButtonColor: '#3085d6',
+    cancelButtonText: 'Cancelar',
+    cancelButtonColor: '#d33'
+  }).then((result) => {
+    if (result.value) {
+      window.location.href = this.href;
+    }
+  })
+
+};
+for (var i = 0, l = elems.length; i < l; i++) {
+    elems[i].addEventListener('click', confirmBtn, false);
+}
+
+// Btn Copy
+var elems = document.getElementsByClassName('btn-confirm-copy');
+
+var confirmBtn = function (e) {
+  e.preventDefault();
+  Swal.fire({
+    title: 'Esta seguro de duplicar este elemento?',
+    text: "",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Si, duplicar!',
     confirmButtonColor: '#3085d6',
     cancelButtonText: 'Cancelar',
     cancelButtonColor: '#d33'

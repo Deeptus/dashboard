@@ -92,6 +92,7 @@ Route::group([
         Route::get ('/{id}/restore', 'DynamicContentController@restore')->name('.restore');
         //
         Route::get ('api/{seccion}/data/{id?}', 'DynamicContentController@data')->name('.data');
+        Route::get ('/{id}/copy', 'DynamicContentController@copy')->name('.copy');
     });
     Route::group([
         'prefix' => 'translation',

@@ -80,10 +80,13 @@ class DynamicContentController extends Controller
     {
         $data = Content::where('section', $section)->orderBy('order', 'ASC')->paginate(20);
         $config = config('dynamic-content.' . $section);
+        //dd($config);
+        $inputs = ['order', 'title', 'subtitle', 'text', 'description'];
         return view('Dashboard::admin.dynamic-content.index', [
             'data' => $data,
             'section' => $section,
             'config' => $config,
+            'inputs' => $inputs,
         ]);
     }
 
@@ -234,17 +237,20 @@ class DynamicContentController extends Controller
         $item = Content::find($id);
         $section = $item->section;
         $item->delete();
-        return redirect()->route('admin.dynamic-content', [$section])->with('status', 'Se elimino un item del slider con éxito.');
+        return redirect()->route('admin.dynamic-content', [$section])->with('status', 'Se elimino un <strong>item</strong> del slider con éxito.');
     }
     public function trash($section)
     {
         $data = Content::onlyTrashed()->get();
         $config = config('dynamic-content.' . $section);
+        $inputs = ['order', 'title', 'subtitle', 'text', 'description'];
+        
         return view('Dashboard::admin.dynamic-content.index', [
             'data' => $data,
             'section' => $section,
             'config' => $config,
             'trash'=> true,
+            'inputs' => $inputs,
         ]);
     }
     public function restore($id)
@@ -253,7 +259,13 @@ class DynamicContentController extends Controller
         $section = $item->section;
         $item->deleted_at = null;
         $item->save();
-        return redirect()->route('admin.dynamic-content.trash', [$section])->with('success', 'Se ha restaurado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.dynamic-content.trash', [$section])->with('success', 'Se ha restaurado un <strong>item</strong> con éxito.');
     }
-
+    public function copy($id)
+    {
+        $new = Content::find($id)->replicate();
+        $section = $new->section;
+        $new->save();
+        return redirect()->route('admin.dynamic-content.edit', $new->id)->with('success', 'Se ha duplicado un <strong>item</strong> con éxito.');
+    }
 }

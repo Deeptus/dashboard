@@ -32,27 +32,49 @@
                 @if ($loop->first)
                     <thead>
                         <tr>
+                            @foreach ($inputs as $input)
+                                @if (
+                                    is_array($config) &&
+                                    array_key_exists('use-' . $input, $config) &&
+                                    is_array($config['use-' . $input]) &&
+                                    array_key_exists('display_index', $config['use-' . $input]) &&
+                                    $config['use-' . $input]['display_index'] == true)
+                                    <th>{{ $config['use-' . $input]['label'] }}</th>
+                                @endif
+                            @endforeach
                             @if ($item->image != '')
                             <th>Imagen</th>
                             @endif
-                            <th>Titulo</th>
                             <th class="no-sort"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                <tbody>
                 @endif
                 <tr>
+                    @foreach ($inputs as $input)
+                        @if (
+                            is_array($config) &&
+                            array_key_exists('use-' . $input, $config) &&
+                            is_array($config['use-' . $input]) &&
+                            array_key_exists('display_index', $config['use-' . $input]) &&
+                            $config['use-' . $input]['display_index'] == true)
+                            <td>{{ $item->{$input} }}</td>
+                        @endif
+                    @endforeach
                     @if ($item->image != '')
                     <td><img src="{{ asset(Storage::url($item->image)) }}" style="max-width: 50px; max-height: 50px;"></td>
                     @endif
-                    <td>{{ $item->title }}</td>
                     <td>
                         @if (!$item->trashed())
                         <a href="{{ route('admin.dynamic-content.edit', [$item->id]) }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-sm text-white-50 fa-edit"></i>
                             Editar
                         </a>
-                        <a href="{{ route('admin.dynamic-content.destroy', [$item->id]) }}" class="btn btn-danger btn-sm">
+                        <a href="{{ route('admin.dynamic-content.copy', [$item->id]) }}" class="btn btn-warning btn-sm btn-confirm-copy">
+                            <i class="fas fa-sm text-white-50 fa-copy"></i>
+                            Duplicar
+                        </a>
+                        <a href="{{ route('admin.dynamic-content.destroy', [$item->id]) }}" class="btn btn-danger btn-sm btn-confirm-delete">
                             <i class="fas fa-sm text-white-50 fa-trash-alt"></i>
                             Eliminar
                         </a>

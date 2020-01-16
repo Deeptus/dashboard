@@ -18,8 +18,8 @@ Breadcrumbs::for('admin.content', function ($trail, $section) {
 });
 // Panel > Contenido > Añadir
 Breadcrumbs::for('admin.dynamic-content.create', function ($trail, $section) {
-    $trail->parent('admin.dynamic-content', $section);
-    $trail->push('Añadir', route('admin.dynamic-content.create', ['section' => $section]));
+	$trail->parent('admin.dynamic-content', $section);
+    $trail->push('Añadir', route('admin.dynamic-content.create', ['seccion' => $section]));
 });
 // Panel > Contenido > Editar
 Breadcrumbs::for('admin.dynamic-content.edit', function ($trail, $element) {
@@ -29,7 +29,7 @@ Breadcrumbs::for('admin.dynamic-content.edit', function ($trail, $element) {
 // Panel > Contenido > Papelera
 Breadcrumbs::for('admin.dynamic-content.trash', function ($trail, $section) {
     $trail->parent('admin.dynamic-content', $section);
-    $trail->push('Papelera', route('admin.dynamic-content.trash', ['section' => $section]));
+    $trail->push('Papelera', route('admin.dynamic-content.trash', ['seccion' => $section]));
 });
 
 
