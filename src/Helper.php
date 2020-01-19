@@ -1,4 +1,21 @@
 <?php
+if (!function_exists('__file_url')) {
+    function __file_url($path, $default_file, $is_storage = false)
+    {
+        $final = $default_file;
+        if ($is_storage != false) {
+            if(Storage::exists($path)){
+                $final = asset(Storage::url($path));
+            }
+        } else {
+            if(file_exists(public_path($path))){
+                $final = asset(Storage::url($path));
+            }
+        }
+        return $final;
+    }
+}
+
 if (!function_exists('__t')) {
     function __t($key)
     {

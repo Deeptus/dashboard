@@ -25,10 +25,13 @@ var lang_es = {
         }
     };
 $('.data_table').DataTable({
+    "order": [[ $('th.sort-by').index(), "asc" ]],
 	"language": lang_es,
     "autoWidth": false,
-	"columnDefs": [{
-		"targets": 'no-sort',
-		"orderable": false,
-	}]
+	"columnDefs": [
+        {
+            "targets": 'no-sort',
+            "orderable": false
+        }
+    ]
 });
