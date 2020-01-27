@@ -50,7 +50,7 @@
                             <legend>{{ languages[languageKey] }}</legend>
                             <div class="row" v-if="isDisplayInput('use-order', languageKey)">
                                 <div class="form-group col-md-12">
-                                    <label :for="'order-'+languageKey">Orden</label>
+                                    <label :for="'order-'+languageKey">{{ getLabel('use-order')?getLabel('use-order'):'Orden' }}</label>
                                     <input
                                         type="text"
                                         class="form-control"
