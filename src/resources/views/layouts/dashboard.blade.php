@@ -35,30 +35,6 @@
                 @if (isset($__admin_menu))
                     @include($__admin_menu)
                 @endif
-                @if (auth()->user()->root)
-                <li class="nav-item {{ __active($__admin_active, 'admin.user') }}">
-                    <a class="nav-link" href="{{ route('admin.user') }}">
-                        <i class="fas fa-fw fa-users"></i>
-                        <span>Usuarios</span>
-                    </a>
-                </li>
-                <!-- Nav Item - Tables -->
-                <li class="nav-item {{ __active($__admin_active, 'admin.grupo') }}">
-                    <a class="nav-link" href="{{ route('admin.grupo') }}">
-                        <i class="fas fa-fw fa-user-tag"></i>
-                        <span>Grupos</span>
-                    </a>
-                </li>
-                <!-- Nav Item - Tables -->
-                <li class="nav-item {{ __active($__admin_active, 'admin.permission') }}">
-                    <a class="nav-link" href="{{ route('admin.permission') }}">
-                        <i class="fas fa-fw fa-key"></i>
-                        <span>Permisos</span>
-                    </a>
-                </li>
-                @endif
-
-
                 <!-- Sidebar Toggler (Sidebar) -->
                 <div class="text-center d-none d-md-inline">
                     <button class="rounded-circle border-0" id="sidebarToggle"></button>
