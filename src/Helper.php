@@ -100,4 +100,18 @@ if (!function_exists('__config_var')) {
     }
 }
 
+if (!function_exists('__uuid')) {
+    function __uuid()
+    {
+        return \Webpatser\Uuid\Uuid::generate()->string;
+    }
+}
+
+if (!function_exists('__slug')) {
+    function __slug($string)
+    {
+        return \Illuminate\Support\Str::slug($string);
+    }
+}
+
 ?>

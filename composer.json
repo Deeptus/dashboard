@@ -14,7 +14,8 @@
         "phpoffice/phpspreadsheet": "^1.6",
         "mateusjunges/laravel-acl": "2.2.*",
         "spatie/laravel-translatable": "^4.2",
-        "barryvdh/laravel-debugbar": "^3.2"
+        "barryvdh/laravel-debugbar": "^3.2",
+        "webpatser/laravel-uuid": "^3.0"
     },
     "autoload": {
         "files": [
