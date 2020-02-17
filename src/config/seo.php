@@ -8,4 +8,3 @@ return [
     'novadades' => 'Novadades',
     'contacto'  => 'Contacto',
 ];
-?>
