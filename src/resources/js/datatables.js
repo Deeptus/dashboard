@@ -24,8 +24,9 @@ var lang_es = {
             "sSortDescending": ": Activar para ordenar la columna de manera descendente"
         }
     };
+let colSort = $('th.sort-by').index()
 $('.data_table').DataTable({
-    "order": [[ $('th.sort-by').index(), "asc" ]],
+    "order": [[ colSort>=0?colSort:0, "asc" ]],
 	"language": lang_es,
     "autoWidth": false,
 	"columnDefs": [
