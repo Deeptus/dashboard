@@ -3,8 +3,12 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-4">
+            <center><img class="img-fluid" src="{{ asset(Storage::url(__config_var('admin_logo'))) }}"></center>
+        </div>
+    </div>
+    <div class="row justify-content-center">
         <div class="col-md-8">
-            {{--<center><img src="{{ asset('images/logo-header_10.png') }}"></center>--}}
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 

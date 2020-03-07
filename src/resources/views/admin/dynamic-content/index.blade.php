@@ -27,9 +27,9 @@
 
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-12 col-md-12 mb-12">
-        <table class="data_table table table-striped table-bordered display">
                 @foreach ($data as $item)
                 @if ($loop->first)
+                <table class="data_table table table-striped table-bordered display">
                     <thead>
                         <tr>
                             @foreach ($inputs as $input)
@@ -86,9 +86,11 @@
                         @endif
                     </td>
                 </tr>
-                @endforeach
-            </tbody>
-        </table>
+                @if ($loop->last)
+                    </tbody>
+                </table>
+                @endif
+            @endforeach
     </div>
 </div>
 @endsection
