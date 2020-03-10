@@ -1,6 +1,8 @@
 window.Vue = require('vue');
 
 Vue.component('dynamic-content-form', require('./components/dynamic-content/DynamicContentFormComponent.vue').default);
+Vue.component('input-file-image', require('./components/InputFileImageComponent.vue').default);
+
 require('../../../../../../resources/js/custom-dashboard');
 Vue.filter('toCurrency', function (numero) {
     let decimales = 2
