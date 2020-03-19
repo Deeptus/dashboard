@@ -105,7 +105,7 @@
             },
             getPreviewImage() {
                 let file = this.image
-                if (!file.type) {
+                if (!file || !file.type) {
                     return ''
                 }
 

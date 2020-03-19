@@ -27,6 +27,28 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
+
+        /*
+        example
+        @exception
+            code ......
+        @catch
+            {!! $e->getMessage() !!}
+        @endexception
+        */
+
+        Blade::directive('exception', function () {
+            return '<?php try { ?>';
+        });
+
+        Blade::directive('catch', function () {
+            return '<?php } catch (\Exception $e) { ?>';
+            // use {!! $e->getMessage() !!}
+        });
+
+        Blade::directive('endexception', function () {
+            return '<?php } ?>';
+        });
         // Load Routes
         if(file_exists(__DIR__.'/routes/web.php')) {
             Route::middleware('web')

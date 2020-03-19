@@ -105,6 +105,7 @@
                                     <jodit-vue
                                         v-model="content.subtitle[languageKey]"
                                         :id="'subtitle-'+languageKey"
+                                        :value="content.subtitle[languageKey]"
                                         v-else
                                     ></jodit-vue>
                                 </div>
@@ -112,18 +113,18 @@
                             <div class="row" v-if="isDisplayInput('use-text', languageKey)">
                                 <div class="form-group col-md-12">
                                     <label :for="'text-'+languageKey">{{ getLabel('use-text') }}</label>
-                                    <textarea
+                                    <input
+                                        type="text"
                                         class="form-control"
                                         :id="'text-'+languageKey"
                                         :name="'text-'+languageKey"
                                         v-model="content.text[languageKey]"
-                                        cols="30"
-                                        rows="3"
                                         v-if="!wysiwyg('use-text')"
-                                    ></textarea>
+                                    >
                                     <jodit-vue
                                         v-model="content.text[languageKey]"
                                         :id="'text-'+languageKey"
+                                        :value="content.text[languageKey]"
                                         v-else
                                     ></jodit-vue>
                                 </div>
@@ -131,9 +132,19 @@
                             <div class="row" v-if="isDisplayInput('use-description', languageKey)">
                                 <div class="form-group col-md-12">
                                     <label :for="'description-'+languageKey">{{ getLabel('use-description') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        :id="'description-'+languageKey"
+                                        :name="'description-'+languageKey"
+                                        v-model="content.description[languageKey]"
+                                        v-if="!wysiwyg('use-description')"
+                                    >
                                     <jodit-vue
                                         v-model="content.description[languageKey]"
                                         :id="'description-'+languageKey"
+                                        :value="content.description[languageKey]"
+                                        v-else
                                     ></jodit-vue>
                                 </div>
                             </div>
