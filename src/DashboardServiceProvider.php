@@ -36,7 +36,10 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             {!! $e->getMessage() !!}
         @endexception
         */
+        // Temporal hasta que se adapten los component a tags a Laravel 7
 
+        Blade::withoutComponentTags();
+        Blade::component('Dashboard::components.messages', 'messages');
         Blade::directive('exception', function () {
             return '<?php try { ?>';
         });
@@ -101,7 +104,6 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             //...with this variable
             // $view->with('__admin_menu', 'Dashboard::admin.menu');
         });
-        Blade::component('Dashboard::components.messages', 'messages');
     }
     public function register()
     {
