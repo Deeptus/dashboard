@@ -37,8 +37,9 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         @endexception
         */
         // Temporal hasta que se adapten los component a tags a Laravel 7
-
-        Blade::withoutComponentTags();
+        if (version_compare(App::VERSION(), '7.0.0') >= 0) {
+            Blade::withoutComponentTags();
+        }
         Blade::component('Dashboard::components.messages', 'messages');
         Blade::directive('exception', function () {
             return '<?php try { ?>';
