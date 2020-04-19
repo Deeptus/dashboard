@@ -25,8 +25,19 @@ var lang_es = {
         }
     };
 let colSort = $('th.sort-by').index()
+let colSortDesc = $('th.sort-by-desc').index()
+let order = [[ 0, "asc" ]]
+
+if (colSort>=0) {
+    order = [[ colSort, "asc" ]]
+}
+
+if (colSortDesc>=0) {
+    order = [[ colSortDesc, "desc" ]]
+}
+
 $('.data_table').DataTable({
-    "order": [[ colSort>=0?colSort:0, "asc" ]],
+    "order": order,
 	"language": lang_es,
     "autoWidth": false,
 	"columnDefs": [
@@ -35,4 +46,4 @@ $('.data_table').DataTable({
             "orderable": false
         }
     ]
-});
+})
