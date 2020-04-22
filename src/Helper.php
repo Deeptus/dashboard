@@ -60,7 +60,7 @@ if (!function_exists('__meta')) {
      * */
     function __meta($section, $key)
     {
-        $meta = Cache::remember('seo', 60, function () {
+        $meta = Cache::remember('seo', env('CACHE_DURATION', 0), function () {
             return AporteWeb\Dashboard\Models\Seo::get();
         });
         if ($meta) {
@@ -88,7 +88,7 @@ if (!function_exists('__config_var')) {
      * */
     function __config_var($key)
     {
-        $var = Cache::remember('config_var', 0, function () {
+        $var = Cache::remember('config_var', env('CACHE_DURATION', 0), function () {
             return AporteWeb\Dashboard\Models\ConfigVar::get()->pluck('config_value', 'config_key');
         })->toArray();
 
@@ -137,7 +137,7 @@ if (!function_exists('__dolar')) {
             $client->setClient($guzzleClient);
             */
 
-            $dolarPrice = Illuminate\Support\Facades\Cache::remember('dolar', 60, function () use ($client) {
+            $dolarPrice = Cache::remember('dolar', env('CACHE_DURATION', 0), function () use ($client) {
                 $crawler = $client->request('GET', 'http://www.bna.com.ar/Personas');
                 $table   = 'table cotizacion';
 

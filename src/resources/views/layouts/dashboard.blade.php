@@ -18,6 +18,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="public-path" content="{{ asset('/') }}">
     <meta name="storage-path" content="{{ asset(Storage::url('/')) }}">
+    <meta name="decimal-separator" content="{{ __config_var('decimal_separator') }}">
+    <meta name="thousands-separator" content="{{ __config_var('thousands_separator') }}">
+
 
     <title>{{ config('app.name', 'Panel') }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/nunito/nunito.css') }}">
