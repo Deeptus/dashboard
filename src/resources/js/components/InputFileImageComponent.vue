@@ -106,6 +106,13 @@
             getPreviewImage() {
                 let file = this.image
                 if (!file || !file.type) {
+                    if (file.url) {
+                        if (typeof file.url === 'string' || file.url instanceof String) {
+                            if (file.url.length) {
+                                return file.url
+                            }
+                        }
+                    }
                     return ''
                 }
 

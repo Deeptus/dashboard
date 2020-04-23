@@ -83,7 +83,7 @@
                 if (txtExt.includes(file.type)) {
                     return publicPATH + '/images/icons/txt.svg'
                 }
-                
+
                 let xlsExt = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
                 if (xlsExt.includes(file.type)) {
                     return publicPATH + '/images/icons/xls.svg'
@@ -92,7 +92,7 @@
                 if (docExt.includes(file.type)) {
                     return publicPATH + '/images/icons/doc.svg'
                 }
-                let imgExt = ['image/jpeg', 'image/png']
+                let imgExt = ['image/jpeg', 'image/png', 'image/x-icon', 'image/svg+xml', 'image/svg']
                 if (imgExt.includes(file.type)) {
                     if (file && file instanceof File) {
                         return URL.createObjectURL(file)
