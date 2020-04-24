@@ -9,6 +9,7 @@
                             <img :src="createImageURL(item)" alt="">
                         </div>
                         <div class="gallery-item-controls">
+                            <a :href="itemURL(item)" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> Descargar</a>
                             <button type="button" class="btn btn-danger" @click="deleteFileGallery(index)"><i class="fas fa-trash-alt"></i></button>
                         </div>
                         <div class="gallery-item-path">
@@ -193,9 +194,19 @@
             },
             deleteFileGallery(index) {
                 this.gallery.splice(index, 1);
+            },
+            itemURL(file) {
+                if (file && file instanceof File) {
+                    return URL.createObjectURL(file)
+                }
+                if (typeof file === 'object' || file instanceof Object) {
+                    return file.url
+                }
             }
+        },
+        computed: {
         }
-  }
+    }
 </script>
 <style lang="scss" scoped>
     .gallery-item {
@@ -205,8 +216,11 @@
     }
     .gallery-item-controls {
         position: absolute;
-        right: 0;
+        left: 0;
         top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
     .gallery-item-container{
         position: absolute;
