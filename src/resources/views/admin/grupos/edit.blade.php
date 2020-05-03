@@ -9,8 +9,7 @@
 		</a>
 	</div>
 </div>
-@messages()
-@endmessages
+<x-dashboard-messages/>
 <div class="row">
 	<form class="col s12" method="POST" action="{{ route('admin.grupo.update', $element->id) }}" enctype="multipart/form-data">
 		@csrf

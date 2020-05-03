@@ -9,8 +9,7 @@
         </a>
     </div>
 </div>
-@messages()
-@endmessages
+<x-dashboard-messages/>
 <dynamic-content-form
     form-name="Añadir"
     url-data="{{ route('admin.dynamic-content.data', [$section]) }}"

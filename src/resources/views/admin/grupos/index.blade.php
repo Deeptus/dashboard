@@ -20,8 +20,7 @@
         </a>
     </div>
 </div>
-@messages()
-@endmessages
+<x-dashboard-messages/>
 
 <!-- Content Row -->
 <div class="row">

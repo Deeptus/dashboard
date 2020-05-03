@@ -1,7 +1,6 @@
 @extends('Dashboard::layouts.dashboard')
 @section('content')
-@messages()
-@endmessages
+<x-dashboard-messages/>
 <company-data-form
     form-name="Editar datos de la empresa"
     url-data="{{ route('admin.companydata.data') }}"

@@ -14,10 +14,11 @@ namespace AporteWeb\Dashboard;
 */
 
 use Illuminate\Support\Facades\Route;
-use AporteWeb\Dashboard\Models\Content;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Blade;
+use AporteWeb\Dashboard\Models\Content;
+use AporteWeb\Dashboard\View\Components\Messages;
 
 class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -37,10 +38,10 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         @endexception
         */
         // Temporal hasta que se adapten los component a tags a Laravel 7
-        if (version_compare(App::VERSION(), '7.0.0') >= 0) {
+        /*if (version_compare(App::VERSION(), '7.0.0') >= 0) {
             Blade::withoutComponentTags();
-        }
-        Blade::component('Dashboard::components.messages', 'messages');
+        }*/
+        Blade::component('dashboard-messages', Messages::class);
         Blade::directive('exception', function () {
             return '<?php try { ?>';
         });

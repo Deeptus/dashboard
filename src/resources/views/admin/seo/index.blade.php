@@ -3,8 +3,7 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     {!! Breadcrumbs::render() !!}
 </div>
-@messages()
-@endmessages
+<x-dashboard-messages/>
 
 <!-- Content Row -->
 <div class="row">
