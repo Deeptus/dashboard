@@ -57,8 +57,8 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         // Load Routes
         if(file_exists(__DIR__.'/routes/web.php')) {
             Route::middleware('web')
-                 ->namespace('\AporteWeb\Dashboard\Controllers')
-                 ->group(__DIR__.'/routes/web.php');
+                ->namespace('\AporteWeb\Dashboard\Controllers')
+                ->group(__DIR__.'/routes/web.php');
         }
         if(file_exists(__DIR__.'/routes/breadcrumbs.php')) {
             include __DIR__.'/routes/breadcrumbs.php';

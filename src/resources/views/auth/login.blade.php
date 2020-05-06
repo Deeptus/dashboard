@@ -3,8 +3,15 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-4">
-            <center><img class="img-fluid" src="{{ asset(Storage::url(__config_var('admin_logo'))) }}"></center>
+        <div class="col-12 col-md-8 col-lg-4 text-center">
+            @if (Storage::exists(__config_var('admin_logo')))
+                <img class="img-fluid" src="{{ asset(Storage::url(__config_var('admin_logo'))) }}">
+            @endif
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <x-dashboard-messages/>
         </div>
     </div>
     <div class="row justify-content-center">

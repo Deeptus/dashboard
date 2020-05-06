@@ -4,6 +4,10 @@ namespace AporteWeb\Dashboard\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -18,14 +22,16 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers {
+        logout as performLogout;
+    }
 
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/adm';
 
     /**
      * Create a new controller instance.
@@ -48,5 +54,12 @@ class LoginController extends Controller
     public function username()
     {
         return 'username';
+    }
+    public function logout(Request $request)
+    {
+        $this->performLogout($request);
+        return $request->wantsJson()
+            ? new Response('', 204)
+            : redirect()->route('login');
     }
 }
