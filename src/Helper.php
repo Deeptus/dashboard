@@ -3,7 +3,11 @@
 if (!function_exists('fastcgi_finish_request')) {
     function fastcgi_finish_request()
     {
-        ob_end_flush();
+        try {
+            ob_end_flush();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }
 
