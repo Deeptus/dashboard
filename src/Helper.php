@@ -1,4 +1,16 @@
 <?php
+// Esto hay que probarlo con detalle
+if (!function_exists('fastcgi_finish_request')) {
+    function fastcgi_finish_request()
+    {
+        try {
+            ob_end_flush();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+}
+
 if (!function_exists('__file_url')) {
     function __file_url($path, $default_file, $is_storage = false)
     {
