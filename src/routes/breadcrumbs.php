@@ -2,7 +2,7 @@
 
 // Panel
 Breadcrumbs::for('admin.home', function ($trail) {
-	$trail->push('Panel', route('admin.home'));
+	$trail->push('Dashboard', route('admin.home'));
 });
 
 

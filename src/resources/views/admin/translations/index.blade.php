@@ -30,7 +30,8 @@
         <table class="data_table table table-striped table-bordered display">
             <thead>
                 <tr>
-                    <th>Palabra o Frese a traducir</th>
+                    <th>key</th>
+                    <th>Text</th>
                     <th class="no-sort"></th>
                 </tr>
             </thead>
@@ -38,6 +39,7 @@
                 @foreach ($data as $item)
                 <tr>
                     <td>{{ $item->key }}</td>
+                    <td>{{ $item->translation }}</td>
                     <td>
                         @if (!$item->trashed())
                         <a href="{{ route('admin.translation.edit', [$item->id]) }}" class="btn btn-primary btn-sm">
