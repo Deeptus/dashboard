@@ -1,12 +1,12 @@
 <template>
     <div>
-        <label :for="id">{{ label }}</label>
+        <label :for="id" v-if="label">{{ label }}</label>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <label class="input-group-text" :for="id"><i class="fas fa-2x fa-images"></i></label>
             </div>
             <div class="input-group-prepend" v-if="getPreviewImage()">
-                <div class="input-group-text px-4 remove-btn" @click="removeImage()"><i class="fas fa-2x fa-trash-alt mr-2"></i> Quitar</div>
+                <div class="input-group-text px-4 remove-btn" @click="removeImage()"><i class="fas fa-2x fa-trash-alt mr-2"></i> Remove</div>
             </div>
             <div class="custom-file">
                 <input type="file" :name="name" class="custom-file-input" :id="id"  @change="onFileChange($event)">
@@ -169,7 +169,7 @@
         color: #444;
         background-color: #F9F8FC;
         border-left: inherit;
-        content: "Seleccione Archivo" !important;
+        content: "Select File" !important;
         height: auto !important;
         justify-content: center;
         align-items: center;
@@ -224,5 +224,24 @@
         font-size: 13px;
         color: #495057;
         font-weight: 800;
+    }
+    .input-group-text {
+        display: flex;
+        align-items: center;
+        padding: 0.375rem 0.75rem !important;
+        margin-bottom: 0;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #444;
+        text-align: center;
+        white-space: nowrap;
+        background-color: #F9F8FC !important;
+        border: 1px solid #cbc8d0 !important;
+    }
+    .input-group-prepend {
+        position: relative !important;
+        height: auto !important;
+        width: auto !important;
     }
 </style>
