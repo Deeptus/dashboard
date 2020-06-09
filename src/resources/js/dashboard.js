@@ -8,7 +8,7 @@ require('./vue');
 
 require('./datatables');
 
-require('./ckeditor');
+// require('./ckeditor');
 
 let __random   = document.getElementById('random');
 let __display  = document.getElementById('display');

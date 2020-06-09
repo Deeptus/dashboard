@@ -57,7 +57,7 @@
                             is_array($config['use-' . $input]) &&
                             array_key_exists('display_index', $config['use-' . $input]) &&
                             $config['use-' . $input]['display_index'] == true)
-                            <td>{{ $item->{$input} }}</td>
+                            <td>{!! $item->{$input} !!}</td>
                         @endif
                     @endforeach
                     @if ($item->image != '')
