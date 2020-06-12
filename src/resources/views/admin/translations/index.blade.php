@@ -30,7 +30,9 @@
         <table class="data_table table table-striped table-bordered display">
             <thead>
                 <tr>
+                    @anypermission('display-dev-keys')
                     <th>key</th>
+                    @endanygroup
                     <th>Text</th>
                     <th class="no-sort"></th>
                 </tr>
@@ -38,7 +40,9 @@
             <tbody>
                 @foreach ($data as $item)
                 <tr>
+                    @anypermission('display-dev-keys')
                     <td>{{ $item->key }}</td>
+                    @endanygroup
                     <td>{{ $item->translation }}</td>
                     <td>
                         @if (!$item->trashed())
