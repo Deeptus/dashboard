@@ -51,7 +51,7 @@ class GrupoController extends Controller
         $item->slug        = Str::slug($request->name);
         $item->description = $request->description;
         $item->save();
-        return redirect()->route('admin.grupo')->with('success', 'Se añadio un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
     }
 
     /**
@@ -92,7 +92,7 @@ class GrupoController extends Controller
         $item->slug        = Str::slug($request->name);
         $item->description = $request->description;
         $item->save();
-        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con éxito.');
     }
 
     /**
@@ -104,7 +104,7 @@ class GrupoController extends Controller
     public function destroy($id)
     {
         Group::find($id)->delete();
-        return redirect()->route('admin.grupo')->with('success', 'Se ha eliminado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se ha eliminado un <strong>Groupo</strong> con éxito.');
     }
     public function trash()
     {
@@ -120,7 +120,7 @@ class GrupoController extends Controller
         $item = Group::withTrashed()->find($id);
         $item->deleted_at = null;
         $item->save();
-        return redirect()->route('admin.grupo.trash')->with('success', 'Se ha restaurado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo.trash')->with('success', 'Se ha restaurado un <strong>Groupo</strong> con éxito.');
     }
 
     /**
@@ -149,7 +149,7 @@ class GrupoController extends Controller
     {
         $item = Group::find($id);
         $item->permissions()->sync($request->permissions);
-        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con éxito.');
     }
 
 }
