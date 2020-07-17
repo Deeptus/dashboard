@@ -47,9 +47,10 @@ class GrupoController extends Controller
      */
     public function store(GroupCreateRequest $request, Group $item)
     {
-        $item->name        = $request->name;
-        $item->slug        = Str::slug($request->name);
-        $item->description = $request->description;
+        $item->name              = $request->name;
+        $item->slug              = Str::slug($request->name);
+        $item->description       = $request->description;
+        $item->display_only_root = $request->display_only_root;
         $item->save();
         return redirect()->route('admin.grupo')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
     }
@@ -88,9 +89,10 @@ class GrupoController extends Controller
     public function update(GroupEditRequest $request, $id)
     {
         $item = Group::find($id);
-        $item->name        = $request->name;
-        $item->slug        = Str::slug($request->name);
-        $item->description = $request->description;
+        $item->name              = $request->name;
+        $item->slug              = Str::slug($request->name);
+        $item->description       = $request->description;
+        $item->display_only_root = $request->display_only_root;
         $item->save();
         return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con éxito.');
     }

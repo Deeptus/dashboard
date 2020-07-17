@@ -32,6 +32,7 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Descripción</th>
+                    <th>Mostrar solo para ROOT</th>
                     <th class="no-sort"></th>
                 </tr>
             </thead>
@@ -40,6 +41,7 @@
                 <tr>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->description }}</td>
+                    <td>{{ $item->display_only_root?'Si':'No' }}</td>
                     <td>
                         @if (!$item->trashed())
                         <a href="{{ route('admin.grupo.edit', [$item->id]) }}" class="btn btn-primary btn-sm">
