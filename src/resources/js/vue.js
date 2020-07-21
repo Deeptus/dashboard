@@ -4,7 +4,7 @@ Vue.component('dynamic-content-form', require('./components/dynamic-content/Dyna
 Vue.component('input-file-image', require('./components/InputFileImageComponent.vue').default);
 
 require('../../../../../../resources/js/custom-dashboard');
-Vue.filter('toCurrency', function (numero) {
+window.toCurrency = (numero) => {
     let decimales = 2
     let separadorDecimal = ','
     let separadorMiles = '.'
@@ -46,10 +46,14 @@ Vue.filter('toCurrency', function (numero) {
     }
 
     return numero;
-});
+}
+Vue.filter('toCurrency', window.toCurrency);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
+    toCurrency(numero) {
+        window.toCurrency(numero)
+    },
     calcIva(val) {
         if (this.$root.actions['display-price-iva']) {
             return (val * ((this.$root.iva / 100) + 1))
@@ -93,6 +97,7 @@ Vue.use(VeeValidate);
 const app = new Vue({
     el: '#app',
     data: {
+        iva: 0,
         markup: 0,
         actions: {
             'mode-edit': false,
