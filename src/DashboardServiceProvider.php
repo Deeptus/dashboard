@@ -41,6 +41,10 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         /*if (version_compare(App::VERSION(), '7.0.0') >= 0) {
             Blade::withoutComponentTags();
         }*/
+        config([
+            'log-viewer.theme'         => 'bootstrap-4',
+            'log-viewer.route.enabled' => false
+        ]);
         Blade::component('dashboard-messages', Messages::class);
         Blade::directive('exception', function () {
             return '<?php try { ?>';
