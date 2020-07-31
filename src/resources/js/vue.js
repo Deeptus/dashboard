@@ -6,8 +6,21 @@ Vue.component('input-file-image', require('./components/InputFileImageComponent.
 require('../../../../../../resources/js/custom-dashboard');
 window.toCurrency = (numero) => {
     let decimales = 2
-    let separadorDecimal = ','
-    let separadorMiles = '.'
+
+    let separadorDecimal = document.head.querySelector('meta[name="decimal-separator"]');
+    if (separadorDecimal) {
+        separadorDecimal = separadorDecimal.content;
+    } else {
+        separadorDecimal = ','
+    }
+
+    let separadorMiles = document.head.querySelector('meta[name="thousands-separator"]');
+    if (separadorMiles) {
+        separadorMiles = separadorMiles.content;
+    } else {
+        separadorMiles = '.'
+    }
+
     let partes, array;
 
     if ( !isFinite(numero) || isNaN(numero = parseFloat(numero)) ) {
@@ -47,12 +60,71 @@ window.toCurrency = (numero) => {
 
     return numero;
 }
+window.getFileSize = (file) => {
+    if (file && file instanceof File) {
+        return file.size/1024
+    }
+    return 0
+}
+window.getValidFileSize = (param = '') => {
+    let maxFileSize = document.head.querySelector('meta[name="3c3aazbg5"]');
+    if (maxFileSize) {
+        maxFileSize = parseFloat(maxFileSize.content)-50;
+    } else {
+        maxFileSize = 128
+    }
+    if (param.search('h') > -1) {
+        if (maxFileSize > 1024) {
+            return window.toCurrency(maxFileSize / 1024)+'mb'
+        }
+        return window.toCurrency(maxFileSize)+'kb'
+    }
+    return maxFileSize
+}
+window.getPostMaxSize = (param = '') => {
+    let postMaxSize = document.head.querySelector('meta[name="f983jd020"]');
+    if (postMaxSize) {
+        postMaxSize = parseFloat(postMaxSize.content)-50;
+    } else {
+        postMaxSize = 128
+    }
+    if (param.search('h') > -1) {
+        if (postMaxSize > 1024) {
+            return window.toCurrency(postMaxSize / 1024)+'mb'
+        }
+        return window.toCurrency(postMaxSize)+'kb'
+    }
+    return postMaxSize
+}
+window.checkValidFileSize = (file) => {
+    if (window.getFileSize(file) > window.getValidFileSize()) {
+        return false
+    }
+    return true
+}
+
 Vue.filter('toCurrency', window.toCurrency);
+Vue.filter('getFileSize', window.getFileSize);
+Vue.filter('getPostMaxSize', window.getPostMaxSize);
+Vue.filter('checkValidFileSize', window.checkValidFileSize);
+Vue.filter('getValidFileSize', window.getValidFileSize);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
     toCurrency(numero) {
-        window.toCurrency(numero)
+        return window.toCurrency(numero)
+    },
+    getPostMaxSize(file) {
+        return window.getPostMaxSize(file)
+    },
+    getFileSize(file) {
+        return window.getFileSize(file)
+    },
+    checkValidFileSize(file) {
+        return window.checkValidFileSize(file)
+    },
+    getValidFileSize(param) {
+        return window.getValidFileSize(param)
     },
     calcIva(val) {
         if (this.$root.actions['display-price-iva']) {
