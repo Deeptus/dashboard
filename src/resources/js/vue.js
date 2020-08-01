@@ -90,9 +90,9 @@ Vue.mixin({
 })
 
 // Vue.use( CKEditor );
-import VeeValidate from 'vee-validate';
+// import { ValidationProvider } from 'vee-validate';
 
-Vue.use(VeeValidate);
+// Vue.component('ValidationProvider', ValidationProvider);
 
 const app = new Vue({
     el: '#app',
