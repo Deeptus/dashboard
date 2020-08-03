@@ -92,3 +92,9 @@ fieldset {
         align-items: center;
     }
 }
+.dashboard-home-card {
+    &:hover {
+        text-decoration: none;
+        transform: scale(1.02);
+    }
+}

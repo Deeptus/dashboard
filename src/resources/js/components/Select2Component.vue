@@ -30,6 +30,7 @@
             value: function (value) {
                 if ([...value].sort().join(",") !== [...$(this.$el).val()].sort().join(","))
                     $(this.$el).val(value).trigger('change');
+                console.log(this.value)
             },
             options: function (options) {
                 $(this.$el).empty().select2({ data: options })
