@@ -174,7 +174,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="input-group mb-3" v-if="isDisplayInput('use-image', languageKey)">
+                            <div class="input-group" v-if="isDisplayInput('use-image', languageKey)">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" :for="'image-'+languageKey" id="inputGroupFileAddon01"><i class="fas fa-2x fa-images"></i></label>
                                 </div>
@@ -184,6 +184,9 @@
                                         <img :src="getPreviewImage(languageKey)" v-if="displayImage" style="max-height: 100%;">
                                     </label>
                                 </div>
+                            </div>
+                            <div class="mb-3">
+                                <div v-if="!$root.checkValidFileSize(content.image[languageKey])" style="color: #FC3939; font-weight: bold; font-size: .9em;">El Archivo pesa mas de lo permitido, peso maximo permitido: <strong>{{ $root.getValidFileSize('h') }}</strong></div>
                             </div>
                             <fieldset v-if="isDisplayInput('use-gallery', languageKey)" @dragover="onDropGalleryOver" @drop="onDropGallery">
                                 <legend>{{ getLabel('use-gallery') }}</legend>
@@ -242,6 +245,7 @@
     import draggable from 'vuedraggable'
     import 'jodit/build/jodit.min.css'
     import JoditVue from 'jodit-vue'
+    import Swal from 'sweetalert2'
 
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
@@ -271,7 +275,6 @@
                     featured: 0,
                     gallery: [],
                 },
-                formData: new FormData(),
                 languages: {},
                 loaded: 0,
                 displayImage: true,
@@ -360,34 +363,53 @@
                 return false
             },
             postForm() {
-                this.loaded = 2
-                var self = this
-                if (self.content.image) {
-                    Object.keys(self.content.image).forEach(function(key){
-                        self.formData.append('images['+key+']', self.content.image[key]);
+                // this.loaded = 2
+                let formData = new FormData()
+                if (this.content.image) {
+                    Object.keys(this.content.image).forEach((key) => {
+                        formData.append('images['+key+']', this.content.image[key]);
                     })
                 }
-                if (self.content.gallery) {
-                    Object.keys(self.content.gallery).forEach(function(key){
-                        let file = self.content.gallery[key]
+                if (this.content.gallery) {
+                    Object.keys(this.content.gallery).forEach((key) => {
+                        let file = this.content.gallery[key]
                         if (file && file instanceof File) {
-                            self.formData.append('gallery['+key+']', file);
+                            formData.append('gallery['+key+']', file);
                         }
                         if (typeof file === 'string' || file instanceof String) {
-                            self.formData.append('gallery['+key+']', file);
+                            formData.append('gallery['+key+']', file);
                         }
                         if (typeof file === 'object' || file instanceof Object) {
-                            self.formData.append('gallery['+key+']', file.path);
+                            formData.append('gallery['+key+']', file.path);
                         }
                     })
                 }
-                self.formData.append('data', JSON.stringify(self.content));
-                console.log(self.formData)
-                axios.post(this.urlAction, self.formData).then((response) => {
+                formData.append('data', JSON.stringify(this.content));
+
+                let formTotalSize = 0
+                for(var pair of formData.entries()) {
+                    if (pair[1] instanceof Blob) 
+                        formTotalSize += pair[1].size;
+                    else
+                        formTotalSize += pair[1].length;
+                }
+                formTotalSize = formTotalSize / 1024
+                if (formTotalSize>this.$root.getPostMaxSize()) {
+                    Swal.fire({
+                        title: 'No se puede enviar',
+                        type: 'error',
+                        // width: 600,
+                        html: '<div style="text-align: center;">El Formulario que desea enviar pesa mas de lo permitido, peso maximo permitido: <strong>' + this.$root.getPostMaxSize('h') + '</strong></div>',
+                        confirmButtonText: 'Cerrar',
+                    })
+                    return false
+                }
+
+                axios.post(this.urlAction, formData).then((response) => {
                     this.loaded = 3
                     var self = this
-                    setTimeout(function(){
-                        window.location.href = self.urlBack
+                    setTimeout(() => {
+                        window.location.href = this.urlBack
                     }, 1000);
                 });
             },

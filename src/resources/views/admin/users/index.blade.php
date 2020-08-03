@@ -48,10 +48,12 @@
                             <i class="fas fa-sm text-white-50 fa-edit"></i>
                             Editar
                         </a>
+                        @if (2==3)
                         <a href="{{ route('admin.user.permission', [$item->id]) }}" class="btn btn-warning btn-sm">
                             <i class="fas fa-sm text-white-50 fa-key"></i>
                             Permisos
                         </a>
+                        @endif
                         <a href="{{ route('admin.user.destroy', [$item->id]) }}" class="btn btn-danger btn-sm">
                             <i class="fas fa-sm text-white-50 fa-trash-alt"></i>
                             Eliminar

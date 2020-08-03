@@ -1,4 +1,6 @@
-require('datatables.net-bs4');
+window.$.fn.DataTable = require('datatables.net')
+// require('datatables.net-bs4')
+
 $.noConflict();
 var lang_es = {
         "sProcessing":     "Procesando...",

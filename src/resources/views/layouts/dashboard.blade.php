@@ -20,7 +20,8 @@
     <meta name="storage-path" content="{{ asset(Storage::url('/')) }}">
     <meta name="decimal-separator" content="{{ __config_var('decimal_separator') }}">
     <meta name="thousands-separator" content="{{ __config_var('thousands_separator') }}">
-
+    <meta name="3c3aazbg5" content="{{ floatval(ini_get('upload_max_filesize')) * 1024 }}">
+    <meta name="f983jd020" content="{{ floatval(ini_get('post_max_size')) * 1024 }}">
 
     <title>{{ config('app.name', 'Panel') }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/nunito/nunito.css') }}">
@@ -114,11 +115,11 @@
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    {{--
                                     <a class="dropdown-item" href="#">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Perfil
                                     </a>
+                                    {{--
                                     <a class="dropdown-item" href="#">
                                         <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Mi Acitividad

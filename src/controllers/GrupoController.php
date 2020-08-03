@@ -47,11 +47,12 @@ class GrupoController extends Controller
      */
     public function store(GroupCreateRequest $request, Group $item)
     {
-        $item->name        = $request->name;
-        $item->slug        = Str::slug($request->name);
-        $item->description = $request->description;
+        $item->name              = $request->name;
+        $item->slug              = Str::slug($request->name);
+        $item->description       = $request->description;
+        $item->display_only_root = $request->display_only_root;
         $item->save();
-        return redirect()->route('admin.grupo')->with('success', 'Se añadio un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
     }
 
     /**
@@ -88,11 +89,12 @@ class GrupoController extends Controller
     public function update(GroupEditRequest $request, $id)
     {
         $item = Group::find($id);
-        $item->name        = $request->name;
-        $item->slug        = Str::slug($request->name);
-        $item->description = $request->description;
+        $item->name              = $request->name;
+        $item->slug              = Str::slug($request->name);
+        $item->description       = $request->description;
+        $item->display_only_root = $request->display_only_root;
         $item->save();
-        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con éxito.');
     }
 
     /**
@@ -104,7 +106,7 @@ class GrupoController extends Controller
     public function destroy($id)
     {
         Group::find($id)->delete();
-        return redirect()->route('admin.grupo')->with('success', 'Se ha eliminado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se ha eliminado un <strong>Groupo</strong> con éxito.');
     }
     public function trash()
     {
@@ -120,7 +122,7 @@ class GrupoController extends Controller
         $item = Group::withTrashed()->find($id);
         $item->deleted_at = null;
         $item->save();
-        return redirect()->route('admin.grupo.trash')->with('success', 'Se ha restaurado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo.trash')->with('success', 'Se ha restaurado un <strong>Groupo</strong> con éxito.');
     }
 
     /**
@@ -149,7 +151,7 @@ class GrupoController extends Controller
     {
         $item = Group::find($id);
         $item->permissions()->sync($request->permissions);
-        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con exitó.');
+        return redirect()->route('admin.grupo')->with('success', 'Se ha editado un <strong>Groupo</strong> con éxito.');
     }
 
 }

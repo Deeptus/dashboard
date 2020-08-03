@@ -57,6 +57,6 @@ class SeoController extends Controller
         $item->setTranslations('description', (array) $request->description);
         $item->setTranslations('keywords', (array) $request->keywords);
         $item->save();
-        return redirect()->route('admin.seo')->with('success', 'Se ha editado la inforación meta de una <strong>Sección</strong> con exitó.');
+        return redirect()->route('admin.seo')->with('success', 'Se ha editado la inforación meta de una <strong>Sección</strong> con éxito.');
     }
 }

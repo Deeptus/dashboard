@@ -62,7 +62,7 @@ class UserController extends Controller
         //$item->sucursal_id  = $request->sucursal_id;
         $item->save();
         $item->groups()->sync($request->groups);
-        return redirect()->route('admin.user')->with('success', 'Se añadio un <strong>Usuario</strong> con exitó.');
+        return redirect()->route('admin.user')->with('success', 'Se añadio un <strong>Usuario</strong> con éxito.');
     }
 
     /**
@@ -120,7 +120,7 @@ class UserController extends Controller
         //$item->sucursal_id  = intval($request->sucursal_id);
         $item->save();
         $item->groups()->sync($request->groups);
-        return redirect()->route('admin.user')->with('success', 'Se ha editado un <strong>Usuario</strong> con exitó.');
+        return redirect()->route('admin.user')->with('success', 'Se ha editado un <strong>Usuario</strong> con éxito.');
     }
 
     /**
@@ -132,7 +132,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         User::find($id)->delete();
-        return redirect()->route('admin.user')->with('success', 'Se ha eliminado un <strong>Usuario</strong> con exitó.');
+        return redirect()->route('admin.user')->with('success', 'Se ha eliminado un <strong>Usuario</strong> con éxito.');
     }
     public function trash()
     {
@@ -148,7 +148,7 @@ class UserController extends Controller
         $item = User::withTrashed()->find($id);
         $item->deleted_at = null;
         $item->save();
-        return redirect()->route('admin.user.trash')->with('success', 'Se ha restaurado un <strong>Usuario</strong> con exitó.');
+        return redirect()->route('admin.user.trash')->with('success', 'Se ha restaurado un <strong>Usuario</strong> con éxito.');
     }
 
     /**
@@ -177,7 +177,7 @@ class UserController extends Controller
     {
         $item = User::find($id);
         $item->permissions()->sync($request->permissions);
-        return redirect()->route('admin.user')->with('success', 'Se ha editado un <strong>Usuario</strong> con exitó.');
+        return redirect()->route('admin.user')->with('success', 'Se ha editado un <strong>Usuario</strong> con éxito.');
     }
 
 }

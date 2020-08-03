@@ -1,19 +1,22 @@
 <template>
     <div>
-        <label :for="id" v-if="label">{{ label }}</label>
-        <div class="input-group mb-3">
+        <label :for="id">{{ label }}</label>
+        <div class="input-group">
             <div class="input-group-prepend">
                 <label class="input-group-text" :for="id"><i class="fas fa-2x fa-images"></i></label>
             </div>
             <div class="input-group-prepend" v-if="getPreviewImage()">
-                <div class="input-group-text px-4 remove-btn" @click="removeImage()"><i class="fas fa-2x fa-trash-alt mr-2"></i> Remove</div>
+                <div class="input-group-text px-4 remove-btn" @click="removeImage()"><i class="fas fa-2x fa-trash-alt mr-2"></i> Quitar</div>
             </div>
             <div class="custom-file">
                 <input type="file" :name="name" class="custom-file-input" :id="id"  @change="onFileChange($event)">
                 <label class="custom-file-label2" :for="id">
-                    <img :src="getPreviewImage()" v-if="displayImage" style="max-height: 100%;">
+                    <img :src="getPreviewImage()" v-if="displayImage" style="height: 100%;">
                 </label>
             </div>
+        </div>
+        <div class="mb-3">
+            <div v-if="!$root.checkValidFileSize(image)" style="color: #FC3939; font-weight: bold; font-size: .9em;">El Archivo pesa mas de lo permitido, peso maximo permitido: <strong>{{ $root.getValidFileSize('h') }}</strong></div>
         </div>
     </div>
 </template>
@@ -105,6 +108,10 @@
             },
             getPreviewImage() {
                 let file = this.image
+                if (!this.$root.checkValidFileSize(file)) {
+                    return publicPATH + '/images/icons/Emblem-important-red.svg'
+                }
+
                 if (!file || !file.type) {
                     if (file.url) {
                         if (typeof file.url === 'string' || file.url instanceof String) {

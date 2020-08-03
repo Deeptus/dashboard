@@ -57,6 +57,6 @@ class ContentController extends Controller
         $item->save();
         $item->updateMeta($request);
 
-        return redirect()->route('content', ['seccion' => $item->section])->with('status', 'Se actualizó el <strong>Contenido</strong> con exitó.');
+        return redirect()->route('content', ['seccion' => $item->section])->with('status', 'Se actualizó el <strong>Contenido</strong> con éxito.');
     }
 }

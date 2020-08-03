@@ -47,7 +47,7 @@ class TranslationController extends Controller
         $item->key         = $request->key;
         $item->translation = $request->translation;
         $item->save();
-        return redirect()->route('admin.translation')->with('success', 'Se añadio una <strong>Traducción</strong> con exitó.');
+        return redirect()->route('admin.translation')->with('success', 'Se añadio una <strong>Traducción</strong> con éxito.');
     }
 
     /**
@@ -86,7 +86,7 @@ class TranslationController extends Controller
         $item->key         = $request->key;
         $item->translation = $request->translation;
         $item->save();
-        return redirect()->route('admin.translation')->with('success', 'Se ha editado una <strong>Traducción</strong> con exitó.');
+        return redirect()->route('admin.translation')->with('success', 'Se ha editado una <strong>Traducción</strong> con éxito.');
     }
 
     /**
@@ -98,7 +98,7 @@ class TranslationController extends Controller
     public function destroy($id)
     {
         Translation::find($id)->delete();
-        return redirect()->route('admin.translation')->with('success', 'Se ha eliminado una <strong>Traducción</strong> con exitó.');
+        return redirect()->route('admin.translation')->with('success', 'Se ha eliminado una <strong>Traducción</strong> con éxito.');
     }
     public function trash()
     {
@@ -113,6 +113,6 @@ class TranslationController extends Controller
         $item = Translation::withTrashed()->find($id);
         $item->deleted_at = null;
         $item->save();
-        return redirect()->route('admin.translation.trash')->with('success', 'Se ha restaurado un <strong>Traducción</strong> con exitó.');
+        return redirect()->route('admin.translation.trash')->with('success', 'Se ha restaurado un <strong>Traducción</strong> con éxito.');
     }
 }
