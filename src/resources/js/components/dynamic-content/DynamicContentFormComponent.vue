@@ -244,7 +244,7 @@
 <script>
     import draggable from 'vuedraggable'
     import 'jodit/build/jodit.min.css'
-    import JoditVue from 'jodit-vue'
+    import { JoditEditor } from 'jodit-vue'
     import Swal from 'sweetalert2'
 
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
@@ -257,7 +257,7 @@
         },
         components: {
             draggable,
-            JoditVue,
+            'jodit-vue': JoditEditor,
         },
         data(){
             return{
