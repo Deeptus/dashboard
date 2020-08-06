@@ -64,24 +64,31 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
         Route::get('/', 'HomeController@index')->name('.home');
 
-    	Route::group([
-    		'prefix' => 'user',
-    		'as' => '.user',
-    	], function() {
-    		Route::get ('/', 'UserController@index');
-    		Route::get ('/create', 'UserController@create')->name('.create');
-    		Route::post('/', 'UserController@store')->name('.store');
-    		Route::get ('/{id}/edit', 'UserController@edit')->name('.edit');
-    		Route::post('/{id}', 'UserController@update')->name('.update');
-    		//
-    		Route::get ('/{id}/delete', 'UserController@destroy')->name('.destroy');
-    		Route::get ('/trash', 'UserController@trash')->name('.trash');
-    		Route::get ('/{id}/restore', 'UserController@restore')->name('.restore');
-    		//
-    		Route::get ('/{id}/permission', 'UserController@permission')->name('.permission');
-    		Route::post('/{id}/permission', 'UserController@updatePermission')->name('.permission.update');
+        Route::group([
+            'prefix' => 'user',
+            'as' => '.user',
+        ], function() {
+            Route::get ('/', 'UserController@index');
+            Route::get ('/create', 'UserController@create')->name('.create');
+            Route::post('/', 'UserController@store')->name('.store');
+            Route::get ('/{id}/edit', 'UserController@edit')->name('.edit');
+            Route::post('/{id}', 'UserController@update')->name('.update');
+            //
+            Route::get ('/{id}/delete', 'UserController@destroy')->name('.destroy');
+            Route::get ('/trash', 'UserController@trash')->name('.trash');
+            Route::get ('/{id}/restore', 'UserController@restore')->name('.restore');
+            //
+            Route::get ('/{id}/permission', 'UserController@permission')->name('.permission');
+            Route::post('/{id}/permission', 'UserController@updatePermission')->name('.permission.update');
 
-    	});
+        });
+        Route::group([
+            'prefix' => 'profile',
+            'as' => '.profile',
+        ], function() {
+            Route::get ('/', 'ProfileController@index');
+            Route::post('/', 'ProfileController@update')->name('.update');
+        });
     	Route::group([
     		'prefix' => 'permission',
     		'as' => '.permission',

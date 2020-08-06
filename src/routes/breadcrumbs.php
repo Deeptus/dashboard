@@ -5,6 +5,10 @@ Breadcrumbs::for('admin.home', function ($trail) {
 	$trail->push('Dashboard', route('admin.home'));
 });
 
+Breadcrumbs::for('admin.profile', function ($trail, $section) {
+    $trail->parent('admin.home');
+    $trail->push('Editar mi perfil', route('admin.profile'));
+});
 
 // Panel > Contenido
 Breadcrumbs::for('admin.dynamic-content', function ($trail, $section) {
