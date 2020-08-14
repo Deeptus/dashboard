@@ -119,3 +119,8 @@ fieldset {
     padding: 0;
     margin-top: 6px;
 }
+
+.dataTables_length, .dataTables_filter {
+    width: 50%;
+    float: left;
+}
