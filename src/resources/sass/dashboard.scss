@@ -19,10 +19,41 @@ body {
     height: 100%;
     overflow-x: hidden;
 }
-.navbar-nav {
-    .nav-item {
-        &.active {
-            font-weight: bold;
+.headband {
+    .navbar-nav {
+        .nav-item {
+            .nav-link {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #535353;
+                font-size: 12px;
+                text-transform: uppercase;
+                * {
+                    margin-left: 7.5px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+                &:hover {
+                    color: $pink;
+                }
+            }
+            &.active {
+                font-weight: bold;
+            }
+        }
+        .nav-item-separator {
+            &::after {
+                content: '|';
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                height: 100%;
+                margin: 0 10px;
+            }
         }
     }
 }
