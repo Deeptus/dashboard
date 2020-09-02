@@ -155,7 +155,23 @@ fieldset {
     width: 50%;
     float: left;
 }
-.iframe-full-auto-adjustable {
+#iframe-full-auto-adjustable {
     width: 100%;
     border: none;
+}
+
+a.paginate_button {
+    border: 1px solid #dee2e6;
+    margin: 1px;
+    padding: 5px 16px;
+    cursor: pointer;
+    background-color: #FFF;
+    color: #007bff;
+    transition: 1s;
+    &.current {
+        background: #c5c5c5;
+        color: #fff;
+        border: 1px solid #a5a5a5;
+        cursor: default;
+    }
 }
