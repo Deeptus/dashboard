@@ -16,7 +16,8 @@
         "spatie/laravel-translatable": "^4.3",
         "barryvdh/laravel-debugbar": "^3.2",
         "arcanedev/log-viewer": "^7.0",
-        "webpatser/laravel-uuid": "^3.0"
+        "webpatser/laravel-uuid": "^3.0",
+        "jenssegers/date": "^4.0"
     },
     "autoload": {
         "files": [

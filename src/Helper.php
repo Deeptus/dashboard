@@ -165,5 +165,3 @@ if (!function_exists('__dolar')) {
 
     }
 }
-
-?>
