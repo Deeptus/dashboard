@@ -15,7 +15,9 @@ class AddUuidToGroupsTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->uuid('uuid')->after('id');
+            if (!Schema::hasColumn('users', 'uuid')) {
+                $table->uuid('uuid')->after('id');
+            }
         });
         $all = User::withTrashed()->get();
         foreach ($all as $key => $item) {

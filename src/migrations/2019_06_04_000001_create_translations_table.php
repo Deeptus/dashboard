@@ -13,6 +13,7 @@ class CreateTranslationsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('translations');
         Schema::create('translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('key')->unique();
@@ -29,6 +30,6 @@ class CreateTranslationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sliders');
+        Schema::dropIfExists('translations');
     }
 }

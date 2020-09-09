@@ -52,8 +52,20 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, User $item)
+    public function store(Request $request, $uuid)
     {
+        if($uuid){
+            $item   = User::where('uuid', $uuid)->firstOrFail();
+            $action = 'edito';
+            if ($request->root != null && $request->root != '' && auth()->user()->root) {
+                $item->root = $request->root;
+            }
+        } else {
+            $item       = new User;
+            $action     = 'añadio';
+            $item->root = 0;
+            $item->uuid = __uuid();
+        }
         $item->name       = $request->name;
         $item->username   = $request->username;
         $item->email      = $request->email;
@@ -71,7 +83,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($uuid)
     {
     }
 
@@ -81,19 +93,22 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($uuid)
     {
-        $groups  = Group::get();
-        if (class_exists('App\Models\Sucursal')) {
-            $sucursales = Sucursal::get();
+        // Verifico si es root
+        if (auth()->user()->root) {
+            // consulto Grupos
+            $groups  = Group::get();
         } else {
-            $sucursales = [];
+            // consulto Grupos
+            $groups  = Group::where('display_only_root', 0)->get();
         }
-        $element = User::with('groups')->find($id);
+
+        $element = User::with('groups')->where('uuid', $uuid)->first();
+        dd('hola');
         $user_groups = $element->groups()->pluck('id')->toArray();
         return view('Dashboard::admin.users.edit', [
             'groups' => $groups,
-            'sucursales' => $sucursales,
             'element' => $element,
             'user_groups' => $user_groups,
             '__admin_active' => 'admin.user'

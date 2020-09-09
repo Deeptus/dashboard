@@ -11,20 +11,6 @@
         <label for="email">Correo electrónico <small style="color: red">(Es el correo a donde llegaran sus notificaciones)</small></label>
         <input type="text" class="form-control" id="email" name="email" value="{{ old('email', isset($element) ? $element->email : null) }}">
     </div>
-    @if (count($sucursales) > 0)
-    <div class="form-group">
-        <label for="sucursal_id">Tienda / Sucursal <small style="color: red">(La sucursal a donde pertenece el usuario)</small></label>
-        <select class="custom-select" id="sucursal_id" name="sucursal_id">
-            <option selected>Seleccione una Tienda</option>
-            @foreach ($sucursales as $sucursal)
-            <option
-            value="{{ $sucursal->id }}"
-            {{ old('sucursal_id', isset($element) ? $element->sucursal_id : null)==$sucursal->id?'selected':'' }}
-            >{{ $sucursal->tienda->nombre }} / {{ $sucursal->description }} / {{ $sucursal->localidad->nombre }}</option>
-            @endforeach
-        </select>
-    </div>
-    @endif
     <div class="form-group">
         <label for="root">Es Super Administrador <small style="color: red">(Esto significa que tendra permisos avanzados)</small></label>
         <select class="custom-select" id="root" name="root">

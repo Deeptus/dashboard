@@ -12,7 +12,7 @@
 */
 
 Route::group([
-    'prefix'     => 'adm',
+    'prefix'     => config('adashboard.prefix', 'adm'),
 ], function() {
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Auth\LoginController@login');
@@ -22,7 +22,7 @@ Route::group([
 
 Route::group(
     [
-        "prefix" => "adm/log-viewer",
+        "prefix" => config('adashboard.prefix', 'adm') . "/log-viewer",
         "namespace" => "\Arcanedev\LogViewer\Http\Controllers"
     ]
     , function() {
@@ -56,7 +56,7 @@ Route::group(
 
 Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
     Route::group([
-    	'prefix'     => 'adm',
+    	'prefix'     => config('adashboard.prefix', 'adm'),
     	'as'         => 'admin',
     	'middleware' => 'auth',
     	//'namespace'  => 'Admin',
@@ -167,6 +167,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('/api/data', 'CompanyDataController@data')->name('.data');
         });
     });
+    /*
     Route::get ('test', function () {
         $test = new \App\Test;
         // $test->text = [
@@ -185,4 +186,5 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             'storage:link' => Illuminate\Support\Facades\Artisan::call('storage:link')
         ]);
     });
+    */
 });
