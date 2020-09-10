@@ -8,6 +8,8 @@ require('./vue');
 
 require('./datatables');
 
+require('select2');
+
 // require('./ckeditor');
 
 let __random   = document.getElementById('random');
@@ -150,7 +152,6 @@ String.prototype.latinise=function(){return this.replace(/[^A-Za-z0-9\[\] ]/g,fu
 String.prototype.latinize=String.prototype.latinise;
 String.prototype.isLatin=function(){return this==this.latinise()}
 
-
 $(document).ready(function() {
-    $('.select2').select2();
+    $('.select2').select2()
 });
