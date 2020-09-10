@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/adm';
+    protected $redirectTo;
 
     /**
      * Create a new controller instance.
@@ -40,6 +40,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        $this->redirectTo = config('adashboard.prefix', 'adm');
         $this->middleware('guest')->except('logout');
     }
     /**

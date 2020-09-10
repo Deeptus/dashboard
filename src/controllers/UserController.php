@@ -105,7 +105,6 @@ class UserController extends Controller
         }
 
         $element = User::with('groups')->where('uuid', $uuid)->first();
-        dd('hola');
         $user_groups = $element->groups()->pluck('id')->toArray();
         return view('Dashboard::admin.users.edit', [
             'groups' => $groups,

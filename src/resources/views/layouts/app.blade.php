@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/nunito/nunito.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/fontawesome/css/all.min.css') }}">
     <link href="{{ asset(config('admin.theme.styles', 'css/theme-02.css')) }}?{{ $assets_version }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('fontello/css/hard.css') }}">
 </head>
 <body>
     <div id="app">
