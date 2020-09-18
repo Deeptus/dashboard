@@ -21,19 +21,7 @@
             </label>
         </div>
     </div>
-
-<!-- <div class="input-group mb-3">
-    <div class="input-group-prepend">
-        <label class="input-group-text" :for="id" id="inputGroupFileAddon01"><i class="fas fa-2x fa-images"></i></label>
-    </div>
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" :id="id"  @change="onFileChange($event)" aria-describedby="inputGroupFileAddon01">
-        <label class="custom-file-label" :data-label-text="labelText" :for="id" aria-label="test">
-            <img :src="getPreviewImage()" v-if="displayImage" style="max-height: 100%;">
-        </label>
-    </div>
-</div>
- --></template>
+</template>
 <script>
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
@@ -48,7 +36,6 @@
         },
         mounted () {
             this.image = this.model
-            console.log(this.model)
             this.displayImage = true
         },
         watch: {
@@ -68,31 +55,77 @@
                 this.$emit('update:model', file)
                 this.displayImage = true
             },
+            getFileIcon(file) {
+                // Este metodo deberia encargarse se sacar las preview de imagenes y pdf
+                // Este metodo deberia ser global o una libreria independiente
+                let icon = false
+                let fileIcon = [
+                    {
+                        ext: [
+                            'application/zip',
+                            'application/x-zip-compressed'
+                        ],
+                        icon: publicPATH + '/images/icons/zip.svg'
+                    },
+                    {
+                        ext: [
+                            'application/pdf'
+                        ],
+                        icon: publicPATH + '/images/icons/pdf.svg'
+                    },
+                    {
+                        ext: [
+                            'text/csv',
+                            'text/xml',
+                            'text/plain'
+                        ],
+                        icon: publicPATH + '/images/icons/txt.svg'
+                    },
+                    {
+                        ext: [
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel'
+                        ],
+                        icon: publicPATH + '/images/icons/xls.svg'
+                    },
+                    {
+                        ext: [
+                            'application/msword'
+                        ],
+                        icon: publicPATH + '/images/icons/doc.svg'
+                    },
+                ]
+                fileIcon.forEach(item => {
+                    if (item.ext.includes(file.type)) {
+                        icon = item.icon
+                    }
+                });
+                return icon
+            },
             getPreviewImage() {
                 let file = this.image
-                if (!file.type) {
-                    return ''
-                }
-                if (file.type == 'application/pdf') {
-                    return publicPATH + '/images/icons/pdf.svg'
-                }
-                if (file.type == 'application/zip') {
-                    return publicPATH + '/images/icons/zip.svg'
-                }
-                let txtExt = ['text/csv', 'text/xml', 'text/plain']
-                if (txtExt.includes(file.type)) {
-                    return publicPATH + '/images/icons/txt.svg'
+
+                if (!this.$root.checkValidFileSize(file)) {
+                    return publicPATH + '/images/icons/Emblem-important-red.svg'
                 }
 
-                let xlsExt = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
-                if (xlsExt.includes(file.type)) {
-                    return publicPATH + '/images/icons/xls.svg'
+                if (!file || !file.type) {
+                    if (file.url) {
+                        if (typeof file.url === 'string' || file.url instanceof String) {
+                            if (file.url.length) {
+                                return file.url
+                            }
+                        }
+                    }
+                    return ''
                 }
-                let docExt = ['application/msword']
-                if (docExt.includes(file.type)) {
-                    return publicPATH + '/images/icons/doc.svg'
+
+                let icon = this.getFileIcon(file)
+                if (icon) {
+                    return icon
                 }
-                let imgExt = ['image/jpeg', 'image/png', 'image/x-icon', 'image/svg+xml', 'image/svg']
+
+                let imgExt = ['image/jpeg', 'image/png', 'image/svg+xml']
                 if (imgExt.includes(file.type)) {
                     if (file && file instanceof File) {
                         return URL.createObjectURL(file)
@@ -105,9 +138,9 @@
                 if (typeof file === 'string' || file instanceof String) {
                     return this.storage_path(file)
                 }
-            },
+            }
         }
-  }
+    }
 </script>
 <style lang="scss" scoped>
     .custom-file-label {
