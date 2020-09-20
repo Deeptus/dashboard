@@ -34,6 +34,16 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
     }
     public function boot()
     {
+        /*
+        $request = request()->all();
+        foreach ($request as $key => $value) {
+            if ($request[$key] == 'undefined' || $request[$key] == 'null' || $request[$key] == 'NULL') {
+                $request[$key] = '';
+            }
+        }
+        */
+        // request()->merge($request);
+
         Artisan::command('dashboard:init', function () {
             $bar = $this->output->createProgressBar(4);
             $bar->start();

@@ -9,6 +9,7 @@
                             <thead>
                                 <tr>
                                     <th></th>
+                                    <th v-if="icon">Ícono</th>
                                     <th>Texto a mostrar</th>
                                     <th>Enlace</th>
                                 </tr>
@@ -19,6 +20,15 @@
                                         <button @click="removeItem(index)" class="btn btn-danger">
                                             <i class="fas fa-trash"></i>
                                         </button>
+                                    </td>
+                                    <td v-if="icon">
+                                        <input
+                                            type="email"
+                                            class="form-control"
+                                            :id="'item.icon'"
+                                            :name="'item.icon'"
+                                            v-model="item.icon"
+                                        >
                                     </td>
                                     <td>
                                         <input
@@ -41,7 +51,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3">
+                                    <td :colspan="cols">
                                         <button @click="addItem" class="btn btn-primary btn-block">
                                             <i class="fas fa-plus"></i> Añadir
                                         </button>
@@ -59,12 +69,13 @@
 
 <script>
     export default {
-        props: ['model', 'legend'],
+        props: ['model', 'legend', 'icon'],
         components: {
         },
         data(){
             return{
-                data: []
+                data: [],
+                cols: 3
             }
         },
         watch: {
@@ -77,6 +88,9 @@
         },
         created() {
             this.$nextTick(() => {
+                if (this.icon) {
+                    this.cols++
+                }
                 if (this.model instanceof Array) {
                     this.data = this.model
                 }
@@ -99,10 +113,18 @@
         },
         methods: {
             addItem() {
-                this.data.push({
+                let layout = {
                     text: '',
                     link: ''
-                })
+                }
+                if (this.icon == true) {
+                    layout = {
+                        icon: '',
+                        text: '',
+                        link: ''
+                    }
+                }
+                this.data.push(layout)
             },
             removeItem(index) {
                 this.data.splice(index, 1);

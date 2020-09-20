@@ -164,17 +164,3 @@ Vue.mixin({
 // import { ValidationProvider } from 'vee-validate';
 
 // Vue.component('ValidationProvider', ValidationProvider);
-
-const app = new Vue({
-    el: '#app',
-    data: {
-        iva: 0,
-        markup: 0,
-        actions: {
-            'mode-edit': false,
-            'price-view': false,
-            'display-markup': false
-        },
-        targetFocus: null
-    }
-});
