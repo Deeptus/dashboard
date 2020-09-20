@@ -19,16 +19,69 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Blade;
 use AporteWeb\Dashboard\Models\Content;
 use AporteWeb\Dashboard\View\Components\Messages;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Collection;
+use AporteWeb\Dashboard\Models\ConfigVar;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    /**
-     * Will make sure that the required modules have been fully loaded
-     * @return void
-     */
+    public function register()
+    {
+        // App::register('Krucas\Notification\NotificationServiceProvider');
+        // App::alias('Notification','Krucas\Notification\Facades\Notification');
+    }
     public function boot()
     {
+        Artisan::command('dashboard:init', function () {
+            $bar = $this->output->createProgressBar(4);
+            $bar->start();
+            Artisan::call('key:generate');
+            $bar->advance();
+            Artisan::call('storage:link');
+            $bar->advance();
+            Artisan::call('migrate:fresh', [
+                '--seed' => true
+            ]);
+            $bar->advance();
+            DB::table('users')->insert([
+                'uuid'     => __uuid(),
+                'name'     => 'Administrador',
+                'username' => 'admin',
+                'email'    => 'admin@local.test',
+                'password' => bcrypt('admin'),
+                'root'     => 1,
+            ]);
+            $bar->advance();
+            $bar->finish();
+            $this->info("\nSe ejecutaron las migraciones, seeders y se creo el usuario admin!");
+        });
+        if (env('FORCE_HTTPS') == true) {
+            \URL::forceScheme('https');
+        }
+        Collection::macro('slug', function () {
+            return $this->map(function ($value) {
+                return Str::slug($value);
+            });
+        });
+        if (config('app.debug')){
+            $assets_version = hash('md5', rand());
+        } else {
+            $assets_version = '9';
+        }
 
+        if (php_sapi_name() != 'cli') {
+            view()->share([
+                'assets_version' => $assets_version,
+                'query_search'  => ''
+            ]);
+
+            view()->composer('*', function ($view) {
+                $view->with('__admin_menu', 'admin.menu');
+                $view->with('admin_default_image', asset('images/no-image.png'));
+            });
+        }
         /*
         example
         @exception
@@ -110,10 +163,5 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             //...with this variable
             // $view->with('__admin_menu', 'Dashboard::admin.menu');
         });
-    }
-    public function register()
-    {
-        // App::register('Krucas\Notification\NotificationServiceProvider');
-        // App::alias('Notification','Krucas\Notification\Facades\Notification');
     }
 }
