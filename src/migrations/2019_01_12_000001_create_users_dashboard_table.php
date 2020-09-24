@@ -13,6 +13,7 @@ class CreateUsersDashboardTable extends Migration
 	 */
 	public function up()
 	{
+		DB::statement('SET FOREIGN_KEY_CHECKS=0');
 		Schema::dropIfExists('users');
 		Schema::create('users', function (Blueprint $table) {
 			$table->bigIncrements('id');
@@ -29,6 +30,7 @@ class CreateUsersDashboardTable extends Migration
 			$table->timestamps();
 			$table->softDeletes();
 		});
+		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 
 	/**
