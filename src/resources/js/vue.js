@@ -102,14 +102,40 @@ window.checkValidFileSize = (file) => {
     return true
 }
 
-Vue.filter('toCurrency', window.toCurrency);
-Vue.filter('getFileSize', window.getFileSize);
-Vue.filter('getPostMaxSize', window.getPostMaxSize);
+window.replaceAll = (str, searchStr, replaceStr) => {
+    // no match exists in string?
+    if (str.indexOf(searchStr) === -1) {
+        // return string
+        return str;
+    }
+
+    // replace and remove first match, and do another recursirve search/replace
+    return replaceAll(
+        str.replace(searchStr, replaceStr),
+        searchStr,
+        replaceStr
+    );
+}
+
+window.storagePath = (file) => {
+    let storagePath = document.head.querySelector('meta[name="storage-path"]').content
+    let url         = storagePath + '/\\' + file
+    url = replaceAll(url, '\\', '/')
+    return replaceAll(url, '//', '/')
+}
+
+Vue.filter('toCurrency',         window.toCurrency);
+Vue.filter('getFileSize',        window.getFileSize);
+Vue.filter('getPostMaxSize',     window.getPostMaxSize);
 Vue.filter('checkValidFileSize', window.checkValidFileSize);
-Vue.filter('getValidFileSize', window.getValidFileSize);
+Vue.filter('getValidFileSize',   window.getValidFileSize);
+Vue.filter('storagePath',        window.storagePath);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
+    storagePath(file) {
+        return window.storagePath(file)
+    },
     toCurrency(numero) {
         return window.toCurrency(numero)
     },
