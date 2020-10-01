@@ -67,6 +67,14 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             $bar->finish();
             $this->info("\nSe ejecutaron las migraciones, seeders y se creo el usuario admin!");
         });
+        Artisan::command('dashboard:permissions', function () {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            DB::table('permissions')->truncate();
+            DB::table('permissions')->insert(config('permissions'));
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');    
+            $this->info("\nSe actualizo el listado de permisos!");
+        });
+
         if (env('FORCE_HTTPS') == true) {
             \URL::forceScheme('https');
         }
@@ -160,9 +168,12 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             config(['seo' => include __DIR__.'/config/seo.php']);
         }
         */
+        /*
+        resolver este bug
         if(file_exists(__DIR__.'/config/permissions.php')) {
             config(['permissions' => include __DIR__.'/config/permissions.php']);
         }
+        */
         config(['admin.theme.styles' => 'css/dashboard.css']);
         config(['admin.text.footer' => 'Todos los derechos reservados © Dashboard 2019']);
         view()->share([
