@@ -13,7 +13,7 @@ class GroupCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->hasPermission('group-create');
+        return auth()->user()->hasPermission('group-create') || auth()->user()->root;
     }
 
     /**

@@ -9,7 +9,7 @@
                             <img :src="createImageURL(item)" alt="">
                         </div>
                         <div class="gallery-item-controls">
-                            <a :href="itemURL(item)" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> Descargar</a>
+                            <a :href="itemURL(item)" target="_blank" class="btn btn-primary btn-download"><i class="fas fa-download"></i> Descargar</a>
                             <button type="button" class="btn btn-danger" @click="deleteFileGallery(index)"><i class="fas fa-trash-alt"></i></button>
                         </div>
                         <div class="gallery-item-path">
@@ -259,5 +259,8 @@
             bottom: 0;
             margin-top: 0;
         }
+    }
+    .btn-download {
+        pointer-events: auto;
     }
 </style>

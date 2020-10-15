@@ -86,7 +86,12 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         if (config('app.debug')){
             $assets_version = hash('md5', rand());
         } else {
-            $assets_version = '9';
+            $assets_version = '11';
+            $path_file = base_path('.git/refs/heads/master');
+            if (file_exists($path_file)) {
+                // $assets_version = trim(exec('git log --pretty="%h" -n1 HEAD'));
+                $assets_version = trim(substr(file_get_contents($path_file), 4));
+            }
         }
 
         if (php_sapi_name() != 'cli') {

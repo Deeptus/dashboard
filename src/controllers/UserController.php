@@ -52,7 +52,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $uuid)
+    public function store(Request $request, $uuid = null)
     {
         if($uuid){
             $item   = User::where('uuid', $uuid)->firstOrFail();
