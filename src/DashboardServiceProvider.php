@@ -23,6 +23,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 use AporteWeb\Dashboard\Models\ConfigVar;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 
 class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -43,7 +44,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         }
         */
         // request()->merge($request);
-
+        Paginator::useBootstrap();
         Artisan::command('dashboard:init', function () {
             $bar = $this->output->createProgressBar(4);
             $bar->start();
