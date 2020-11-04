@@ -2,6 +2,7 @@ window.Vue = require('vue');
 
 Vue.component('dynamic-content-form', require('./components/dynamic-content/DynamicContentFormComponent.vue').default);
 Vue.component('input-file-image', require('./components/InputFileImageComponent.vue').default);
+Vue.component('login-form-modal', require('./components/LoginFormModalComponent.vue').default);
 
 window.toCurrency = (numero) => {
     let decimales = 2
@@ -190,3 +191,32 @@ Vue.mixin({
 // import { ValidationProvider } from 'vee-validate';
 
 // Vue.component('ValidationProvider', ValidationProvider);
+
+/*********************************************************************
+ * 
+ * Renovar token
+ * 
+*********************************************************************/
+window.csrfUpdateCounter = 0
+class Csrf {
+    async refresh() {
+        if  (window.csrfUpdateCounter >= 3) {
+            throw new Error('Refresh limit exceeded');
+        }
+        window.csrfUpdateCounter ++
+        let publicPath = document.head.querySelector('meta[name="public-path"]').content
+        let tokenPath  = publicPath + 'refresh-csrf'
+        await axios.get(tokenPath).then((response) => {
+            document.querySelector('meta[name="csrf-token"]').setAttribute("content", response.data);
+            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data
+            console.log('%c Se actualizo el csrf', 'background: #32a852; color: #ffffff')
+        }).catch((error) => {
+            if (error.response.data.message == 'Unauthenticated.') {
+                throw new Error('Unauthenticated.');
+            }
+            console.log('%c error al refrescar csrf', 'background: #a83232; color: #ffffff')
+        })
+        return true
+    }
+}
+window.csrf = (new Csrf)
