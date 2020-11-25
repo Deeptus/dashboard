@@ -1,6 +1,10 @@
-window.$.fn.DataTable = require('datatables.net')
+import {DataTable} from "simple-datatables"
+const elem = document.querySelectorAll('.data_table')
+if (elem.length) {
+    const dataTable = new DataTable(".data_table");
+}
 
-$.noConflict()
+/*
 var lang_es = {
     "sProcessing":     "Procesando...",
     "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -49,3 +53,4 @@ $('.data_table').DataTable({
         }
     ]
 })
+*/

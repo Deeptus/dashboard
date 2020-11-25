@@ -6,9 +6,18 @@
             $assets_version = '2';
         }
     }
+    if (isset($_COOKIE["sidebarToggleStatus"])) {
+        if ($_COOKIE["sidebarToggleStatus"] == 'show') {
+            $sidebarToggleHide = false;
+        } else {
+            $sidebarToggleHide = true;
+        }
+    } else {
+        $sidebarToggleHide = false;
+    }
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ App::getLocale() }}">
 
 <head>
     <meta charset="utf-8">
@@ -30,13 +39,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('fontello/css/hard.css') }}">
 </head>
 
-<body id="page-top">
-
+<body id="page-top" class="{{ $sidebarToggleHide ? 'sidebar-toggled' : '' }}">
     <!-- Page Wrapper -->
     <div id="app">
         <div id="wrapper">
             <!-- Sidebar -->
-            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion {{ $sidebarToggleHide ? 'toggled' : '' }}" id="accordionSidebar">
                 @if (isset($__admin_menu))
                     @include($__admin_menu)
                 @endif

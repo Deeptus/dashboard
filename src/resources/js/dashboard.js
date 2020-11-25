@@ -4,15 +4,14 @@ import Swal from 'sweetalert2'
 
 require('./vue');
 
-window.dashboardInit = () => {
-	require('../../../../../../node_modules/startbootstrap-sb-admin-2/js/sb-admin-2')
-
+window.dashboardInit = function () {
+	
 	require('./datatables')
-
+	
 	require('select2')
-
+	
 	require('bootstrap-select')
-
+	
 	let __random   = document.getElementById('random');
 	let __display  = document.getElementById('display');
 	let __password = document.getElementById('password');
@@ -156,4 +155,12 @@ window.dashboardInit = () => {
 	$(document).ready(function() {
 		$('.select2').select2()
 	});
+	require('../vendor/startbootstrap-sb-admin-2/js/sb-admin-2')
+	$("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
+		if ($(".sidebar").hasClass("toggled")) {
+			document.cookie = "sidebarToggleStatus=hide";
+		} else {
+			document.cookie = "sidebarToggleStatus=show";
+		}
+	})
 }

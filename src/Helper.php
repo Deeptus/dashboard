@@ -112,10 +112,26 @@ if (!function_exists('__config_var')) {
     }
 }
 
+if (!function_exists('__crudFolder')) {
+    function __crudFolder()
+    {
+        $dirPath = app_path('Dashboard');
+        if (file_exists($dirPath)) {
+            if (!is_dir($dirPath)) {
+                unlink($dirPath);
+                mkdir($dirPath, 0777);
+            }
+        } else {
+            mkdir($dirPath, 0777);
+        }
+        return $dirPath;
+    }
+}
+
 if (!function_exists('__uuid')) {
     function __uuid()
     {
-        return \Webpatser\Uuid\Uuid::generate()->string;
+        return (string) \Illuminate\Support\Str::uuid();
     }
 }
 

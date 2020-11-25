@@ -5,11 +5,14 @@
 @import 'variables';
 
 // Bootstrap
-//@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/bootstrap';
 
-@import '~startbootstrap-sb-admin-2/scss/sb-admin-2';
-@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+@import '../vendor/startbootstrap-sb-admin-2/scss/sb-admin-2';
+@import '~Simple-DataTables/src/style.css';
 @import 'sidebar';
+* {
+    font-family: 'Nunito', sans-serif;
+}
 @for $i from 2 through 10 {
     .flex-grow-#{$i} {
         flex-grow: $i !important;

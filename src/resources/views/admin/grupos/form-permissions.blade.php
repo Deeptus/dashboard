@@ -3,16 +3,16 @@
 	<div class="row">
 		@foreach ($permissions as $permission)
 		<div class="col-md-3">
-			<div class="custom-control custom-switch">
+			<div class="form-check form-switch">
 				<input
 				type="checkbox"
-				class="custom-control-input"
+				class="form-check-input"
 				id="permission-{{ $permission->id }}"
 				name="permissions[]"
 				value="{{ $permission->id }}"
 				{{ in_array($permission->id, $group_permissions)?'checked':'' }}
 				>
-				<label class="custom-control-label" for="permission-{{ $permission->id }}">
+				<label class="form-check-label" for="permission-{{ $permission->id }}">
 					{{ $permission->name }}
 					<small>{{ $permission->slug }}</small>
 				</label>

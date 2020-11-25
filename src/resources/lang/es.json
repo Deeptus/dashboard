@@ -3,5 +3,6 @@
     "User name": "Nombre de usuario",
     "Password": "Clave",
     "Remember Me": "Recordarme en este equipo",
-    "Logout": "Cerrar sesión"
+    "Logout": "Cerrar sesión",
+    "CRUD Generator": "Generador de CLAB"
 }

@@ -4,6 +4,12 @@ Vue.component('dynamic-content-form', require('./components/dynamic-content/Dyna
 Vue.component('input-file-image', require('./components/InputFileImageComponent.vue').default);
 Vue.component('login-form-modal', require('./components/LoginFormModalComponent.vue').default);
 
+Vue.component('crud-generator-form', require('./components/crud-generator/index.vue').default);
+
+Vue.component('crud-form', require('./components/crud/index.vue').default);
+
+Vue.component('select2', require('./components/Select2Component.vue').default);
+
 window.toCurrency = (numero) => {
     let decimales = 2
 

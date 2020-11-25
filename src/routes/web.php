@@ -65,6 +65,40 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get('/', 'HomeController@index')->name('.home');
 
         Route::group([
+            'prefix' => 'crud-generator',
+            'as' => '.crud-generator',
+        ], function() {
+            Route::get ('/', 'CrudGeneratorController@index');
+            Route::get ('/create', 'CrudGeneratorController@create')->name('.create');
+            Route::post('/', 'CrudGeneratorController@store')->name('.store');
+            Route::get ('/{id}/edit', 'CrudGeneratorController@edit')->name('.edit');
+            Route::post('/{id}', 'CrudGeneratorController@update')->name('.update');
+            //
+            Route::get ('/{id}/delete', 'CrudGeneratorController@destroy')->name('.destroy');
+            Route::get ('/trash', 'CrudGeneratorController@trash')->name('.trash');
+            Route::get ('/{id}/restore', 'CrudGeneratorController@restore')->name('.restore');
+            //
+            Route::get ('api/data/{id?}', 'CrudGeneratorController@data')->name('.data');
+        });
+
+        Route::group([
+            'prefix' => 'crud',
+            'as' => '.crud',
+        ], function() {
+            Route::get ('/{tablename}', 'CrudController@index');
+            Route::get ('/{tablename}/create', 'CrudController@create')->name('.create');
+            Route::post('/{tablename}/{id?}', 'CrudController@store')->name('.store');
+            Route::get ('/{tablename}/{id}/edit', 'CrudController@edit')->name('.edit');
+            //
+            Route::get ('/{tablename}/{id}/delete', 'CrudController@destroy')->name('.destroy');
+            Route::get ('/{tablename}/trash', 'CrudController@trash')->name('.trash');
+            Route::get ('/{tablename}/{id}/restore', 'CrudController@restore')->name('.restore');
+            //
+            Route::get ('/{tablename}/api/data/{id?}', 'CrudController@data')->name('.data');
+            Route::get ('/{tablename}/{id}/copy', 'CrudController@copy')->name('.copy');
+        });
+
+        Route::group([
             'prefix' => 'user',
             'as' => '.user',
         ], function() {
@@ -82,6 +116,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::post('/{id}/permission', 'UserController@updatePermission')->name('.permission.update');
 
         });
+        
         Route::group([
             'prefix' => 'profile',
             'as' => '.profile',
