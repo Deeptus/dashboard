@@ -9,6 +9,7 @@
     "minimum-stability": "stable",
     "require": {
         "barryvdh/laravel-dompdf": "^0.8.7",
+        "doctrine/dbal": "^3.0",
         "davejamesmiller/laravel-breadcrumbs": "5.x",
         "mcamara/laravel-localization": "^1.6",
         "phpoffice/phpspreadsheet": "^1.11",
