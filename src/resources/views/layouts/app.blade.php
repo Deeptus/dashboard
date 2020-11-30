@@ -19,7 +19,8 @@
     <meta name="storage-path" content="{{ asset(Storage::url('/')) }}">
     <meta name="decimal-separator" content="{{ __config_var('decimal_separator') }}">
     <meta name="thousands-separator" content="{{ __config_var('thousands_separator') }}">
-
+    <meta name="3c3aazbg5" content="{{ floatval(ini_get('upload_max_filesize')) * 1024 }}">
+    <meta name="f983jd020" content="{{ floatval(ini_get('post_max_size')) * 1024 }}">
 
     <title>{{ config('app.name', 'Panel') }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/nunito/nunito.css') }}">

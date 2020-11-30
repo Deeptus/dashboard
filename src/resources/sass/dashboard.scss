@@ -8,7 +8,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 @import '../vendor/startbootstrap-sb-admin-2/scss/sb-admin-2';
-@import '~Simple-DataTables/src/style.css';
+@import '~simple-dataTables/src/style.css';
 @import 'sidebar';
 * {
     font-family: 'Nunito', sans-serif;
@@ -17,6 +17,9 @@
     .flex-grow-#{$i} {
         flex-grow: $i !important;
     }
+}
+.form-control {
+    min-height: 33px;
 }
 body {
     height: 100%;

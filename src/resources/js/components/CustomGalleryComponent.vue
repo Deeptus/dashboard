@@ -10,6 +10,7 @@
                         </div>
                         <div class="gallery-item-controls">
                             <a :href="itemURL(item)" target="_blank" class="btn btn-primary btn-download"><i class="fas fa-download"></i> Descargar</a>
+                            <div :href="itemURL(item)" target="_blank" class="btn btn-download" :class="{ 'btn-success': fileInfo(item).valid, 'btn-danger': !fileInfo(item).valid }" v-if="fileInfo(item).location == 'fileToUpload'">{{ fileInfo(item).sizeH }}</div>
                             <button type="button" class="btn btn-danger" @click="deleteFileGallery(index)"><i class="fas fa-trash-alt"></i></button>
                         </div>
                         <div class="gallery-item-path">
@@ -70,10 +71,43 @@
         },
         watch: {
             gallery: function(val, oldVal) {
+                let gallerySize = 0
+                let errors = {
+                    ok: true,
+                    filesThatExceed: 0,
+                    gallerySizeExceeded: false
+                }
+                this.gallery.forEach(item => {
+                    if (item instanceof File) {
+                        gallerySize += this.getFileSize(item)
+                        if (!this.checkValidFileSize(item)) {
+                            errors.ok = false
+                            errors.filesThatExceed++
+                        }
+                    }
+                });
+                if (gallerySize > this.getPostMaxSize()) {
+                    errors.ok = false
+                    errors.gallerySizeExceeded = true
+                }
+                this.$emit('errors', errors)
                 this.$emit('update:model', this.gallery || [])
             }
         },
         methods: {
+            fileInfo(item) {
+                let info = {}
+                if (item instanceof File) {
+                    info = {
+                        location: 'fileToUpload',
+                        size: this.getFileSize(item),
+                        valid: this.checkValidFileSize(item),
+                        sizeH: this.getFileSize(item, 'h')
+                    }
+                    return info
+                }
+                return { location: 'inServer' }
+            },
             onDropGalleryOver(e) {
                 var path = e.path || (e.composedPath && e.composedPath())
                 e.preventDefault()

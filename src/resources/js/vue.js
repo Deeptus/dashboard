@@ -66,10 +66,24 @@ window.toCurrency = (numero) => {
 
     return numero;
 }
-window.getFileSize = (file) => {
+window.getFileSize = (file, param = '') => {
     if (file && file instanceof File) {
+
+        if (param.search('h') > -1) {
+            if (file.size / (1024 * 1024) > 1024 ) {
+                return window.toCurrency(file.size / 1024 / 1024 / 1024)+'gb'
+            }
+            
+            if (file.size / 1024 > 1024 ) {
+                return window.toCurrency(file.size / 1024 / 1024)+'mb'
+            }
+
+            return window.toCurrency(file.size / 1024)+'kb'
+        }
+
         return file.size/1024
     }
+
     return 0
 }
 window.getValidFileSize = (param = '') => {
@@ -146,11 +160,11 @@ Vue.mixin({
     toCurrency(numero) {
         return window.toCurrency(numero)
     },
-    getPostMaxSize(file) {
-        return window.getPostMaxSize(file)
+    getPostMaxSize(param) {
+        return window.getPostMaxSize(param)
     },
-    getFileSize(file) {
-        return window.getFileSize(file)
+    getFileSize(file, param) {
+        return window.getFileSize(file, param)
     },
     checkValidFileSize(file) {
         return window.checkValidFileSize(file)
