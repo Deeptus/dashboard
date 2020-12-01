@@ -57,7 +57,7 @@ class CrudController extends Controller
             }    
         }
         foreach ($this->inputs as $inputKey => $input) {
-            if ($input->type == 'select') {
+            if ($input->type == 'select' && $input->valueoriginselector == 'table') {
                 $relations[$input->tabledata] = DB::table($input->tabledata)->pluck($input->tabletextcolumn, $input->tablekeycolumn);
             }
         }    
