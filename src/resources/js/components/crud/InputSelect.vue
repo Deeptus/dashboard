@@ -1,7 +1,8 @@
 <template>
     <div class="form-floating mb-3">
         <select class="form-select" v-model="value.value">
-            <option :value="key" v-for="(option, key) in options" :key="key">{{ option }}</option>
+            <option :value="key" v-for="(option, key) in options" :key="key" v-if="mode == 'table'">{{ option }}</option>
+            <option :value="option.key" v-for="(option, key) in options" :key="key" v-if="mode == 'values'">{{ option.text }}</option>
         </select>
         <label>{{ input.label[lang()] }}</label>
     </div>
@@ -25,7 +26,8 @@
         components: {},
         data(){
             return{
-                options: {}
+                options: {},
+                mode: this.input.valueoriginselector
             }
         },
         created() {
@@ -33,14 +35,16 @@
                 0: 'No',
                 1: 'Yes'
             }
-            if (this.input.type == 'select' && this.input.valueoriginselector == 'table') {
+
+            if (this.mode == 'table') {
                 this.options = this.relations[this.input.tabledata]
-            }else{
+            }else if(this.mode == 'values'){
                 this.options = this.input.options
             }
+            
         },
         mounted () {
-            console.log(this.input)
+            
         },
         watch: {},
         methods: {
