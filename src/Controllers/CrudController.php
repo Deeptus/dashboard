@@ -56,7 +56,9 @@ class CrudController extends Controller
                 $content[$input->columnname] = $item->{$input->columnname};
             }    
         }
+
         foreach ($this->inputs as $inputKey => $input) {
+            
             if ($input->type == 'select' && $input->valueoriginselector == 'table') {
                 $relations[$input->tabledata] = DB::table($input->tabledata)->pluck($input->tabletextcolumn, $input->tablekeycolumn);
             }
@@ -96,15 +98,29 @@ class CrudController extends Controller
 
     public function store(Request $request, $tablename, $id = false)
     {
+
+        $validHelper = [];
+
         if($id){
-            $item   = $this->model::where('id', $id)->firstOrFail();
-            $action = 'edito';
+            $item       = $this->model::where('id', $id)->firstOrFail();
+            $action     = 'edito';
         } else {
             $item       = new $this->model;
             $action     = 'añadio';
         }
+
         foreach ($this->inputs as $inputKey => $input) {
-            $item->{$input->columnname} = $request->{$input->columnname};
+
+           if($input->validate == 1){
+                $validHelper = [ $input->columnname => 'required' ];
+           }
+           
+        }
+
+        $validatedData = $request->validate($validHelper);
+
+        foreach ($this->inputs as $inputKey => $input) {
+           $item->{$input->columnname} = $request->{$input->columnname};
         }
         $item->save();
 
