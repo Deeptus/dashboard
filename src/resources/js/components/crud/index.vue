@@ -27,7 +27,10 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-12" v-if="loaded == 1">
+
+
             <div class="card">
                 <div class="card-header">
                     Crud
@@ -164,7 +167,37 @@
                         this.openLoginFormModal()
                         return true
                     }
-                    console.log(error.response.data)
+
+                    if (error.response.data.message == 'The given data was invalid.'){
+
+
+                        let parsedErrors  = '';
+                        let errorData = error.response.data.errors
+                        console.log(errorData)
+                        Object.keys(error.response.data.errors).forEach(item =>  
+                            
+                            parsedErrors += '<div style="text-align: center;"> ' + errorData[item] + ' </div>'
+                        );
+                        
+
+                        console.log(parsedErrors)
+
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error',
+                            html: parsedErrors,
+                            showCancelButton: false,
+                            confirmButtonText: 'Aceptar',                            
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                
+                            }
+                        })
+
+
+                    }
+
                     this.loaded = 1
                 })
             }

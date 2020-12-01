@@ -112,7 +112,12 @@ class CrudController extends Controller
         foreach ($this->inputs as $inputKey => $input) {
 
            if($input->validate == 1){
+
+            if($input->nullable == "1"){
                 $validHelper = [ $input->columnname => 'required' ];
+            }
+
+
            }
            
         }
