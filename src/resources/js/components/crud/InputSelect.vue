@@ -33,11 +33,15 @@
                 0: 'No',
                 1: 'Yes'
             }
-            if (this.input.type == 'select') {
+            if (this.input.type == 'select' && this.input.valueoriginselector == 'table') {
                 this.options = this.relations[this.input.tabledata]
+            }else{
+                this.options = this.input.options
             }
         },
-        mounted () {},
+        mounted () {
+            console.log(this.input)
+        },
         watch: {},
         methods: {
             lang() {
