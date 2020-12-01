@@ -221,19 +221,57 @@
                                             <label for="floatingInput">MIN</label>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="inputParams(input).includes('tabledata')">
+                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector')">
+                                        <div class="form-floating">
+                                            <select class="form-select" v-model="input.valueoriginselector">
+                                                <option value="table">Table</option>
+                                                <option value="values">Values</option>
+                                            </select>
+                                            <label>VALUES ORIGIN</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4" v-if="inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'values'">
+                                        <div v-if="Array.isArray(input.options)">
+                                            <div class="row" v-for="(option, optionKey) in input.options" :key="input.columnname + optionKey">
+                                                <div class="col-4 pr-0">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" v-model="option.key">
+                                                        <label for="floatingInput">KEY</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 p-0">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" v-model="option.text">
+                                                        <label for="floatingInput">TEXT</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 pl-0 d-flex">
+                                                    <button type="button" @click="removeOption(input, optionKey)" class="btn btn-secondary">
+                                                        <i class="fas fa-trash fa-sm text-white-50"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-sm-flex align-items-center justify-content-center mt-3">
+                                            <button type="button" @click="addOption(input)" class="btn btn-secondary">
+                                                <i class="fas fa-plus fa-sm text-white-50"></i>
+                                                Add Option
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table'">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tabledata">
                                             <label for="floatingInput">TABLE DATA</label>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="inputParams(input).includes('tablekeycolumn')">
+                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table'">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tablekeycolumn">
                                             <label for="floatingInput">TABLE KEY COlUMN</label>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="inputParams(input).includes('tabletextcolumn')">
+                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table'">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tabletextcolumn">
                                             <label for="floatingInput">TABLE TEXT COlUMN</label>
@@ -328,6 +366,19 @@
         mounted () {},
         watch: {},
         methods: {
+            addOption(input) {
+                if (!Array.isArray(input.options)) {
+                    this.$set(input, 'options', [])
+                    // input.options = Vue.observable([])
+                }
+                input.options.push({
+                    key: '',
+                    text: ''
+                })
+            },
+            removeOption(input, key) {
+                input.options.splice(key,1)
+            },
             languagesKeys() {
                 this.languages.keys
             },
@@ -390,19 +441,19 @@
                     params.push('validate', 'label', 'nullable', 'validate')
                 }
                 if (input.type == 'select') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'tabledata', 'tablekeycolumn', 'tabletextcolumn')
+                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
                 }
                 if (input.type == 'radio') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'tabledata', 'tablekeycolumn', 'tabletextcolumn')
+                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
                 }
                 if (input.type == 'checkbox') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'tabledata', 'tablekeycolumn', 'tabletextcolumn')
+                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
                 }
                 if (input.type == 'select2') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'tabledata', 'tablekeycolumn', 'tabletextcolumn')
+                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
                 }
                 if (input.type == 'select2multiple') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'tabledata', 'tablekeycolumn', 'tabletextcolumn')
+                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
                 }
                 return params;
             },

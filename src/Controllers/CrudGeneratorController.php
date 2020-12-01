@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use AporteWeb\Dashboard\Generators\Generator;
+use Illuminate\Support\Facades\Artisan;
 
 class CrudGeneratorController extends Controller
 {
@@ -88,6 +89,7 @@ class CrudGeneratorController extends Controller
         ], ['slug'], ['name', 'description']);
 
         (new Generator($data->table, $data->inputs))->crud();
+        return Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/2020_11_23_000001_generate_crud_tables.php');
         return 1;
         return redirect()->route('admin.crud-generator')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
     }

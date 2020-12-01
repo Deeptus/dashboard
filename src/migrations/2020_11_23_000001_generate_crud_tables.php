@@ -64,7 +64,7 @@ class GenerateCrudTables extends Migration
             $change = false;
             if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
                 $change = true;
-            }    
+            }
             if($input->type == 'text') {
                 $col = $table->string($input->columnname);
             }
@@ -73,7 +73,6 @@ class GenerateCrudTables extends Migration
             }
             if($input->type == 'number') {
                 $col = $table->double($input->columnname);
-                $change = false;
             }
             if($input->type == 'true_or_false') {
                 $col = $table->boolean($input->columnname);
@@ -82,9 +81,13 @@ class GenerateCrudTables extends Migration
                 $col = $table->unsignedBigInteger($input->columnname);
             }
             if($input->nullable == 1) {
-                $col->nullable();
+                $col->nullable(true);
+            } else {
+                $col->nullable(false);
             }
-            $col->change();
+            if ($change) {
+                $col->change();
+            }
         }
         if (!Schema::hasColumn($content->table->tablename, 'created_at')) {
             $table->timestamps();
