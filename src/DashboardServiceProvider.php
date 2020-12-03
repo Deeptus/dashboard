@@ -75,7 +75,15 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             DB::statement('SET FOREIGN_KEY_CHECKS=1');    
             $this->info("\nSe actualizo el listado de permisos!");
         });
-
+        Artisan::command('dashboard:crudeame', function () {
+            $bar = $this->output->createProgressBar(2);
+            $bar->start();
+            $bar->advance();
+            Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/2020_11_23_000001_generate_crud_tables.php');
+            $bar->advance();
+            $bar->finish();
+            $this->info("\nSe actualizaron las tablas del CRUD");
+        });
         if (env('FORCE_HTTPS') == true) {
             \URL::forceScheme('https');
         }
