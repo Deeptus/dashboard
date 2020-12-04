@@ -33,140 +33,98 @@
     <meta name="f983jd020" content="{{ floatval(ini_get('post_max_size')) * 1024 }}">
 
     <title>{{ config('app.name', 'Panel') }}</title>
-    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/nunito/nunito.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/fontawesome/css/all.min.css') }}">
-    <link href="{{ asset(config('admin.theme.styles', 'css/theme-02.css')) }}?{{ $assets_version }}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ asset('fontello/css/hard.css') }}">
+
+    <!-- FontAwesome JS-->
+    <script defer src="{{ url('/') }}/assets/plugins/fontawesome/js/all.min.js"></script>
+    
+    <!-- App CSS -->  
+    <link id="theme-style" rel="stylesheet" href="{{ url('/') }}/css/dashboard.css">
+
 </head>
 
-<body id="page-top" class="{{ $sidebarToggleHide ? 'sidebar-toggled' : '' }}">
-    <!-- Page Wrapper -->
-    <div id="app">
-        <div id="wrapper">
-            <!-- Sidebar -->
-            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion {{ $sidebarToggleHide ? 'toggled' : '' }}" id="accordionSidebar">
-                @if (isset($__admin_menu))
-                    @include($__admin_menu)
-                @endif
-                <!-- Sidebar Toggler (Sidebar) -->
-                <div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    <header class="app-header fixed-top">                   
+        <div class="app-header-inner">  
+            <div class="container-fluid py-2">
+                <div class="app-header-content"> 
+                    <div class="row justify-content-between align-items-center">
+                    
+                    <div class="col-auto">
+                        <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+                        </a>
+                    </div><!--//col-->
+                    <div class="search-mobile-trigger d-sm-none col">
+                        <i class="search-mobile-trigger-icon fas fa-search"></i>
+                    </div><!--//col-->
+
+                    <div class="app-utilities col-auto">
+                        <div class="app-utility-item app-notifications-dropdown dropdown">    
+                            <a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Notifications">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z"/>
+  <path fill-rule="evenodd" d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+</svg>
+                                <span class="icon-badge">3</span>
+                            </a><!--//dropdown-toggle-->
+                            
+                            <div class="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
+                                <div class="dropdown-menu-header p-3">
+                                    <h5 class="dropdown-menu-title mb-0">Notificaciones</h5>
+                                </div><!--//dropdown-menu-title-->
+                                <div class="dropdown-menu-content">
+
+
+                                </div><!--//dropdown-menu-content-->
+                                
+                                <div class="dropdown-menu-footer p-2 text-center d-none">
+                                    <a href="notifications.html"> Ver todas </a>
+                                </div>
+                                                            
+                            </div><!--//dropdown-menu-->                            
+                        </div><!--//app-utility-item-->
+                        <div class="app-utility-item">
+                            <a href="{{ route('admin.crud-generator') }}" title="CRUD">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"/>
+  <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z"/>
+</svg>
+                            </a>
+                        </div><!--//app-utility-item-->
+                        
+                        <div class="app-utility-item app-user-dropdown dropdown">
+                            <a class="dropdown-toggle" id="user-dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="{{ url('/') }}/assets/images/user.png" alt="user profile"></a>
+                            <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
+                                <li><a class="dropdown-item" href="{{ route('admin.profile') }}">Mi perfil</a></li>
+
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ route('logout') }}">Salir</a></li>
+                            </ul>
+                        </div><!--//app-user-dropdown--> 
+                    </div><!--//app-utilities-->
+                </div><!--//row-->
+                </div><!--//app-header-content-->
+            </div><!--//container-fluid-->
+        </div><!--//app-header-inner-->
+                
+
+    @include('Dashboard::admin.menu')
+
+
+    </header><!--//app-header-->
+    
+    <div class="app-wrapper" id="app">
+        
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">
+                <div class="row g-4 mb-4">
+
+                <h1 class="app-page-title">Overview</h1>
+
+                    @yield('content')
+                
                 </div>
-
-            </ul>
-            <!-- End of Sidebar -->
-
-            <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column">
-
-                <!-- Main Content -->
-                <div id="content">
-
-                    <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                        <!-- Sidebar Toggle (Topbar) -->
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
-
-                        <!-- Topbar Navbar -->
-                        <ul class="navbar-nav ml-auto">
-
-                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                                <!-- Dropdown - Messages -->
-                                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                                    <form class="form-inline mr-auto w-100 navbar-search">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="fas fa-search fa-sm"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-
-                            <div class="topbar-divider d-none d-sm-block"></div>
-
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-globe img-profile"></i>
-                                    <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ strtoupper(LaravelLocalization::getCurrentLocale()) }}</span>
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    @foreach (LaravelLocalization::getSupportedLocales() as $key => $lang)
-                                        @if (LaravelLocalization::getCurrentLocale()!=$key)
-                                            <a href="{{ LaravelLocalization::getLocalizedURL($key) }}" class="dropdown-item">
-                                                {{ strtoupper($key) }}
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </li>
-
-                            <div class="topbar-divider d-none d-sm-block"></div>
-
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-user-circle img-profile"></i>
-                                    <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
-                                    {{-- <img class="img-profile rounded-circle" src="{{ asset('img/blank-profile-picture.png') }}"> --}}
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="{{ route('admin.profile') }}">
-                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Perfil
-                                    </a>
-                                    {{--
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Mi Acitividad
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    --}}
-                                    <a class="dropdown-item" href="{{ route('logout') }}" {{--data-toggle="modal" data-target="#logoutModal"--}}>
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Salir
-                                    </a>
-                                </div>
-                            </li>
-
-                        </ul>
-
-                    </nav>
-                    <!-- End of Topbar -->
-
-                    <!-- Begin Page Content -->
-                    <div class="container-fluid">
-
-                        @yield('content')
-
-                    </div>
-                    <!-- /.container-fluid -->
-
-                </div>
-                <!-- End of Main Content -->
-
-                <!-- Footer -->
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>{{ config('admin.text.footer') }}</span>
-                        </div>
-                    </div>
-                </footer>
-                <!-- End of Footer -->
 
             </div>
             <!-- End of Content Wrapper -->
@@ -197,7 +155,7 @@
             </div>
         </div>
     </div>
-
+--}}
         <!-- Scripts -->
         <script src="{{ asset('js/dashboard.js') }}?{{ $assets_version }}" defer></script>
 

@@ -57,9 +57,9 @@ class GenerateCrudTables extends Migration
         if (!Schema::hasColumn($content->table->tablename, 'id')) {
             $table->bigIncrements('id');
         }
-        if (!Schema::hasColumn($content->table->tablename, 'uuid')) {
+        /*if (!Schema::hasColumn($content->table->tablename, 'uuid')) {
             $table->uuid('uuid');
-        }
+        }*/
         foreach ($content->inputs as $inputKey => $input) {
             $change = false;
             if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
@@ -70,6 +70,9 @@ class GenerateCrudTables extends Migration
             }
             if($input->type == 'textarea') {
                 $col = $table->longText($input->columnname);
+            }
+            if($input->type == 'date') {
+                $col = $table->datetime($input->columnname);
             }
             if($input->type == 'number') {
                 $col = $table->double($input->columnname);

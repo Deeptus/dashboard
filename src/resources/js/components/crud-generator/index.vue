@@ -170,6 +170,15 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <div class="row">
+                                    <!--- <div class="col-md" v-if="inputParams(input).includes('visible')">
+                                        <div class="form-floating">
+                                            <select class="form-select" v-model="input.visible">
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                            <label>VISIBLE</label>
+                                        </div>
+                                    </div> ---->
                                     <div class="col-md" v-if="inputParams(input).includes('validate')">
                                         <div class="form-floating">
                                             <select class="form-select" v-model="input.validate">
@@ -386,6 +395,7 @@
                 this.inputs.push({
                     columnname: '',
                     type: 'text',
+                    visible: 1,
                     label: {},
                     unique: 0,
                     default: '',
@@ -455,6 +465,7 @@
                 if (input.type == 'select2multiple') {
                     params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
                 }
+                //params.push('visible')
                 return params;
             },
             rmInput(key) {

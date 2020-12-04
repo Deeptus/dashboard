@@ -1,11 +1,14 @@
 <template>
     <div :class="'col-md-' + input.gridcols">
-        <InputText :value="value" :input="input" v-if="layout[input.type] == 'basic'"></InputText>
+        <InputText :value="value" :input="input" v-if="layout[input.type] == 'basic'" @child-cuit="setDireccion"></InputText>
         <InputSelect :relations="relations" :value="value" :input="input" v-if="layout[input.type] == 'select'"></InputSelect>
+        <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'" ></InputDate>
+
     </div>
 </template>
 <script>
     import InputText from './InputText'
+    import InputDate from './InputDate'
     import InputSelect from './InputSelect'
 
     export default {
@@ -24,7 +27,8 @@
         },
         components: {
             InputText,
-            InputSelect
+            InputSelect,
+            InputDate
         },
         data(){
             return{
@@ -53,8 +57,14 @@
         created() {
         },
         mounted () {},
-        watch: {},
+        watch: {
+
+
+        },
         methods: {
+                setDireccion: function (x) {
+                    console.log(x)
+                }
         },
         computed: {
         }
@@ -64,3 +74,4 @@
 <style lang="scss" scoped>
 
 </style>
+

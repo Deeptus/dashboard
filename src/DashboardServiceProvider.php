@@ -28,11 +28,49 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
 {
+
+
+    protected $package = 'dashboard';
+
     public function register()
     {
+
+        $this->mergeConfig();
+        
+
         // App::register('Krucas\Notification\NotificationServiceProvider');
         // App::alias('Notification','Krucas\Notification\Facades\Notification');
     }
+
+
+    private function mergeConfig()
+    {
+        $path = $this->getConfigPath();
+        $this->mergeConfigFrom($path, 'dashboard');
+    }
+
+    private function publishConfig()
+    {
+        $path = $this->getConfigPath();
+        $this->publishes([$path => config_path('dashboard.php')], 'config');
+    }
+
+    private function publishMigrations()
+    {
+        $path = $this->getMigrationsPath();
+        $this->publishes([$path => database_path('migrations')], 'migrations');
+    }
+
+    private function getConfigPath()
+    {
+        return __DIR__ . '/config/dashboard.php';
+    }
+
+    private function getMigrationsPath()
+    {
+        return __DIR__ . '/../database/migrations/';
+    }
+
     public function boot()
     {
         /*
@@ -44,8 +82,18 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         }
         */
         // request()->merge($request);
+            $this->loadViewsFrom($this->app->resourcePath('views/vendor/dashboard'), 'dashboard');
+
+            $this->publishes([
+                __DIR__.'/resources/views' => resource_path('views/vendor/dashboard')
+            ], 'views');
+
+
         Paginator::useBootstrap();
         Artisan::command('dashboard:init', function () {
+
+
+
             $bar = $this->output->createProgressBar(4);
             $bar->start();
             Artisan::call('key:generate');

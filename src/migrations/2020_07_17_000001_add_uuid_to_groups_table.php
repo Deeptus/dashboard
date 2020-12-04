@@ -19,11 +19,11 @@ class AddUuidToGroupsTable extends Migration
                 $table->uuid('uuid')->after('id');
             }
         });
-        $all = User::withTrashed()->get();
+        /*$all = User::withTrashed()->get();
         foreach ($all as $key => $item) {
             $item->uuid = __uuid();
             $item->save();
-        }
+        }*/
     }
 
     /**

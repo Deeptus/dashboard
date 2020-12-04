@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
-                        <InputLayout :relations="relations" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"></InputLayout>
+                        <InputLayout :relations="relations" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk" ></InputLayout>
                     </div>
                 </div>
             </div>
@@ -173,14 +173,11 @@
 
                         let parsedErrors  = '';
                         let errorData = error.response.data.errors
-                        console.log(errorData)
+
                         Object.keys(error.response.data.errors).forEach(item =>  
                             
-                            parsedErrors += '<div style="text-align: center;"> ' + errorData[item] + ' </div>'
+                            parsedErrors = parsedErrors + '<div style="text-align: center;"> ' + errorData[item] + ' </div>'
                         );
-                        
-
-                        console.log(parsedErrors)
 
                         Swal.fire({
                             title: 'Error',
@@ -206,5 +203,9 @@
         }
     }
 </script>
-<style lang="scss" scoped>
+<style lang="css" scoped>
+.form-label {
+    margin-bottom: .5rem;
+    font-weight: bold;
+}
 </style>

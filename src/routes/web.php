@@ -64,6 +64,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
         Route::get('/', 'HomeController@index')->name('.home');
 
+
         Route::group([
             'prefix' => 'crud-generator',
             'as' => '.crud-generator',
