@@ -6,7 +6,9 @@ Vue.component('login-form-modal', require('./components/LoginFormModalComponent.
 
 Vue.component('crud-generator-form', require('./components/crud-generator/index.vue').default);
 
+
 Vue.component('crud-form', require('./components/crud/index.vue').default);
+Vue.component('InputLayout', require('./components/crud/InputLayout.vue').default);
 
 Vue.component('select2', require('./components/Select2Component.vue').default);
 

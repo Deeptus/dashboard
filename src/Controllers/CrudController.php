@@ -47,6 +47,7 @@ class CrudController extends Controller
         $languages = [];
         $content = null;
         $relations = [];
+        $subForm = [];
         foreach (LaravelLocalization::getLocalesOrder() as $key => $value) {
             $languages[$key] = $value['name'];
         }
@@ -54,13 +55,34 @@ class CrudController extends Controller
             $item = $this->model::where('id', $id)->firstOrFail();
             foreach ($this->inputs as $inputKey => $input) {
                 $content[$input->columnname] = $item->{$input->columnname};
-            }    
+            }
         }
 
         foreach ($this->inputs as $inputKey => $input) {
-            
             if ($input->type == 'select' && $input->valueoriginselector == 'table') {
                 $relations[$input->tabledata] = DB::table($input->tabledata)->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            }
+            if ($input->type == 'subForm') {
+                $dirPath  = app_path('Dashboard');
+                $filePath = $dirPath . '/' . $input->tabledata . '.json';
+
+                $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
+                $className = ucwords($className);
+                $className = str_replace(' ', '', $className);
+                $subModel = "\\App\\Models\\" . $className;
+
+                if (file_exists($filePath)) {
+                    $subFormLayout      = json_decode(file_get_contents($filePath));
+                    $subForm[$input->columnname] = [
+                        'table'  => $subFormLayout->table,
+                        'inputs' => $subFormLayout->inputs
+                    ];
+
+                    if ($id) {
+                        $subForm[$input->columnname]['content'] = $subModel::where($input->tablekeycolumn, $item->id)->get();
+                    }            
+                }
+                // $input->tablekeycolumn id para buscar
             }
         }    
         return response()->json([
@@ -70,13 +92,15 @@ class CrudController extends Controller
             'table'     => $this->table,
             'inputs'    => $this->inputs,
             'relations' => $relations,
-            'content' => $content
+            'subForm'   => $subForm,
+            'content'   => $content
         ]);
     }
 
     public function index()
     {
-        $data = $this->model::paginate(20);
+        // $data = $this->model::paginate(20);
+        $data = $this->model::get();
         return view('Dashboard::admin.crud.index', [
             'data'           => $data,
             'tablename'      => $this->tablename,
@@ -124,10 +148,48 @@ class CrudController extends Controller
 
         $validatedData = $request->validate($validHelper);
 
+        $subForm = json_decode($request->subForm, true);
         foreach ($this->inputs as $inputKey => $input) {
-           $item->{$input->columnname} = $request->{$input->columnname};
+
+            if ($input->type != 'subForm') {
+                $item->{$input->columnname} = $request->{$input->columnname};
+            }
+
+            $item->save();
+
+            if ($input->type == 'subForm') {
+                
+                $dirPath  = app_path('Dashboard');
+                $filePath = $dirPath . '/' . $input->tabledata . '.json';
+    
+                if (file_exists($filePath)) {
+                    $content   = json_decode(file_get_contents($filePath));
+                    $subTable  = $content->table;
+                    $subInputs = $content->inputs;
+                }
+    
+                $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
+                $className = ucwords($className);
+                $className = str_replace(' ', '', $className);
+                $subModel = "\\App\\Models\\" . $className;
+
+                foreach ($subForm[$input->columnname] as $subFormItem) {
+                    if ( array_key_exists('id', $subFormItem) ) {
+                        $subItem = $subModel::find($subFormItem['id']);
+                    } else {
+                        $subItem = new $subModel;
+                    }
+                    foreach ($subInputs as $subInputKey => $subInput) {
+                        if ($subInput->type != 'subForm') {
+                            $subItem->{$subInput->columnname} = $subFormItem[$subInput->columnname];
+                        }
+                        $subItem->{$input->tablekeycolumn} = $item->id;
+                    }
+                    $subItem->save();
+                }
+
+            }
         }
-        $item->save();
 
         return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);
     }

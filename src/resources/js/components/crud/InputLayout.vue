@@ -2,19 +2,25 @@
     <div :class="'col-md-' + input.gridcols">
         <InputText :value="value" :input="input" v-if="layout[input.type] == 'basic'"></InputText>
         <InputSelect :relations="relations" :value="value" :input="input" v-if="layout[input.type] == 'select'"></InputSelect>
+        <SubForm :relations="{}" :value="value" :subForm="subForm" :input="input" v-if="layout[input.type] == 'subForm'"></SubForm>
     </div>
 </template>
 <script>
     import InputText from './InputText'
     import InputSelect from './InputSelect'
+    import SubForm from './SubForm'
 
     export default {
+        name:"InputLayout",
         props: {
             input: {
                 type: Object,
                 default: {}
             },
             relations: {
+                default: {}
+            },
+            subForm: {
                 default: {}
             },
             value: {
@@ -24,7 +30,8 @@
         },
         components: {
             InputText,
-            InputSelect
+            InputSelect,
+            SubForm
         },
         data(){
             return{
@@ -47,6 +54,7 @@
                     "checkbox": 'select',
                     "select2": 'select',
                     "select2multiple": 'select',
+                    "subForm": 'subForm'
                 }
             }
         },

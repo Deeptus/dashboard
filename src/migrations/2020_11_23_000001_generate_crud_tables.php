@@ -74,6 +74,9 @@ class GenerateCrudTables extends Migration
             if($input->type == 'number') {
                 $col = $table->double($input->columnname);
             }
+            if($input->type == 'bigInteger') {
+                $col = $table->bigInteger($input->columnname);
+            }
             if($input->type == 'true_or_false') {
                 $col = $table->boolean($input->columnname);
             }

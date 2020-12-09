@@ -139,6 +139,7 @@
                                         <option value="url">url</option>
                                         <option value="tel">tel</option>
                                         <option value="number">number</option>
+                                        <option value="bigInteger">bigInteger</option>
                                         <option value="money">money</option>
                                         <option value="password">password</option>
                                         <option value="date">date</option>
@@ -153,6 +154,7 @@
                                         <option value="checkbox">checkbox</option>
                                         <option value="select2">select2</option>
                                         <option value="select2multiple">select2multiple</option>
+                                        <option value="subForm">subForm</option>
                                         <!-- -->
                                     </select>
                                     <label>TYPE</label>
@@ -259,13 +261,13 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table'">
+                                    <div class="col-md" v-if="(inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table') || inputParams(input).includes('tabledata')">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tabledata">
                                             <label for="floatingInput">TABLE DATA</label>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table'">
+                                    <div class="col-md" v-if="(inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table') || inputParams(input).includes('tablekeycolumn')">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tablekeycolumn">
                                             <label for="floatingInput">TABLE KEY COlUMN</label>
@@ -418,6 +420,9 @@
                 if (input.type == 'number') {
                     params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
                 }
+                if (input.type == 'bigInteger') {
+                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                }
                 if (input.type == 'money') {
                     params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
                 }
@@ -454,6 +459,9 @@
                 }
                 if (input.type == 'select2multiple') {
                     params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
+                }
+                if (input.type == 'subForm') {
+                    params.push('validate', 'label', 'default', 'nullable', 'tabledata', 'tablekeycolumn')
                 }
                 return params;
             },

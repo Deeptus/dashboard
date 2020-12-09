@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
-                        <InputLayout :relations="relations" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"></InputLayout>
+                        <InputLayout :relations="relations" :subForm="subForm" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"></InputLayout>
                     </div>
                 </div>
             </div>
@@ -90,6 +90,8 @@
                 table: {},
                 inputs: [],
                 content: {},
+                relations: {},
+                subForm: {},
                 loaded: 0
             }
         },
@@ -101,6 +103,7 @@
                     this.table     = response.data.table
                     this.inputs    = response.data.inputs
                     this.relations = response.data.relations
+                    this.subForm   = response.data.subForm
                     this.inputs.forEach(input => {
                         this.content[input.columnname] = {
                             value: input.default,
@@ -117,8 +120,7 @@
             });
         },
         mounted () {},
-        watch: {
-        },
+        watch: {},
         methods: {
             sendForm() {
                 Swal.fire({
@@ -138,16 +140,31 @@
             },
             postForm() {
                 let formData = new FormData()
+                var subForm = {}
 
                 this.inputs.forEach(input => {
-                    formData.append(input.columnname, this.content[input.columnname].value);
+                    if (input.type != 'subForm') {
+                        formData.append(input.columnname, this.content[input.columnname].value);
+                    } else {
+                        subForm[input.columnname] = []
+                        this.content[input.columnname].value.forEach(item => {
+                            let subFormItem = {}
+                            this.subForm[input.columnname].inputs.forEach(subInput => {
+                                subFormItem[subInput.columnname] = item.content[subInput.columnname].value
+                            });
+                            if (item.content?.id?.value) {
+                                subFormItem['id'] = item.content?.id?.value
+                            }
+                            subForm[input.columnname].push(subFormItem)
+                        });
+                    }
                 });
-
+                formData.append('subForm', JSON.stringify(subForm));
 
                 axios.post(this.urlAction, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
-                        //this.loaded = 1
+                        // this.loaded = 1
                         window.location.href = this.urlBack
                     }, 1000);
                 }).catch((error) => {
