@@ -209,6 +209,9 @@ Vue.mixin({
   }
 })
 
+import VueTheMask from 'vue-the-mask'
+Vue.use(VueTheMask)
+
 // Vue.use( CKEditor );
 // import { ValidationProvider } from 'vee-validate';
 
