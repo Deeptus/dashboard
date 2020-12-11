@@ -19,6 +19,14 @@ class AddUuidToGroupsTable extends Migration
                 $table->uuid('uuid')->after('id');
             }
         });
+
+        Schema::table('groups', function (Blueprint $table) {
+            if (!Schema::hasColumn('display_only_root', 'boolean')) {
+                $table->boolean('display_only_root')->after('id');
+            }
+        });
+
+
         /*$all = User::withTrashed()->get();
         foreach ($all as $key => $item) {
             $item->uuid = __uuid();

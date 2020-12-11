@@ -57,6 +57,9 @@ class GenerateCrudTables extends Migration
         if (!Schema::hasColumn($content->table->tablename, 'id')) {
             $table->bigIncrements('id');
         }
+
+        //dd($content);
+        //iF($conten->table)
         /*if (!Schema::hasColumn($content->table->tablename, 'uuid')) {
             $table->uuid('uuid');
         }*/

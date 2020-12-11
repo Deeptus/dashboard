@@ -2,92 +2,42 @@
 
 namespace AporteWeb\Dashboard;
 
-/**
-* SDClapServiceProvider
-*
-* The service provider for the modules. After being registered
-* it will make sure that each of the modules are properly loaded
-* i.e. with their routes, views etc.
-*
-* @author Alfonzo Diez <alfonzodiez@gmail.com>
-* @package AporteWeb\Dashboard
-*/
-
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Blade;
-use AporteWeb\Dashboard\Models\Content;
-use AporteWeb\Dashboard\View\Components\Messages;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
-use AporteWeb\Dashboard\Models\ConfigVar;
+
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 
-class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
+
+use Illuminate\Support\ServiceProvider;
+
+use AporteWeb\Dashboard\Models\ConfigVar;
+use AporteWeb\Dashboard\Models\Content;
+use AporteWeb\Dashboard\View\Components\Messages;
+use AporteWeb\Dashboard\Dashboard;
+
+class DashboardServiceProvider extends ServiceProvider
 {
 
-
-    protected $package = 'dashboard';
 
     public function register()
     {
 
-        $this->mergeConfig();
-        
+        $this->mergeConfigFrom(__DIR__.'/../config/dashboard.php', 'Dashboard');
 
-        // App::register('Krucas\Notification\NotificationServiceProvider');
-        // App::alias('Notification','Krucas\Notification\Facades\Notification');
-    }
-
-
-    private function mergeConfig()
-    {
-        $path = $this->getConfigPath();
-        $this->mergeConfigFrom($path, 'dashboard');
-    }
-
-    private function publishConfig()
-    {
-        $path = $this->getConfigPath();
-        $this->publishes([$path => config_path('dashboard.php')], 'config');
-    }
-
-    private function publishMigrations()
-    {
-        $path = $this->getMigrationsPath();
-        $this->publishes([$path => database_path('migrations')], 'migrations');
-    }
-
-    private function getConfigPath()
-    {
-        return __DIR__ . '/config/dashboard.php';
-    }
-
-    private function getMigrationsPath()
-    {
-        return __DIR__ . '/../database/migrations/';
     }
 
     public function boot()
     {
-        /*
-        $request = request()->all();
-        foreach ($request as $key => $value) {
-            if ($request[$key] == 'undefined' || $request[$key] == 'null' || $request[$key] == 'NULL') {
-                $request[$key] = '';
-            }
-        }
-        */
-        // request()->merge($request);
-            $this->loadViewsFrom($this->app->resourcePath('views/vendor/dashboard'), 'dashboard');
 
-            $this->publishes([
-                __DIR__.'/resources/views' => resource_path('views/vendor/dashboard')
-            ], 'views');
-
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'Dashboard');
+        $this->configurePublishing();
+        $this->configureRoutes();
 
         Paginator::useBootstrap();
         Artisan::command('dashboard:init', function () {
@@ -184,18 +134,18 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             return '<?php } ?>';
         });
         // Load Routes
-        if(file_exists(__DIR__.'/routes/web.php')) {
+        /*if(file_exists(__DIR__.'/routes/web.php')) {
             Route::middleware('web')
                 ->namespace('\AporteWeb\Dashboard\Controllers')
                 ->group(__DIR__.'/routes/web.php');
-        }
-        if(file_exists(__DIR__.'/routes/breadcrumbs.php')) {
+        }*/
+        /*if(file_exists(__DIR__.'/routes/breadcrumbs.php')) {
             include __DIR__.'/routes/breadcrumbs.php';
-        }
+        }*/
         // Load the views
-        if(is_dir(__DIR__.'/resources/views')) {
+       /* if(is_dir(__DIR__.'/resources/views')) {
             $this->loadViewsFrom(__DIR__.'/resources/views', 'Dashboard');
-        }
+        }*/
         // Load Translations
         if(is_dir(__DIR__.'/resources/lang')) {
             $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'Dashboard');
@@ -229,7 +179,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         }
         */
         config(['admin.theme.styles' => 'css/dashboard.css']);
-        config(['admin.text.footer' => 'Todos los derechos reservados © Dashboard 2019']);
+        config(['admin.text.footer' => 'Todos los derechos reservados © Dashboard 2020']);
         view()->share([
             '__admin_active' => 'admin',
         ]);
@@ -239,4 +189,38 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             // $view->with('__admin_menu', 'Dashboard::admin.menu');
         });
     }
+
+
+    protected function configurePublishing()
+    {
+
+
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
+        $this->publishes([
+            __DIR__.'/../config/dashboard.php' => config_path('dashboard.php'),
+        ], 'dashboard');
+
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/dashboard'),
+        ], 'dashboard');
+
+
+    }
+
+    protected function configureRoutes()
+    {
+
+
+        if (Dashboard::$registersRoutes) {
+            Route::middleware('web')
+                ->namespace('\AporteWeb\Dashboard\Http\Controllers')
+                ->group(__DIR__.'/../routes/web.php');
+        }
+
+    }
+
+
 }
