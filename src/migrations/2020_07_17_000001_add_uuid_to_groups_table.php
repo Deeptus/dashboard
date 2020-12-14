@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\User;
 
 class AddUuidToGroupsTable extends Migration
 {
@@ -19,7 +18,11 @@ class AddUuidToGroupsTable extends Migration
                 $table->uuid('uuid')->after('id');
             }
         });
-        $all = User::withTrashed()->get();
+        try {
+            $all = \App\Models\User::withTrashed()->get();
+        } catch (\Throwable $th) {
+            $all = \App\User::withTrashed()->get();
+        }
         foreach ($all as $key => $item) {
             $item->uuid = __uuid();
             $item->save();

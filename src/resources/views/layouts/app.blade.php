@@ -64,7 +64,7 @@
                                     Tienda
                                 </a>
                             </li>--}}
-                            <li class="nav-item ml-2">
+                            <li class="nav-item ms-2">
                                 <a href="{{ route('admin.home') }}" class="nav-link">
                                     <i class="fas fa-tachometer-alt"></i>
                                     Área de Configuración

@@ -71,11 +71,11 @@
                         </button>
 
                         <!-- Topbar Navbar -->
-                        <ul class="navbar-nav ml-auto">
+                        <ul class="navbar-nav ms-auto">
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                             <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-search fa-fw"></i>
                                 </a>
                                 <!-- Dropdown - Messages -->
@@ -97,9 +97,9 @@
 
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-globe img-profile"></i>
-                                    <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ strtoupper(LaravelLocalization::getCurrentLocale()) }}</span>
+                                    <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ strtoupper(LaravelLocalization::getCurrentLocale()) }}</span>
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -117,9 +117,9 @@
 
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-user-circle img-profile"></i>
-                                    <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
+                                    <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
                                     {{-- <img class="img-profile rounded-circle" src="{{ asset('img/blank-profile-picture.png') }}"> --}}
                                 </a>
                                 <!-- Dropdown - User Information -->
