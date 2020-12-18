@@ -12,42 +12,58 @@ window.dashboardInit = function () {
 	
 	require('bootstrap-select')
 	
-	let __random   = document.getElementById('random');
-	let __display  = document.getElementById('display');
-	let __password = document.getElementById('password');
+	let __random   = document.getElementById('random')
+	let __display  = document.getElementById('display')
+	let __password = document.getElementById('password')
+	let __body = document.querySelector('body')
+
 	if (__random) {
 		__random.addEventListener('click', function(event) {
-			let string = Math.random().toString(36).substring(7);
-			__password.value = string;
-		});
+			let string = Math.random().toString(36).substring(7)
+			__password.value = string
+		})
 	}
+
 	if (__display) {
 		__display.addEventListener('click', function(event) {
 			if (__password.type === "password") {
-				__password.type = "text";
+				__password.type = "text"
 			} else {
-				__password.type = "password";
+				__password.type = "password"
 			}
 		});
 	}
+
+	let __sidebarToggleBtns = document.querySelectorAll('#sidebarToggle, #sidebarToggleTop')
+	let __sidebars = document.querySelectorAll('.sidebar')
+	__sidebarToggleBtns.forEach(btn => {
+		btn.addEventListener('click', function(event) {
+
+			__body.classList.toggle('sidebar-toggled')
+
+			if (__body.classList.contains('sidebar-toggled')) {
+				document.cookie = "sidebarToggleStatus=hide; path=/";
+			} else {
+				document.cookie = "sidebarToggleStatus=show; path=/";
+			}
+
+			__sidebars.forEach(sidebar => {
+				sidebar.classList.toggle('toggled')
+			})
+			
+		})
+	})
+
 	$('.custom-file input').change(function (e) {
 		var files = [];
 		for (var i = 0; i < $(this)[0].files.length; i++) {
-			files.push($(this)[0].files[i].name);
+			files.push($(this)[0].files[i].name)
 		}
-		$(this).next('.custom-file-label').html(files.join(', '));
+		$(this).next('.custom-file-label').html(files.join(', '))
 	});
+
 	(function($) {
 		"use strict"; // Start of use strict
-
-		// Toggle the side navigation
-		$("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
-			$("body").toggleClass("sidebar-toggled");
-			$(".sidebar").toggleClass("toggled");
-			if ($(".sidebar").hasClass("toggled")) {
-				$('.sidebar .collapse').collapse('hide');
-			};
-		});
 
 		// Close any open menu accordions when window is resized below 768px
 		$(window).resize(function() {
@@ -156,11 +172,4 @@ window.dashboardInit = function () {
 		$('.select2').select2()
 	});
 	require('../vendor/startbootstrap-sb-admin-2/js/sb-admin-2')
-	$("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
-		if ($(".sidebar").hasClass("toggled")) {
-			document.cookie = "sidebarToggleStatus=hide";
-		} else {
-			document.cookie = "sidebarToggleStatus=show";
-		}
-	})
 }
