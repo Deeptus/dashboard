@@ -163,7 +163,6 @@
 <script>
     // import ClassicEditor from '@novicov/ckeditor5-build-classic-full';
     import draggable from 'vuedraggable'
-    import tinymce from '@tinymce/tinymce-vue';
     import InputFileImage from '../InputFileImageComponent';
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
@@ -175,7 +174,6 @@
         },
         components: {
             draggable,
-            'tinymce': tinymce,
             'input-file-image': InputFileImage
         },
         data(){

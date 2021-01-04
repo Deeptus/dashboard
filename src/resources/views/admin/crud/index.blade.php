@@ -32,6 +32,11 @@
                 <thead>
                     <tr>
                         @foreach ($inputs as $inputKey => $input)
+                            <?php
+                            if ($input->type == 'card-header' || $input->listable == 0) {
+                                continue;
+                            }
+                            ?>
                             <th>{{ $input->label->{App::getLocale()} }}</th>
                         @endforeach                
                         <th class="no-sort"></th>
@@ -41,7 +46,16 @@
                 @endif
                 <tr>
                     @foreach ($inputs as $inputKey => $input)
+                    <?php
+                    if ($input->type == 'card-header' || $input->listable == 0) {
+                        continue;
+                    }
+                    ?>
+                    @if ($input->type == 'select')
+                    <td>{{ $item->{$input->columnname . '_rel_val'} }}</td>
+                    @else
                     <td>{{ $item->{$input->columnname} }}</td>
+                    @endif
                     @endforeach
                     <td>
                         @if (!$item->trashed())

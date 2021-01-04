@@ -35,9 +35,12 @@
                 <div class="card-body pb-0">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" v-model="table.tablename">
-                                <label for="floatingInput">Table name</label>
+                            <div class="input-group mb-3">
+                                <div class="form-floating flex-grow-1">
+                                    <input type="text" class="form-control" v-model="table.tablename">
+                                    <label for="floatingInput">Table name</label>
+                                </div>
+                                <button class="btn btn-outline-secondary" type="button" @click="table.tablename = slugify(table.tablename, '_')"><i class="fas fa-hand-scissors"></i> Slug</button>
                             </div>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -125,15 +128,19 @@
                     <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" v-model="input.columnname">
-                                    <label for="floatingInput">Column name</label>
+                                <div class="input-group mb-3">
+                                    <div class="form-floating flex-grow-1">
+                                        <input type="text" class="form-control" v-model="input.columnname">
+                                        <label for="floatingInput">Column name</label>
+                                    </div>
+                                    <button class="btn btn-outline-secondary" type="button" @click="input.columnname = slugify(input.columnname, '_')"><i class="fas fa-hand-scissors"></i> Slug</button>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select" v-model="input.type">
                                         <option value="text">text</option>
+                                        <option value="card-header">CARD Header</option>
                                         <option value="textarea">textarea</option>
                                         <option value="email">email</option>
                                         <option value="url">url</option>
@@ -148,6 +155,10 @@
                                         <option value="week">week</option>
                                         <option value="password">password</option>
                                         <option value="true_or_false">BOOLEAN (True or False)</option>
+                                        <!-- -->
+                                        <option value="multimedia_file">Multimedia File</option>
+                                        <option value="gallery">Gallery</option>
+                                        <option value="map-select-lat-lng">Map selector Lat-Lon</option>
                                         <!-- -->
                                         <option value="select">select</option>
                                         <option value="radio">radio</option>
@@ -172,6 +183,15 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <div class="row">
+                                    <div class="col-md" v-if="inputParams(input).includes('listable')">
+                                        <div class="form-floating">
+                                            <select class="form-select" v-model="input.listable">
+                                                <option value="0">No</option>
+                                                <option value="1">Yes</option>
+                                            </select>
+                                            <label>LISTABLE</label>
+                                        </div>
+                                    </div>
                                     <div class="col-md" v-if="inputParams(input).includes('validate')">
                                         <div class="form-floating">
                                             <select class="form-select" v-model="input.validate">
@@ -190,7 +210,7 @@
                                             <label>UNIQUE</label>
                                         </div>
                                     </div>
-                                    <div class="col-md">
+                                    <div class="col-md" v-if="inputParams(input).includes('gridcols')">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.gridcols">
                                             <label for="floatingInput">GRID COLS</label>
@@ -403,65 +423,77 @@
             inputParams(input) {
                 let params = []
                 if (input.type == 'text') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                }
+                if (input.type == 'card-header') {
                 }
                 if (input.type == 'textarea') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'email') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'url') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'tel') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'number') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'bigInteger') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'money') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'password') {
-                    params.push('validate', 'label', 'unique', 'default', 'nullable', 'validate', 'max', 'min')
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'true_or_false') {
-                    params.push('label', 'default')
+                    params.push('label', 'default', 'gridcols')
+                }
+
+                if (input.type == 'multimedia_file') {
+                    params.push('listable', 'validate', 'label', 'nullable')
+                }
+                if (input.type == 'gallery') {
+                    params.push('listable', 'validate', 'label', 'nullable')
+                }
+                if (input.type == 'map-select-lat-lng') {
+                    params.push('listable', 'validate', 'label', 'nullable')
                 }
 
                 if (input.type == 'date') {
-                    params.push('validate', 'label', 'nullable', 'validate')
+                    params.push('listable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'time') {
-                    params.push('validate', 'label', 'nullable', 'validate')
+                    params.push('listable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'datetime') {
-                    params.push('validate', 'label', 'nullable', 'validate')
+                    params.push('listable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'week') {
-                    params.push('validate', 'label', 'nullable', 'validate')
+                    params.push('listable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'select') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
+                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'radio') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
+                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'checkbox') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
+                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'select2') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
+                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'select2multiple') {
-                    params.push('validate', 'label', 'default', 'nullable', 'validate', 'valueoriginselector')
+                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'subForm') {
-                    params.push('validate', 'label', 'default', 'nullable', 'tabledata', 'tablekeycolumn')
+                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'tabledata', 'tablekeycolumn')
                 }
                 return params;
             },

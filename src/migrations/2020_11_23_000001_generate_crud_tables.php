@@ -41,11 +41,6 @@ class GenerateCrudTables extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'uuid')) {
-                $table->dropColumn('uuid');
-            }
-        });
     }
     public function table($table, $content)
     {
@@ -61,35 +56,59 @@ class GenerateCrudTables extends Migration
             $table->uuid('uuid');
         }
         foreach ($content->inputs as $inputKey => $input) {
+            // saltar inputs que no son campos realmente
+            $col = [];
+            if($input->type == 'card-header') {
+                continue;
+            }
             $change = false;
             if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
                 $change = true;
             }
             if($input->type == 'text') {
-                $col = $table->string($input->columnname);
+                $col[] = $table->string($input->columnname);
             }
             if($input->type == 'textarea') {
-                $col = $table->longText($input->columnname);
+                $col[] = $table->longText($input->columnname);
             }
             if($input->type == 'number') {
-                $col = $table->double($input->columnname);
+                $col[] = $table->double($input->columnname);
+            }
+            if($input->type == 'date') {
+                $col[] = $table->date($input->columnname);
             }
             if($input->type == 'bigInteger') {
-                $col = $table->bigInteger($input->columnname);
+                $col[] = $table->bigInteger($input->columnname);
             }
             if($input->type == 'true_or_false') {
-                $col = $table->boolean($input->columnname);
+                $col[] = $table->boolean($input->columnname);
             }
             if($input->type == 'select') {
-                $col = $table->unsignedBigInteger($input->columnname);
+                $col[] = $table->unsignedBigInteger($input->columnname);
             }
-            if($input->nullable == 1) {
-                $col->nullable(true);
-            } else {
-                $col->nullable(false);
+            if($input->type == 'gallery') {
+                $col[] = $table->unsignedBigInteger($input->columnname);
             }
-            if ($change) {
-                $col->change();
+            if($input->type == 'map-select-lat-lng') {
+                // deber ser
+                // $col[] = $table->point($input->columnname);
+                // mientras
+                if (Schema::hasColumn($content->table->tablename, $input->columnname . '_lat') || Schema::hasColumn($content->table->tablename, $input->columnname . '_lng')) {
+                    $change = true;
+                }    
+                $col[] = $table->string($input->columnname . '_lat');
+                $col[] = $table->string($input->columnname . '_lng');
+            }
+
+            foreach ($col as $key => $colItem) {
+                if($input->nullable == 1) {
+                    $colItem->nullable(true);
+                } else {
+                    $colItem->nullable(false);
+                }
+                if ($change) {
+                    $colItem->change();
+                }
             }
         }
         if (!Schema::hasColumn($content->table->tablename, 'created_at')) {

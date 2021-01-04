@@ -112,9 +112,21 @@
                     });
                     if(response.data.content) {
                         this.inputs.forEach(input => {
-                            this.content[input.columnname].value = response.data.content[input.columnname]
+                            if (input.type == 'gallery') {
+                                this.content[input.columnname] = {
+                                    value: response.data.galleries[input.columnname],
+                                    errors: []
+                                }
+                            } else if (input.type == 'map-select-lat-lng') {
+                                this.$set(this.content[input.columnname], 'value', {})
+                                this.$set(this.content[input.columnname].value, 'lat', parseFloat(response.data.content[input.columnname + '_lat']))
+                                this.$set(this.content[input.columnname].value, 'lng', parseFloat(response.data.content[input.columnname + '_lng']))
+                            } else {
+                                this.content[input.columnname].value = response.data.content[input.columnname]
+                            }
                         });
                     }
+
                     this.loaded = 1
                 });
             });
@@ -143,7 +155,24 @@
                 var subForm = {}
 
                 this.inputs.forEach(input => {
-                    if (input.type != 'subForm') {
+                    if (input.type == 'gallery') {
+                        if (this.content[input.columnname].value.length) {
+                            this.content[input.columnname].value.forEach((file, index) => {
+                                if (file && file instanceof File) {
+                                    formData.append(input.columnname + '['+index+']', file)
+                                }
+                                if (typeof file === 'string' || file instanceof String) {
+                                    formData.append(input.columnname + '['+index+']', file)
+                                }
+                                if (typeof file === 'object' || file instanceof Object) {
+                                    formData.append(input.columnname + '['+index+']', file.id)
+                                }
+                            })
+                        }
+                    }else if (input.type == 'map-select-lat-lng') {
+                        formData.append(input.columnname + '_lat', this.content[input.columnname].value.lat);
+                        formData.append(input.columnname + '_lng', this.content[input.columnname].value.lng);
+                    }else if (input.type != 'subForm') {
                         formData.append(input.columnname, this.content[input.columnname].value);
                     } else {
                         subForm[input.columnname] = []
@@ -164,7 +193,7 @@
                 axios.post(this.urlAction, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
-                        // this.loaded = 1
+                        //this.loaded = 1
                         window.location.href = this.urlBack
                     }, 1000);
                 }).catch((error) => {
@@ -190,14 +219,10 @@
 
                         let parsedErrors  = '';
                         let errorData = error.response.data.errors
-                        console.log(errorData)
                         Object.keys(error.response.data.errors).forEach(item =>  
                             
                             parsedErrors += '<div style="text-align: center;"> ' + errorData[item] + ' </div>'
                         );
-                        
-
-                        console.log(parsedErrors)
 
                         Swal.fire({
                             title: 'Error',

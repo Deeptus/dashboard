@@ -1,4 +1,6 @@
-window.Vue = require('vue');
+import Vue from 'vue'
+
+window.Vue = Vue
 
 Vue.component('dynamic-content-form', require('./components/dynamic-content/DynamicContentFormComponent.vue').default);
 Vue.component('input-file-image', require('./components/InputFileImageComponent.vue').default);
@@ -6,6 +8,7 @@ Vue.component('login-form-modal', require('./components/LoginFormModalComponent.
 
 Vue.component('crud-generator-form', require('./components/crud-generator/index.vue').default);
 
+// Vue.component('company-data-form', require('./components/company-data/CompanyDataFormComponent.vue').default);
 
 Vue.component('crud-form', require('./components/crud/index.vue').default);
 Vue.component('InputLayout', require('./components/crud/InputLayout.vue').default);
@@ -147,6 +150,28 @@ window.storagePath = (file) => {
     return replaceAll(url, '//', '/')
 }
 
+window.slugify = (text, divider = '-') => {
+    text = text
+        .toString()       // Cast to string
+        .toLowerCase()    // Convert the string to lowercase letters
+        .normalize('NFD') // The normalize() method returns the Unicode Normalization Form of a given string.
+        .trim()           // Remove whitespace from both sides of a string
+
+    if (divider == '-') {
+        text = text
+            .replace(/\s+/g, '-')     // Replace spaces with -
+            .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+            .replace(/\-\-+/g, '-');  // Replace multiple - with single -
+    }
+    if (divider == '_') {
+        text = text
+            .replace(/\s+/g, '_')     // Replace spaces with _
+            .replace(/[^\w\-]+/g, '') // Remove all non_word chars
+            .replace(/\-+/g, '_')  // Replace multiple - with single -
+            .replace(/\_\_+/g, '_');  // Replace multiple - with single -
+    }
+    return text
+}
 Vue.filter('toCurrency',         window.toCurrency);
 Vue.filter('getFileSize',        window.getFileSize);
 Vue.filter('getPostMaxSize',     window.getPostMaxSize);
@@ -156,6 +181,9 @@ Vue.filter('storagePath',        window.storagePath);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
+    slugify(text, divider = '-') {
+        return window.slugify(text, divider)
+    },
     storagePath(file) {
         return window.storagePath(file)
     },

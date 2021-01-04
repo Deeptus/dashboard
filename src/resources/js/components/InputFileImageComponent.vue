@@ -110,6 +110,9 @@
                 return icon
             },
             getPreviewImage() {
+                if (!this.image) {
+                    return ''
+                }
                 let file = this.image
                 if (!this.$root.checkValidFileSize(file)) {
                     return publicPATH + '/images/icons/Emblem-important-red.svg'

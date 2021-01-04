@@ -10,6 +10,8 @@ use AporteWeb\Dashboard\Models\ContentMeta;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use AporteWeb\Dashboard\Models\Gallery;
+use AporteWeb\Dashboard\Models\Multimedia;
 
 class CrudController extends Controller
 {
@@ -45,9 +47,11 @@ class CrudController extends Controller
     public function data($tablename, $id = false)
     {
         $languages = [];
-        $content = null;
+        $content   = null;
         $relations = [];
-        $subForm = [];
+        $galleries = [];
+        $subForm   = [];
+        $item      = null;
         foreach (LaravelLocalization::getLocalesOrder() as $key => $value) {
             $languages[$key] = $value['name'];
         }
@@ -56,11 +60,31 @@ class CrudController extends Controller
             foreach ($this->inputs as $inputKey => $input) {
                 $content[$input->columnname] = $item->{$input->columnname};
             }
+            if ($input->type == 'map-select-lat-lng') {
+                $content[$input->columnname . '_lat'] = $item->{$input->columnname . '_lat'};
+                $content[$input->columnname . '_lng'] = $item->{$input->columnname . '_lng'};
+            }
         }
 
         foreach ($this->inputs as $inputKey => $input) {
+
             if ($input->type == 'select' && $input->valueoriginselector == 'table') {
                 $relations[$input->tabledata] = DB::table($input->tabledata)->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            }
+
+            if ($input->type == 'gallery' && $item) {
+                $galleries[$input->columnname] = [];
+                $gallery = Gallery::find($item->{$input->columnname});
+                if ($gallery) {
+                    foreach ($gallery->items as $key => $item) {
+                        $galleries[$input->columnname][] = [
+                            'url'  => asset(Storage::url($item->path)),
+                            'path' => $item->path,
+                            'id'   => $item->id,
+                            'type' => Storage::mimeType($item->path)
+                        ];
+                    }
+                }
             }
             if ($input->type == 'subForm') {
                 $dirPath  = app_path('Dashboard');
@@ -84,6 +108,7 @@ class CrudController extends Controller
                 }
                 // $input->tablekeycolumn id para buscar
             }
+
         }    
         return response()->json([
             'languages' => $languages,
@@ -93,6 +118,7 @@ class CrudController extends Controller
             'inputs'    => $this->inputs,
             'relations' => $relations,
             'subForm'   => $subForm,
+            'galleries' => $galleries,
             'content'   => $content
         ]);
     }
@@ -134,28 +160,71 @@ class CrudController extends Controller
         }
 
         foreach ($this->inputs as $inputKey => $input) {
-
-           if($input->validate == 1){
-
-            if($input->nullable == "1"){
-                $validHelper = [ $input->columnname => 'required' ];
+            if ($input->type == 'card-header' || $input->type == 'gallery') {
+                continue;
             }
-
-
-           }
-           
+            if($input->validate == 1) {
+                if($input->nullable == "0"){
+                    $validHelper = [ $input->columnname => 'required' ];
+                }
+            }
         }
 
         $validatedData = $request->validate($validHelper);
 
         $subForm = json_decode($request->subForm, true);
         foreach ($this->inputs as $inputKey => $input) {
+            if ($input->type == 'card-header') {
+                continue;
+            }
 
-            if ($input->type != 'subForm') {
+            if ($input->type == 'map-select-lat-lng') {
+                $item->{$input->columnname . '_lat'} = $request->{$input->columnname . '_lat'};
+                $item->{$input->columnname . '_lng'} = $request->{$input->columnname . '_lng'};
+                $item->save();
+                continue;
+            }
+
+            if ($input->type != 'subForm' && $input->type != 'gallery') {
                 $item->{$input->columnname} = $request->{$input->columnname};
             }
 
-            $item->save();
+
+            if ($input->type == 'gallery') {
+                // Gallery
+                // 
+                if ($item->{$input->columnname}) {
+                    $gallery = Gallery::where('id', $item->{$input->columnname})->firstOrNew();
+                } else {
+                    $gallery = new Gallery;
+                }
+                $gallery->description       = $this->tablename . ' gallery' . $item->id;
+                $gallery->save();
+
+                $item->{$input->columnname} = $gallery->id;
+                $item->save();
+
+                $ids = [];
+                foreach ($request->{$input->columnname} as $key => $value) {
+                    if(is_string($value)) {
+                        $ids[$value] = [ 'order' => $key ];
+                    } else {
+                        $path = $value->store('public/content/' . $this->tablename . '/');
+                        $multimedia = new Multimedia;
+                        $multimedia->path          = $path;
+                        $multimedia->order         = null;
+                        $multimedia->filename      = null;
+                        $multimedia->alt           = null;
+                        $multimedia->caption       = null;
+                        $multimedia->original_name = null;
+                        $multimedia->disk          = null;
+                        $multimedia->meta_value    = null;
+                        $multimedia->save();
+                        $ids[$multimedia->id] = [ 'order' => $key ];
+                    }
+                }
+                $gallery->items()->sync($ids);
+            }
 
             if ($input->type == 'subForm') {
                 
@@ -174,6 +243,9 @@ class CrudController extends Controller
                 $subModel = "\\App\\Models\\" . $className;
 
                 foreach ($subForm[$input->columnname] as $subFormItem) {
+                    if ($subFormItem->type == 'card-header') {
+                        continue;
+                    }        
                     if ( array_key_exists('id', $subFormItem) ) {
                         $subItem = $subModel::find($subFormItem['id']);
                     } else {
@@ -234,6 +306,15 @@ class CrudController extends Controller
     public function copy($tablename, $id)
     {
         $new = $this->model::find($id)->replicate();
+        foreach ($this->inputs as $inputKey => $input) {
+
+            if ($input->type == 'select' && $input->valueoriginselector == 'table') {}
+
+            if ($input->type == 'gallery') {
+                $new->{$input->columnname} = NULL;
+            }
+            if ($input->type == 'subForm') {}
+        }
         $new->save();
         return redirect()->route('admin.crud.edit', ['tablename' => $tablename, 'id' => $new->id])->with('success', 'Se ha duplicado un <strong>item</strong> con éxito.');
     }

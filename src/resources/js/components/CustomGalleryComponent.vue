@@ -42,7 +42,7 @@
     export default {
         props: {
             model: {
-                type: Array,
+                default: []
             },
             label: {
                 type: String,
@@ -64,7 +64,14 @@
             }
         },
         created() {
-            this.gallery = JSON.parse(JSON.stringify(this.model || []))
+            let model = []
+            if (Object.prototype.toString.call( this.model ) == '[object Object]') {
+                model = this.model.value
+            }
+            if (Object.prototype.toString.call( this.model ) == '[object Array]') {
+                model = this.model
+            }
+            this.gallery = JSON.parse(JSON.stringify(model || []))
         },
         mounted () {
             this.id = this._uid.toString() + Math.random().toString(36).substring(2)
@@ -90,8 +97,15 @@
                     errors.ok = false
                     errors.gallerySizeExceeded = true
                 }
-                this.$emit('errors', errors)
-                this.$emit('update:model', this.gallery || [])
+                if (Object.prototype.toString.call( this.model ) == '[object Object]') {
+                    // this.$emit('errors', errors)
+                    // this.$emit('update:model', { value: this.gallery, errors: errors })
+                    this.model.value  = this.gallery
+                    this.model.errors = errors
+                } else {
+                    this.$emit('errors', errors)
+                    this.$emit('update:model', this.gallery || [])
+                }
             }
         },
         methods: {

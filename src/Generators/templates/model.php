@@ -6,16 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 <?php if($this->table->softDeletes): ?>
 use Illuminate\Database\Eloquent\SoftDeletes;
 <?php endif ?>
+use Illuminate\Support\Str;
+use AporteWeb\Dashboard\Models\CrudBase;
 
 class <?php print $className ?> extends Model
 {
 <?php if($this->table->softDeletes): ?>
     use SoftDeletes;
 <?php endif ?>
+    use CrudBase;
+
 	protected $table = '<?php print $this->table->tablename ?>';
 
     protected $fillable = [
 <?php foreach ($this->inputs as $key => $input): ?>
+<?php
+if ($input->type == 'card-header') {
+    continue;
+}
+?>
         '<?php print $input->columnname ?>',
 <?php endforeach ?>
 	];
