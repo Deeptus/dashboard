@@ -62,7 +62,9 @@ class CrudController extends Controller
         foreach ($this->inputs as $inputKey => $input) {
             
             if ($input->type == 'select' && $input->valueoriginselector == 'table') {
-                $relations[$input->tabledata] = DB::table($input->tabledata)->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+                $relations[$input->tabledata] = DB::table($input->tabledata)
+                                ->whereNull('deleted_at')
+                                ->pluck($input->tabletextcolumn, $input->tablekeycolumn);
             }
         }    
         return response()->json([
@@ -101,7 +103,7 @@ class CrudController extends Controller
     public function store(Request $request, $tablename, $id = false)
     {
 
-        $validHelper = [];
+        $validHelper = array();
 
         if($id){
             $item       = $this->model::where('id', $id)->firstOrFail();
@@ -116,7 +118,8 @@ class CrudController extends Controller
            
 
             if($input->nullable == 0){
-                $validHelper = [ $input->columnname => 'required' ];
+                //echo $input->columnname.' requerido';
+                $validHelper[$input->columnname] = 'required';
             }
 
 
@@ -126,6 +129,8 @@ class CrudController extends Controller
 
         $validatedData = $request->validate($validHelper);
 
+        //dd($validHelper);
+
         foreach ($this->inputs as $inputKey => $input) {
 
             //echo $input->columnname;
@@ -134,7 +139,7 @@ class CrudController extends Controller
         }
         $item->save();
 
-        return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);
+        return response()->json(['message' => 'Se ' . $action . ' con éxito.']);
     }
 
     public function edit($tablename, $id)
@@ -151,9 +156,9 @@ class CrudController extends Controller
 
     public function destroy($tablename, $id)
     {
-        $item = $this->model::find($id);
+        $item = $this->model::findOrFail($id);
         $item->delete();
-        return redirect()->route('Dashboard::admin.crud', ['tablename' => $tablename, 'id' => $item->id])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
+        return redirect()->route('admin.crud', ['tablename' => $tablename, 'id' => $item->id])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
     }
     public function trash($tablename)
     {
@@ -169,15 +174,15 @@ class CrudController extends Controller
     }
     public function restore($tablename, $id)
     {
-        $item = $this->model::withTrashed()->find($id);
+        $item = $this->model::withTrashed()->findOrFail($id);
         $item->deleted_at = null;
         $item->save();
-        return redirect()->route('Dashboard::admin.crud.trash', ['tablename' => $tablename])->with('success', 'Se ha restaurado un <strong>item</strong> con éxito.');
+        return redirect()->route('admin.crud.trash', ['tablename' => $tablename])->with('success', 'Se ha restaurado un <strong>item</strong> con éxito.');
     }
     public function copy($tablename, $id)
     {
-        $new = $this->model::find($id)->replicate();
+        $new = $this->model::findOrFail($id)->replicate();
         $new->save();
-        return redirect()->route('Dashboard::admin.crud.edit', ['tablename' => $tablename, 'id' => $new->id])->with('success', 'Se ha duplicado un <strong>item</strong> con éxito.');
+        return redirect()->route('admin.crud.edit', ['tablename' => $tablename, 'id' => $new->id])->with('success', 'Se ha duplicado un <strong>item</strong> con éxito.');
     }
 }

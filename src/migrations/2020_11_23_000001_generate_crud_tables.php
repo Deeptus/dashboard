@@ -47,8 +47,19 @@ class GenerateCrudTables extends Migration
             }
         });
     }
+
     public function table($table, $content)
     {
+
+
+        // check if table is al dope
+        $cols   = array();
+        $colsInTable = Schema::getColumnListing($content->table->tablename);
+        //dd($colsInTable);
+
+        //var_dump($columnitas);
+
+
         // added support double to change
         if (!Type::hasType('double')) {
             Type::addType('double', FloatType::class);
@@ -58,16 +69,19 @@ class GenerateCrudTables extends Migration
             $table->bigIncrements('id');
         }
 
-        //dd($content);
-        //iF($conten->table)
-        /*if (!Schema::hasColumn($content->table->tablename, 'uuid')) {
-            $table->uuid('uuid');
-        }*/
+
+
         foreach ($content->inputs as $inputKey => $input) {
             $change = false;
+            $delete = false;
+
+
+            $cols[]  = $input->columnname;
+
             if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
                 $change = true;
             }
+
             if($input->type == 'text') {
                 $col = $table->string($input->columnname);
             }
@@ -87,14 +101,24 @@ class GenerateCrudTables extends Migration
                 $col = $table->unsignedBigInteger($input->columnname);
             }
             if($input->nullable == 1) {
-                $col->nullable(true);
-            } else {
+                $col->nullable();
+            }/* else {
                 $col->nullable(false);
+            }*/
+
+            if($input->default) {
+                $col->default($input->default);
             }
+
             if ($change) {
                 $col->change();
             }
         }
+
+        //$drops = array_diff($cols, $colsInTable);
+        //$table->dropColumn($drops);    
+
+   
         if (!Schema::hasColumn($content->table->tablename, 'created_at')) {
             $table->timestamps();
         }

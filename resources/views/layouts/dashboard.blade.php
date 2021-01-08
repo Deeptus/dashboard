@@ -36,7 +36,8 @@
 
     <!-- FontAwesome JS-->
     <script defer src="{{ url('/') }}/assets/plugins/fontawesome/js/all.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
     <!-- App CSS -->  
     <link id="theme-style" rel="stylesheet" href="{{ url('/') }}/css/dashboard.css">
 
@@ -75,13 +76,24 @@
 
                     <div class="app-utilities col-auto">
                         <div class="app-utility-item app-notifications-dropdown dropdown">    
+                            <a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Imprimir">
+
+                                <svg width="1em" height="1em"  fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+  <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+  <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+</svg>
+                                
+                                </a>
+                            </div>
+
+                        <div class="app-utility-item app-notifications-dropdown dropdown">    
                             <a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Notifications">
                                 <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z"/>
   <path fill-rule="evenodd" d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
 </svg>
-                                <span class="icon-badge">3</span>
+                                <span class="icon-badge">0</span>
                             </a><!--//dropdown-toggle-->
                             
                             <div class="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
@@ -99,6 +111,8 @@
                                                             
                             </div><!--//dropdown-menu-->                            
                         </div><!--//app-utility-item-->
+
+@if (auth()->user()->root)
                         <div class="app-utility-item">
                             <a href="{{ route('admin.crud-generator')}}" title="CRUD">
                                 <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
@@ -108,7 +122,8 @@
 </svg>
                             </a>
                         </div><!--//app-utility-item-->
-                        
+@endif
+
                         <div class="app-utility-item app-user-dropdown dropdown">
                             <a class="dropdown-toggle" id="user-dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="{{ url('/') }}/assets/images/user.png" alt="user profile"></a>
                             <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
@@ -148,11 +163,11 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
+    <!-- Scroll to Top Button
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
+    -->
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -171,7 +186,7 @@
             </div>
         </div>
     </div>
---}}
+
         <!-- Scripts -->
         <script src="{{ asset('js/dashboard.js') }}?{{ $assets_version }}" defer></script>
 

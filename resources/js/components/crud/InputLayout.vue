@@ -1,8 +1,8 @@
 <template>
-    <div :class="'col-md-' + input.gridcols" >
+    <div :class="'col-md-' + input.gridcols">
 
 
-        <InputText  :value="value" :input="input" v-if="layout[input.type] == 'basic'" :afipdata="this.propObject"></InputText>
+        <InputText  :value="value" :input="input" v-if="layout[input.type] == 'basic'" ></InputText>
 
 
         <InputSelect :relations="relations" :value="value" :input="input" v-if="layout[input.type] == 'select'"></InputSelect>

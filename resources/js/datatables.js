@@ -1,22 +1,7 @@
 import {DataTable} from "simple-datatables"
 const elem = document.querySelectorAll('.data_table')
 if (elem.length) {
-         const config = {
-             elem,
-             filters: {"Job": ["Assistant", "Manager"],
-                       "Email": [e => e.endsWith('.edu'), e => e.endsWith('.com')],
-                       "Ext.": [e => e > 6000]},
 
-             columns: [{ select: 4, type: 'date', format: 'MM/DD/YYYY' }]
-         };
-
-    const dataTable = new DataTable(".data_table",config);
-
-
-
-
-}
-/*
 var lang_es = {
     "sProcessing":     "Procesando...",
     "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -54,15 +39,23 @@ if (colSortDesc>=0) {
     order = [[ colSortDesc, "desc" ]]
 }
 
-$('.data_table').DataTable({
+
+
+const dataTable = new DataTable(".data_table",
+{
     "order": order,
-	"language": lang_es,
+    "language": lang_es,
     "autoWidth": false,
-	"columnDefs": [
+    "columnDefs": [
         {
             "targets": 'no-sort',
             "orderable": false
         }
     ]
-})
-*/
+});
+
+
+
+
+}
+

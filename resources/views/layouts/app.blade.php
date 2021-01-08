@@ -121,7 +121,6 @@
         @endauth
         <main class="py-4">
 
-            {{ csrf_token() }}
             @yield('content')
         </main>
     </div>

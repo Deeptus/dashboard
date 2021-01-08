@@ -30,21 +30,21 @@
 
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-12 col-md-12 mb-12">
-        <div class="app-card app-card-orders-table shadow-sm mb-5">
-        <div class="app-card-body">
+
         <div class="table-responsive">
         @foreach ($data as $item)
             @if ($loop->first)
             <!-- <table class="data_table table table-striped table-bordered display"> ------>
-                <table class="data_table table app-table-hover mb-0 text-left">
+
+                <table class="data_table  table app-table-hover mb-0 text-left">
                 <thead>
                     <tr>
                         @foreach ($inputs as $inputKey => $input)
                         @if(isset($input->visible) && $input->visible == 1)
-                            <th class="cell">{{ $input->label->{App::getLocale()} }} {{ $input->type }} </th>
+                            <th class="cell">{{ $input->label->{App::getLocale()} }} </th>
                         @endif
                         @endforeach                
-                        <th class="cell"></th>
+                        <th class="cell"> - </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@
 
 
 
-                    <td>
+                   <td class="cell">
 
 
                        @if($input->type == 'select' && $input->valueoriginselector == 'values')
@@ -106,7 +106,7 @@
 
                     @endif
                     @endforeach
-                    <td>
+                   <td class="cell" data-sortable="false">
                         @if (!$item->trashed())
                         <a href="{{ route('admin.crud.edit', ['tablename' => $tablename, 'id' => $item->id]) }}" class="btn btn-sm app-btn-primary">
                             <i class="fas fa-sm text-white-50 fa-edit"></i>

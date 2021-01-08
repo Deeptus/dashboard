@@ -40,7 +40,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->redirectTo = '/adm'; //config('adashboard.prefix', 'adm');
+        $this->redirectTo = '/adm/home'; //config('adashboard.prefix', 'adm');
         $this->middleware('guest')->except('logout');
     }
     protected function authenticated($request, $user)
