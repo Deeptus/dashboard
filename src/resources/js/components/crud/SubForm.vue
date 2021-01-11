@@ -1,6 +1,6 @@
 <template>
     <fieldset class="mb-3">
-        <legend>Personalia:</legend>
+        <legend>{{ input.label[this.lang()] }}:</legend>
         <div class="row" v-for="(item, key) in items" :key="key">
             <InputLayout :relations="{}" :subForm="{}" :value="item.content[input.columnname]" :input="input" v-for="(input, inputk) in subForm[input.columnname].inputs" :key="inputk"></InputLayout>
             <hr class="mt-0">
@@ -73,6 +73,9 @@
             }
         },
         methods: {
+            lang() {
+                return document.documentElement.lang
+            },
             mapItems() {
                 if (Object.prototype.toString.call( this.items ) == '[object Array]') {
                     this.items.forEach(item => {

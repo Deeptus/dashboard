@@ -142,6 +142,7 @@
                                         <optgroup label="Text">
                                             <option value="text">text</option>
                                             <option value="textarea">textarea</option>
+                                            <option value="wysiwyg">WYSIWYG</option>
                                             <option value="email">email</option>
                                             <option value="url">url</option>
                                             <option value="tel">tel</option>
@@ -436,6 +437,9 @@
                 if (input.type == 'card-header') {
                 }
                 if (input.type == 'textarea') {
+                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                }
+                if (input.type == 'wysiwyg') {
                     params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'email') {

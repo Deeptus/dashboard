@@ -44,11 +44,22 @@ class CrudController extends Controller
 
     }
     public function getInput($id, $input, $content, $relations, $galleries, $subForm, $item) {
+
+        $found = false;
+
         if ($input->type == 'select' && $input->valueoriginselector == 'table') {
+            $found = true;
             $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
         }
 
+        if ($input->type == 'map-select-lat-lng') {
+            $found = true;
+            $content[$input->columnname . '_lat'] = $item->{$input->columnname . '_lat'};
+            $content[$input->columnname . '_lng'] = $item->{$input->columnname . '_lng'};
+        }
+
         if ($input->type == 'multimedia_file') {
+            $found = true;
             $file = Multimedia::find($item->{$input->columnname . '_id'});
             if ($file) {
                 $content[$input->columnname] = [
@@ -61,6 +72,7 @@ class CrudController extends Controller
         }
 
         if ($input->type == 'gallery' && $item) {
+            $found = true;
             $galleries[$input->columnname] = [];
             $gallery = Gallery::find($item->{$input->columnname});
             if ($gallery) {
@@ -75,6 +87,7 @@ class CrudController extends Controller
             }
         }
         if ($input->type == 'subForm') {
+            $found = true;
             $dirPath  = app_path('Dashboard');
             $filePath = $dirPath . '/' . $input->tabledata . '.json';
 
@@ -110,6 +123,9 @@ class CrudController extends Controller
             }
             // $input->tablekeycolumn id para buscar
         }
+        if (!$found) {
+            $content[$input->columnname] = $item->{$input->columnname};
+        }
         return [
             'input'     => $input,
             'content'   => $content,
@@ -131,13 +147,6 @@ class CrudController extends Controller
         }
         if ($id) {
             $item = $this->model::where('id', $id)->firstOrFail();
-            foreach ($this->inputs as $inputKey => $input) {
-                $content[$input->columnname] = $item->{$input->columnname};
-            }
-            if ($input->type == 'map-select-lat-lng') {
-                $content[$input->columnname . '_lat'] = $item->{$input->columnname . '_lat'};
-                $content[$input->columnname . '_lng'] = $item->{$input->columnname . '_lng'};
-            }
         }
 
         foreach ($this->inputs as $inputKey => $input) {
@@ -281,17 +290,20 @@ class CrudController extends Controller
             $className = ucwords($className);
             $className = str_replace(' ', '', $className);
             $subModel = "\\App\\Models\\" . $className;
-
-            foreach ($data[$input->columnname] as $subFormItem) {
-                if ( array_key_exists('id', $subFormItem) ) {
-                    $subItem = $subModel::find($subFormItem['id']);
-                } else {
-                    $subItem = new $subModel;
+            try {
+                foreach ($data[$input->columnname] as $subFormItem) {
+                    if ( array_key_exists('id', $subFormItem) ) {
+                        $subItem = $subModel::find($subFormItem['id']);
+                    } else {
+                        $subItem = new $subModel;
+                    }
+                    foreach ($subInputs as $subInputKey => $subInput) {
+                        $subFormItem[$input->tablekeycolumn] = $item->id;
+                        $this->attachInput($subItem, $subInput, $subFormItem);
+                    }
                 }
-                foreach ($subInputs as $subInputKey => $subInput) {
-                    $subFormItem[$input->tablekeycolumn] = $item->id;
-                    $this->attachInput($subItem, $subInput, $subFormItem);
-                }
+            } catch (\Throwable $th) {
+                // dd($data);
             }
 
             return true;

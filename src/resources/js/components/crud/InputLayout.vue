@@ -7,6 +7,7 @@
         <CustomGallery :label="input.label[lang()]" :model.sync="value" v-if="input.type == 'gallery'"></CustomGallery>
         <MapSelectLatLon :value="value" :input="input" v-if="input.type == 'map-select-lat-lng'"></MapSelectLatLon>
         <MultimediaFile :value="value" :input="input" v-if="input.type == 'multimedia_file'"></MultimediaFile>
+        <wysiwyg :value="value" :input="input" v-if="input.type == 'wysiwyg'"></wysiwyg>
         <div v-if="displayDebug == 1">{{ value }} <button @click="reloadDebug">reload</button></div>
         <div v-if="input.type == 'card-header'" class="card-header">
             {{ input.columnname }}
@@ -21,6 +22,7 @@
     import MapSelectLatLon from './MapSelectLatLon'
     import CustomGallery   from '../CustomGalleryComponent'
     import MultimediaFile  from './MultimediaFile'
+    import Wysiwyg  from './Wysiwyg'
 
     export default {
         name:"InputLayout",
@@ -47,7 +49,8 @@
             SubForm,
             MapSelectLatLon,
             MultimediaFile,
-            CustomGallery
+            CustomGallery,
+            Wysiwyg
         },
         data(){
             return{

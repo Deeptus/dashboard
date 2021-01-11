@@ -71,6 +71,9 @@ class GenerateCrudTables extends Migration
             if($input->type == 'textarea') {
                 $col[] = $table->longText($input->columnname);
             }
+            if($input->type == 'wysiwyg') {
+                $col[] = $table->longText($input->columnname);
+            }
             if($input->type == 'number') {
                 $col[] = $table->double($input->columnname);
             }
@@ -87,6 +90,9 @@ class GenerateCrudTables extends Migration
                 $col[] = $table->unsignedBigInteger($input->columnname);
             }
             if($input->type == 'multimedia_file') {
+                if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
+                    $change = false;
+                }    
                 if (Schema::hasColumn($content->table->tablename, $input->columnname . '_id')) {
                     $change = true;
                 }
