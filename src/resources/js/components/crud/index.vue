@@ -150,51 +150,58 @@
                     }
                 })
             },
+            attachInput(formData, input, content) {
+                if (input.type == 'gallery') {
+                    if (content.value.length) {
+                        content.value.forEach((file, index) => {
+                            if (file && file instanceof File) {
+                                formData.append(input.columnname + '['+index+']', file)
+                            }
+                            if (typeof file === 'string' || file instanceof String) {
+                                formData.append(input.columnname + '['+index+']', file)
+                            }
+                            if (typeof file === 'object' || file instanceof Object) {
+                                formData.append(input.columnname + '['+index+']', file.id)
+                            }
+                        })
+                    }
+                }else if (input.type == 'multimedia_file') {
+                    formData.append(input.columnname, content.value)
+                }else if (input.type == 'map-select-lat-lng') {
+                    formData.append(input.columnname + '_lat', content.value.lat);
+                    formData.append(input.columnname + '_lng', content.value.lng);
+                }else if (input.type == 'subForm') {
+                    content.value.forEach((item, index) => {
+                        let subFormData = new FormData()
+                        this.subForm[input.columnname].inputs.forEach(subInput => {
+                            this.attachInput(subFormData, subInput, item.content[subInput.columnname])
+                        });
+                        if (item.content['id']) {
+                            formData.append(input.columnname + '[' + index + '][id]', item.content['id'].value)
+                        }
+
+                        [...subFormData.entries()].forEach(pair => {
+                            formData.append(input.columnname + '[' + index + '][' + pair[0] + ']', pair[1])
+                        });
+                    });
+                } else {
+                    formData.append(input.columnname, content.value);
+                }
+            },
             postForm() {
                 let formData = new FormData()
                 var subForm = {}
 
                 this.inputs.forEach(input => {
-                    if (input.type == 'gallery') {
-                        if (this.content[input.columnname].value.length) {
-                            this.content[input.columnname].value.forEach((file, index) => {
-                                if (file && file instanceof File) {
-                                    formData.append(input.columnname + '['+index+']', file)
-                                }
-                                if (typeof file === 'string' || file instanceof String) {
-                                    formData.append(input.columnname + '['+index+']', file)
-                                }
-                                if (typeof file === 'object' || file instanceof Object) {
-                                    formData.append(input.columnname + '['+index+']', file.id)
-                                }
-                            })
-                        }
-                    }else if (input.type == 'map-select-lat-lng') {
-                        formData.append(input.columnname + '_lat', this.content[input.columnname].value.lat);
-                        formData.append(input.columnname + '_lng', this.content[input.columnname].value.lng);
-                    }else if (input.type != 'subForm') {
-                        formData.append(input.columnname, this.content[input.columnname].value);
-                    } else {
-                        subForm[input.columnname] = []
-                        this.content[input.columnname].value.forEach(item => {
-                            let subFormItem = {}
-                            this.subForm[input.columnname].inputs.forEach(subInput => {
-                                subFormItem[subInput.columnname] = item.content[subInput.columnname].value
-                            });
-                            if (item.content?.id?.value) {
-                                subFormItem['id'] = item.content?.id?.value
-                            }
-                            subForm[input.columnname].push(subFormItem)
-                        });
-                    }
+                    this.attachInput(formData, input, this.content[input.columnname])
                 });
                 formData.append('subForm', JSON.stringify(subForm));
 
                 axios.post(this.urlAction, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
-                        //this.loaded = 1
-                        window.location.href = this.urlBack
+                        this.loaded = 1
+                        // window.location.href = this.urlBack
                     }, 1000);
                 }).catch((error) => {
                     if (error.response.data.message == 'CSRF token mismatch.') {

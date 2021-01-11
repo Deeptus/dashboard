@@ -43,7 +43,81 @@ class CrudController extends Controller
         }
 
     }
+    public function getInput($id, $input, $content, $relations, $galleries, $subForm, $item) {
+        if ($input->type == 'select' && $input->valueoriginselector == 'table') {
+            $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+        }
 
+        if ($input->type == 'multimedia_file') {
+            $file = Multimedia::find($item->{$input->columnname . '_id'});
+            if ($file) {
+                $content[$input->columnname] = [
+                    'url'  => asset(Storage::url($file->path)),
+                    'path' => $file->path,
+                    'id'   => $file->id,
+                    'type' => Storage::mimeType($file->path)
+                ];
+            }
+        }
+
+        if ($input->type == 'gallery' && $item) {
+            $galleries[$input->columnname] = [];
+            $gallery = Gallery::find($item->{$input->columnname});
+            if ($gallery) {
+                foreach ($gallery->items as $key => $item) {
+                    $galleries[$input->columnname][] = [
+                        'url'  => asset(Storage::url($item->path)),
+                        'path' => $item->path,
+                        'id'   => $item->id,
+                        'type' => Storage::mimeType($item->path)
+                    ];
+                }
+            }
+        }
+        if ($input->type == 'subForm') {
+            $dirPath  = app_path('Dashboard');
+            $filePath = $dirPath . '/' . $input->tabledata . '.json';
+
+            $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
+            $className = ucwords($className);
+            $className = str_replace(' ', '', $className);
+            $subModel = "\\App\\Models\\" . $className;
+
+            if (file_exists($filePath)) {
+                $subFormLayout      = json_decode(file_get_contents($filePath));
+                $subForm[$input->columnname] = [
+                    'table'  => $subFormLayout->table,
+                    'inputs' => $subFormLayout->inputs
+                ];
+                if ($id) {
+                    $subForm[$input->columnname]['content'] = $subModel::where($input->tablekeycolumn, $item->id)->get();
+                    foreach ($subForm[$input->columnname]['content'] as $itemKey => $item) {
+                        foreach ($subFormLayout->inputs as $subkKy => $subInputs) {
+                            if ($subInputs->type == 'multimedia_file') {
+                                $file = Multimedia::find($item->{$subInputs->columnname . '_id'});
+                                if ($file) {
+                                    $subForm[$input->columnname]['content'][$itemKey]->{$subInputs->columnname} = [
+                                        'url'  => asset(Storage::url($file->path)),
+                                        'path' => $file->path,
+                                        'id'   => $file->id,
+                                        'type' => Storage::mimeType($file->path)
+                                    ];
+                                }                    
+                            }
+                        }
+                    }
+                }            
+            }
+            // $input->tablekeycolumn id para buscar
+        }
+        return [
+            'input'     => $input,
+            'content'   => $content,
+            'relations' => $relations,
+            'galleries' => $galleries,
+            'subForm'   => $subForm,
+        ];
+    }
     public function data($tablename, $id = false)
     {
         $languages = [];
@@ -67,48 +141,20 @@ class CrudController extends Controller
         }
 
         foreach ($this->inputs as $inputKey => $input) {
-
-            if ($input->type == 'select' && $input->valueoriginselector == 'table') {
-                $relations[$input->tabledata] = DB::table($input->tabledata)->pluck($input->tabletextcolumn, $input->tablekeycolumn);
-            }
-
-            if ($input->type == 'gallery' && $item) {
-                $galleries[$input->columnname] = [];
-                $gallery = Gallery::find($item->{$input->columnname});
-                if ($gallery) {
-                    foreach ($gallery->items as $key => $item) {
-                        $galleries[$input->columnname][] = [
-                            'url'  => asset(Storage::url($item->path)),
-                            'path' => $item->path,
-                            'id'   => $item->id,
-                            'type' => Storage::mimeType($item->path)
-                        ];
-                    }
-                }
-            }
-            if ($input->type == 'subForm') {
-                $dirPath  = app_path('Dashboard');
-                $filePath = $dirPath . '/' . $input->tabledata . '.json';
-
-                $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
-                $className = ucwords($className);
-                $className = str_replace(' ', '', $className);
-                $subModel = "\\App\\Models\\" . $className;
-
-                if (file_exists($filePath)) {
-                    $subFormLayout      = json_decode(file_get_contents($filePath));
-                    $subForm[$input->columnname] = [
-                        'table'  => $subFormLayout->table,
-                        'inputs' => $subFormLayout->inputs
-                    ];
-
-                    if ($id) {
-                        $subForm[$input->columnname]['content'] = $subModel::where($input->tablekeycolumn, $item->id)->get();
-                    }            
-                }
-                // $input->tablekeycolumn id para buscar
-            }
-
+            $results = $this->getInput(
+                $id,
+                $input,
+                $content,
+                $relations,
+                $galleries,
+                $subForm,
+                $item
+            );
+            $input     = $results['input'];
+            $content   = $results['content'];
+            $relations = $results['relations'];
+            $galleries = $results['galleries'];
+            $subForm   = $results['subForm'];
         }    
         return response()->json([
             'languages' => $languages,
@@ -145,12 +191,116 @@ class CrudController extends Controller
             '__admin_active' => 'admin.crud-' . $this->tablename
         ]);
     }
+    public function attachInput($item, $input, $data)
+    {
+        try {
+            if ($input->type == 'card-header') {
+                return true;
+            }
+        } catch (\Throwable $th) {
+            dd($input);
+        }
 
+        if ($input->type == 'map-select-lat-lng') {
+            $item->{$input->columnname . '_lat'} = $data[$input->columnname . '_lat'];
+            $item->{$input->columnname . '_lng'} = $data[$input->columnname . '_lng'];
+            $item->save();
+            return true;
+        }
+
+        if ($input->type == 'multimedia_file') {
+            try {
+                if ($data[$input->columnname]->isValid()) {
+                    $path = $data[$input->columnname]->store('public/content/' . $this->tablename . '/');
+                    $multimedia = new Multimedia;
+                    $multimedia->path          = $path;
+                    $multimedia->order         = null;
+                    $multimedia->filename      = null;
+                    $multimedia->alt           = null;
+                    $multimedia->caption       = null;
+                    $multimedia->original_name = null;
+                    $multimedia->disk          = null;
+                    $multimedia->meta_value    = null;
+                    $multimedia->save();
+                    $item->{$input->columnname . '_id'} = $multimedia->id;
+                    $item->save();
+                }
+            } catch (\Throwable $th) {
+            }
+            return true;
+        }
+        if ($input->type == 'gallery') {
+            // Gallery
+            // 
+            if ($item->{$input->columnname}) {
+                $gallery = Gallery::where('id', $item->{$input->columnname})->firstOrNew();
+            } else {
+                $gallery = new Gallery;
+            }
+            $gallery->description       = $this->tablename . ' gallery' . $item->id;
+            $gallery->save();
+
+            $item->{$input->columnname} = $gallery->id;
+            $item->save();
+
+            $ids = [];
+            foreach ($data[$input->columnname] as $key => $value) {
+                if(is_string($value)) {
+                    $ids[$value] = [ 'order' => $key ];
+                } else {
+                    $path = $value->store('public/content/' . $this->tablename . '/');
+                    $multimedia = new Multimedia;
+                    $multimedia->path          = $path;
+                    $multimedia->order         = null;
+                    $multimedia->filename      = null;
+                    $multimedia->alt           = null;
+                    $multimedia->caption       = null;
+                    $multimedia->original_name = null;
+                    $multimedia->disk          = null;
+                    $multimedia->meta_value    = null;
+                    $multimedia->save();
+                    $ids[$multimedia->id] = [ 'order' => $key ];
+                }
+            }
+            $gallery->items()->sync($ids);
+            return true;
+        }
+
+        if ($input->type == 'subForm') {
+
+            $dirPath  = app_path('Dashboard');
+            $filePath = $dirPath . '/' . $input->tabledata . '.json';
+
+            if (file_exists($filePath)) {
+                $content   = json_decode(file_get_contents($filePath));
+                $subTable  = $content->table;
+                $subInputs = $content->inputs;
+            }
+
+            $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
+            $className = ucwords($className);
+            $className = str_replace(' ', '', $className);
+            $subModel = "\\App\\Models\\" . $className;
+
+            foreach ($data[$input->columnname] as $subFormItem) {
+                if ( array_key_exists('id', $subFormItem) ) {
+                    $subItem = $subModel::find($subFormItem['id']);
+                } else {
+                    $subItem = new $subModel;
+                }
+                foreach ($subInputs as $subInputKey => $subInput) {
+                    $subFormItem[$input->tablekeycolumn] = $item->id;
+                    $this->attachInput($subItem, $subInput, $subFormItem);
+                }
+            }
+
+            return true;
+        }
+        $item->{$input->columnname} = $data[$input->columnname];
+        $item->save();
+    }
     public function store(Request $request, $tablename, $id = false)
     {
-
-        $validHelper = [];
-
         if($id){
             $item       = $this->model::where('id', $id)->firstOrFail();
             $action     = 'edito';
@@ -158,7 +308,9 @@ class CrudController extends Controller
             $item       = new $this->model;
             $action     = 'añadio';
         }
-
+        /*
+        *** VALIDACION POR AHORA SIN FUNCIONAR POR REVISION FALTANTE A SUBFORM ***
+        $validHelper = [];
         foreach ($this->inputs as $inputKey => $input) {
             if ($input->type == 'card-header' || $input->type == 'gallery') {
                 continue;
@@ -169,98 +321,11 @@ class CrudController extends Controller
                 }
             }
         }
-
         $validatedData = $request->validate($validHelper);
+        */
 
-        $subForm = json_decode($request->subForm, true);
         foreach ($this->inputs as $inputKey => $input) {
-            if ($input->type == 'card-header') {
-                continue;
-            }
-
-            if ($input->type == 'map-select-lat-lng') {
-                $item->{$input->columnname . '_lat'} = $request->{$input->columnname . '_lat'};
-                $item->{$input->columnname . '_lng'} = $request->{$input->columnname . '_lng'};
-                $item->save();
-                continue;
-            }
-
-            if ($input->type != 'subForm' && $input->type != 'gallery') {
-                $item->{$input->columnname} = $request->{$input->columnname};
-            }
-
-
-            if ($input->type == 'gallery') {
-                // Gallery
-                // 
-                if ($item->{$input->columnname}) {
-                    $gallery = Gallery::where('id', $item->{$input->columnname})->firstOrNew();
-                } else {
-                    $gallery = new Gallery;
-                }
-                $gallery->description       = $this->tablename . ' gallery' . $item->id;
-                $gallery->save();
-
-                $item->{$input->columnname} = $gallery->id;
-                $item->save();
-
-                $ids = [];
-                foreach ($request->{$input->columnname} as $key => $value) {
-                    if(is_string($value)) {
-                        $ids[$value] = [ 'order' => $key ];
-                    } else {
-                        $path = $value->store('public/content/' . $this->tablename . '/');
-                        $multimedia = new Multimedia;
-                        $multimedia->path          = $path;
-                        $multimedia->order         = null;
-                        $multimedia->filename      = null;
-                        $multimedia->alt           = null;
-                        $multimedia->caption       = null;
-                        $multimedia->original_name = null;
-                        $multimedia->disk          = null;
-                        $multimedia->meta_value    = null;
-                        $multimedia->save();
-                        $ids[$multimedia->id] = [ 'order' => $key ];
-                    }
-                }
-                $gallery->items()->sync($ids);
-            }
-
-            if ($input->type == 'subForm') {
-                
-                $dirPath  = app_path('Dashboard');
-                $filePath = $dirPath . '/' . $input->tabledata . '.json';
-    
-                if (file_exists($filePath)) {
-                    $content   = json_decode(file_get_contents($filePath));
-                    $subTable  = $content->table;
-                    $subInputs = $content->inputs;
-                }
-    
-                $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
-                $className = ucwords($className);
-                $className = str_replace(' ', '', $className);
-                $subModel = "\\App\\Models\\" . $className;
-
-                foreach ($subForm[$input->columnname] as $subFormItem) {
-                    if ($subFormItem->type == 'card-header') {
-                        continue;
-                    }        
-                    if ( array_key_exists('id', $subFormItem) ) {
-                        $subItem = $subModel::find($subFormItem['id']);
-                    } else {
-                        $subItem = new $subModel;
-                    }
-                    foreach ($subInputs as $subInputKey => $subInput) {
-                        if ($subInput->type != 'subForm') {
-                            $subItem->{$subInput->columnname} = $subFormItem[$subInput->columnname];
-                        }
-                        $subItem->{$input->tablekeycolumn} = $item->id;
-                    }
-                    $subItem->save();
-                }
-
-            }
+            $this->attachInput($item, $input, $request->all());
         }
 
         return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);

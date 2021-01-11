@@ -139,34 +139,42 @@
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select" v-model="input.type">
-                                        <option value="text">text</option>
-                                        <option value="card-header">CARD Header</option>
-                                        <option value="textarea">textarea</option>
-                                        <option value="email">email</option>
-                                        <option value="url">url</option>
-                                        <option value="tel">tel</option>
-                                        <option value="number">number</option>
-                                        <option value="bigInteger">bigInteger</option>
-                                        <option value="money">money</option>
-                                        <option value="password">password</option>
-                                        <option value="date">date</option>
-                                        <option value="time">time</option>
-                                        <option value="datetime">datetime</option>
-                                        <option value="week">week</option>
-                                        <option value="password">password</option>
-                                        <option value="true_or_false">BOOLEAN (True or False)</option>
-                                        <!-- -->
-                                        <option value="multimedia_file">Multimedia File</option>
-                                        <option value="gallery">Gallery</option>
-                                        <option value="map-select-lat-lng">Map selector Lat-Lon</option>
-                                        <!-- -->
-                                        <option value="select">select</option>
-                                        <option value="radio">radio</option>
-                                        <option value="checkbox">checkbox</option>
-                                        <option value="select2">select2</option>
-                                        <option value="select2multiple">select2multiple</option>
-                                        <option value="subForm">subForm</option>
-                                        <!-- -->
+                                        <optgroup label="Text">
+                                            <option value="text">text</option>
+                                            <option value="textarea">textarea</option>
+                                            <option value="email">email</option>
+                                            <option value="url">url</option>
+                                            <option value="tel">tel</option>
+                                        </optgroup>
+                                        <optgroup label="Numeric">
+                                            <option value="number">number</option>
+                                            <option value="bigInteger">bigInteger</option>
+                                            <option value="money">money</option>
+                                            <option value="password">password</option>
+                                        </optgroup>
+                                        <optgroup label="Datetime">
+                                            <option value="date">date</option>
+                                            <option value="time">time</option>
+                                            <option value="datetime">datetime</option>
+                                            <option value="week">week</option>
+                                        </optgroup>
+                                        <optgroup label="File">
+                                            <option value="multimedia_file">Multimedia File</option>
+                                            <option value="gallery">Gallery</option>
+                                        </optgroup>
+                                        <optgroup label="Select's">
+                                            <option value="true_or_false">BOOLEAN (True or False)</option>
+                                            <option value="select">select</option>
+                                            <option value="radio">radio</option>
+                                            <option value="checkbox">checkbox</option>
+                                            <option value="select2">select2</option>
+                                            <option value="select2multiple">select2multiple</option>
+                                            <option value="subForm">subForm</option>
+                                        </optgroup>
+                                        <optgroup label="Special">
+                                            <option value="card-header">CARD Header</option>
+                                            <option value="map-select-lat-lng">Map selector Lat-Lon</option>
+                                        </optgroup>
                                     </select>
                                     <label>TYPE</label>
                                 </div>

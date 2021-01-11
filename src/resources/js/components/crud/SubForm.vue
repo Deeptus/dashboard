@@ -61,6 +61,7 @@
                     this.items.push(newItem)
                 });
             }
+            this.mapItems()
         },
         mounted () {},
         watch: {
@@ -72,31 +73,35 @@
             }
         },
         methods: {
+            mapItems() {
+                if (Object.prototype.toString.call( this.items ) == '[object Array]') {
+                    this.items.forEach(item => {
+                        this.subForm[this.input.columnname].inputs.forEach(input => {
+                            if (!item.content[input.columnname]) {
+                                item.content[input.columnname] = {}
+                                this.$set(item.content[input.columnname], 'value', '')
+                                this.$set(item.content[input.columnname], 'errors', [])
+                            }
+                        });
+                    });
+                } else {
+                    this.items = []
+                }
+            },
             addItem() {
                 this.inputs = this.subForm[this.input.columnname].inputs
                 let newItem = {
                     content: {}
                 }
                 this.inputs.forEach(input => {
-                    newItem.content[input.columnname] = {
-                        value: input.default,
-                        errors: []
-                    }
+                    newItem.content[input.columnname] = {}
+                    this.$set(newItem.content[input.columnname], 'value', input.default)
+                    this.$set(newItem.content[input.columnname], 'errors', [])
                 });
                 if ( !Array.isArray(this.items) ) {
                     this.items = []
                 }
                 this.items.push(newItem)
-                /*
-                this.items.forEach(item => {
-                    this.inputs.forEach(input => {
-                        item.content[input.columnname] = {
-                            value: input.default,
-                            errors: []
-                        }
-                    });
-                })
-                */
             }
         },
         computed: {

@@ -6,6 +6,7 @@
         <SubForm :relations="{}" :value="value" :subForm="subForm" :input="input" v-if="layout[input.type] == 'subForm'"></SubForm>
         <CustomGallery :label="input.label[lang()]" :model.sync="value" v-if="input.type == 'gallery'"></CustomGallery>
         <MapSelectLatLon :value="value" :input="input" v-if="input.type == 'map-select-lat-lng'"></MapSelectLatLon>
+        <MultimediaFile :value="value" :input="input" v-if="input.type == 'multimedia_file'"></MultimediaFile>
         <div v-if="displayDebug == 1">{{ value }} <button @click="reloadDebug">reload</button></div>
         <div v-if="input.type == 'card-header'" class="card-header">
             {{ input.columnname }}
@@ -13,12 +14,13 @@
     </div>
 </template>
 <script>
-    import InputText from './InputText'
-    import InputDate from './InputDate'
+    import InputText   from './InputText'
+    import InputDate   from './InputDate'
     import InputSelect from './InputSelect'
-    import SubForm from './SubForm'
+    import SubForm     from './SubForm'
     import MapSelectLatLon from './MapSelectLatLon'
-    import CustomGallery from '../CustomGalleryComponent'
+    import CustomGallery   from '../CustomGalleryComponent'
+    import MultimediaFile  from './MultimediaFile'
 
     export default {
         name:"InputLayout",
@@ -44,6 +46,7 @@
             InputSelect,
             SubForm,
             MapSelectLatLon,
+            MultimediaFile,
             CustomGallery
         },
         data(){
@@ -72,8 +75,7 @@
                 displayDebug: 0
             }
         },
-        created() {
-        },
+        created() {},
         mounted () {},
         watch: {},
         methods: {

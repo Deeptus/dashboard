@@ -241,7 +241,7 @@ class DynamicContentController extends Controller
     }
     public function trash($section)
     {
-        $data = Content::onlyTrashed()->get();
+        $data   = Content::onlyTrashed()->get();
         $config = config('dynamic-content.' . $section);
         $inputs = ['order', 'title', 'subtitle', 'text', 'description'];
         

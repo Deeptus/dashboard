@@ -86,6 +86,12 @@ class GenerateCrudTables extends Migration
             if($input->type == 'select') {
                 $col[] = $table->unsignedBigInteger($input->columnname);
             }
+            if($input->type == 'multimedia_file') {
+                if (Schema::hasColumn($content->table->tablename, $input->columnname . '_id')) {
+                    $change = true;
+                }
+                $col[] = $table->unsignedBigInteger($input->columnname . '_id');
+            }
             if($input->type == 'gallery') {
                 $col[] = $table->unsignedBigInteger($input->columnname);
             }
@@ -95,7 +101,7 @@ class GenerateCrudTables extends Migration
                 // mientras
                 if (Schema::hasColumn($content->table->tablename, $input->columnname . '_lat') || Schema::hasColumn($content->table->tablename, $input->columnname . '_lng')) {
                     $change = true;
-                }    
+                }
                 $col[] = $table->string($input->columnname . '_lat');
                 $col[] = $table->string($input->columnname . '_lng');
             }
