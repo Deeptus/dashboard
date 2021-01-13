@@ -61,6 +61,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
     	'middleware' => 'auth',
     	//'namespace'  => 'Admin',
     ], function() {
+        Route::get ('file-manager', 'FileManagerController@data')->name('.file-manager');
+        Route::post('file-manager', 'FileManagerController@upload');
 
         Route::get('/', 'HomeController@index')->name('.home');
 

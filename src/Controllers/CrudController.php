@@ -235,6 +235,9 @@ class CrudController extends Controller
                     $item->save();
                 }
             } catch (\Throwable $th) {
+                if ( is_integer(intval($data[$input->columnname])) && intval($data[$input->columnname]) > 0) {
+                    $item->{$input->columnname . '_id'} = intval($data[$input->columnname]);
+                }
             }
             return true;
         }

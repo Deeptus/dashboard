@@ -164,7 +164,16 @@
                         })
                     }
                 }else if (input.type == 'multimedia_file') {
-                    formData.append(input.columnname, content.value)
+                    if (content.value && content.value instanceof File) {
+                        formData.append(input.columnname, content.value)
+                    }
+                    if (typeof content.value === 'string' || content.value instanceof String) {
+                        formData.append(input.columnname, content.value)
+                    }
+                    if (typeof content.value === 'object' || content.value instanceof Object) {
+                        formData.append(input.columnname, content.value.id)
+                    }
+
                 }else if (input.type == 'map-select-lat-lng') {
                     formData.append(input.columnname + '_lat', content.value.lat);
                     formData.append(input.columnname + '_lng', content.value.lng);

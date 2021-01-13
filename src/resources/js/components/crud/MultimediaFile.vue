@@ -3,7 +3,7 @@
         <div class="multimedia-file__preview" :style="'background-image: url('+getPreviewImage()+');'"></div>
         <div class="multimedia-file__label">{{ input.label[lang()] }}</div>
         <div class="multimedia-file__text">{{ getText() }}</div>
-        <input class="visually-hidden" type="file" @change="onFileChange($event)">
+        <!-- <input class="visually-hidden" type="file" @change="onFileChange($event)"> -->
     </label>
 </template>
 <script>
@@ -28,17 +28,24 @@
         },
         created() {
             this.image = this.value.value
-            // this.selectFile()
         },
         mounted () {},
         watch: {
             image: function(val, oldVal) {
+                console.log(this.image)
                 this.value.value = this.image || []
             }
         },
         methods: {
-            selectFile() {
-                // console.log(this.fileManager().open('skldfhsdh dsiofhsdiofsdiofsdhiofshdfshfshdfsdhfjkldsfjksdfhkjsdf'))
+            async selectFile() {
+                await this.fileManager().open().then((callback) => {
+                    if (callback) {
+                        this.image.id   = callback.id
+                        this.image.path = callback.path
+                        this.image.type = callback.type
+                        this.image.url  = callback.url
+                    }
+                })
             },
             lang() {
                 return document.documentElement.lang
@@ -51,7 +58,6 @@
                 this.image.remove = true
             },
             onFileChange(e) {
-                console.log(e.target.files[0])
                 this.displayImage = false
                 const file = e.target.files[0];
                 this.image = file

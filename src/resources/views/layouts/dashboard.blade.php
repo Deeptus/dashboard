@@ -171,7 +171,7 @@
             </div>
             <!-- End of Content Wrapper -->
         </div>
-        <file-manager ref="FileManager"></file-manager>
+        <file-manager ref="FileManager" url-data="{{ route('admin.file-manager') }}"></file-manager>
     </div>
     <!-- End of Page Wrapper -->
 

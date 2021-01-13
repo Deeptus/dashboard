@@ -5,6 +5,7 @@ namespace AporteWeb\Dashboard\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Support\Facades\Storage;
 
 class Multimedia extends Model
 {
@@ -24,4 +25,13 @@ class Multimedia extends Model
 	protected $casts = [
 	];
     public $translatable = [];
+
+    public function getUrlAttribute(Type $var = null)
+    {
+        return asset(Storage::url($this->getAttribute('path')));
+    }
+    public function getTypeAttribute(Type $var = null)
+    {
+        return Storage::mimeType($this->getAttribute('path'));
+    }
 }
