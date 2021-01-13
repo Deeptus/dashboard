@@ -15,6 +15,8 @@ Vue.component('InputLayout', require('./components/crud/InputLayout.vue').defaul
 
 Vue.component('select2', require('./components/Select2Component.vue').default);
 
+Vue.component('file-manager', require('./components/file-manager').default);
+
 window.toCurrency = (numero) => {
     let decimales = 2
 
@@ -181,6 +183,9 @@ Vue.filter('storagePath',        window.storagePath);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
+    fileManager() {
+        return this.$root.$refs.FileManager
+    },
     slugify(text, divider = '-') {
         return window.slugify(text, divider)
     },

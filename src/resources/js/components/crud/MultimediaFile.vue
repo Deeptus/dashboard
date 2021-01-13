@@ -1,5 +1,5 @@
 <template>
-    <label class="multimedia-file mb-3">
+    <label class="multimedia-file mb-3" @click="selectFile()">
         <div class="multimedia-file__preview" :style="'background-image: url('+getPreviewImage()+');'"></div>
         <div class="multimedia-file__label">{{ input.label[lang()] }}</div>
         <div class="multimedia-file__text">{{ getText() }}</div>
@@ -28,6 +28,7 @@
         },
         created() {
             this.image = this.value.value
+            // this.selectFile()
         },
         mounted () {},
         watch: {
@@ -36,6 +37,9 @@
             }
         },
         methods: {
+            selectFile() {
+                // console.log(this.fileManager().open('skldfhsdh dsiofhsdiofsdiofsdhiofshdfshfshdfsdhfjkldsfjksdfhkjsdf'))
+            },
             lang() {
                 return document.documentElement.lang
             },

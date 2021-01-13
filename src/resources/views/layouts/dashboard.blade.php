@@ -171,6 +171,7 @@
             </div>
             <!-- End of Content Wrapper -->
         </div>
+        <file-manager ref="FileManager"></file-manager>
     </div>
     <!-- End of Page Wrapper -->
 

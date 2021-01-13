@@ -123,7 +123,7 @@ class CrudController extends Controller
             }
             // $input->tablekeycolumn id para buscar
         }
-        if (!$found) {
+        if (!$found && $item) {
             $content[$input->columnname] = $item->{$input->columnname};
         }
         return [

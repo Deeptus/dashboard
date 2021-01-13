@@ -29,8 +29,6 @@
         </div>
 
         <div class="col-md-12" v-if="loaded == 1">
-
-
             <div class="card">
                 <div class="card-header">
                     Crud
