@@ -21,6 +21,7 @@ class CreateUsersDashboardTable extends Migration
 			Schema::dropIfExists('users');
 			Schema::create('users', function (Blueprint $table) {
 				$table->bigIncrements('id');
+				$table->uuid('uuid');
 				//
 				$table->boolean('root')->default(0);
 				$table->string('username')->unique();

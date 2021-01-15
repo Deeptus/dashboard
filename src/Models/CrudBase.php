@@ -8,10 +8,9 @@ use AporteWeb\Dashboard\Models\Gallery;
 use AporteWeb\Dashboard\Models\Multimedia;
 use Illuminate\Support\Facades\Storage;
 
-trait CrudBase
-{
-    public function __get($key)
-    {
+trait CrudBase {
+    
+    public function __get($key) {
         $dirPath  = app_path('Dashboard');
         $filePath = $dirPath . '/' . $this->table . '.json';
 
