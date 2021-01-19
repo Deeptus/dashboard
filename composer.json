@@ -8,16 +8,16 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "barryvdh/laravel-dompdf": "^0.8.7",
+        "barryvdh/laravel-dompdf": "^0.9.0",
         "doctrine/dbal": "^3.0",
-        "davejamesmiller/laravel-breadcrumbs": "5.x",
+        "diglactic/laravel-breadcrumbs": "6.x",
         "mcamara/laravel-localization": "^1.6",
-        "phpoffice/phpspreadsheet": "^1.15",
+        "phpoffice/phpspreadsheet": "^1.16",
         "mateusjunges/laravel-acl": "^2.5",
-        "spatie/laravel-translatable": "^4.3",
-        "barryvdh/laravel-debugbar": "^3.2",
+        "spatie/laravel-translatable": "^4.6",
+        "barryvdh/laravel-debugbar": "^3.5",
         "arcanedev/log-viewer": "^8.0",
-        "webpatser/laravel-uuid": "^3.0",
+        "webpatser/laravel-uuid": "^4.0",
         "jenssegers/date": "^4.0"
     },
     "autoload": {
