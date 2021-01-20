@@ -33,7 +33,7 @@
                     <tr>
                         @foreach ($inputs as $inputKey => $input)
                             <?php
-                            if ($input->type == 'card-header' || $input->listable == 0) {
+                            if ( $input->type == 'card-header' || ( property_exists($input, 'listable') && $input->listable == 0 ) ) {
                                 continue;
                             }
                             ?>
@@ -47,7 +47,7 @@
                 <tr>
                     @foreach ($inputs as $inputKey => $input)
                     <?php
-                    if ($input->type == 'card-header' || $input->listable == 0) {
+                    if ( $input->type == 'card-header' || ( property_exists($input, 'listable') && $input->listable == 0 ) ) {
                         continue;
                     }
                     ?>
