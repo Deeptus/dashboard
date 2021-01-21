@@ -52,9 +52,9 @@
                     }
                     ?>
                     @if ($input->type == 'select')
-                    <td>{{ $item->{$input->columnname . '_rel_val'} }}</td>
+                        <td>{{ $item->{$input->columnname . '_rel_val'} }}</td>
                     @else
-                    <td>{{ $item->{$input->columnname} }}</td>
+                        <td>{{ $item->{$input->columnname} }}</td>
                     @endif
                     @endforeach
                     <td>

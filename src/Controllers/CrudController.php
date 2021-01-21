@@ -50,6 +50,7 @@ class CrudController extends Controller
         if ($input->type == 'select' && $input->valueoriginselector == 'table') {
             $found = true;
             $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            $content[$input->columnname] = $item->{$input->columnname};
         }
 
         if ($input->type == 'map-select-lat-lng') {

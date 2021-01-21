@@ -46,6 +46,7 @@ trait CrudBase {
             }
         }
         if (Str::endsWith($key, '_rel_val')) {
+
             $column = str_replace('_rel_val', '', $key);
             if (!$this->getAttribute($column)) {
                 return '';
@@ -60,9 +61,9 @@ trait CrudBase {
                         return $e->columnname == $column;
                     }
                 );
-
+                
                 $input = array_shift($input);
-
+                
                 if ($input->valueoriginselector == 'values') {
                     $option = array_filter(
                         $input->options,
@@ -71,7 +72,23 @@ trait CrudBase {
                         }
                     );
                     $option = array_shift($option);
-                    return $option->text;
+                    try {
+                        return $option->text;
+                    } catch (\Throwable $th) {
+                        return null;
+                    }
+                }
+                if ($input->valueoriginselector == 'table') {
+                    $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
+                    $className = ucwords($className);
+                    $className = str_replace(' ', '', $className);
+                    $subModel = "\\App\\Models\\" . $className;
+                    $item = $subModel::where($input->tablekeycolumn, $this->id)->first();
+                    try {
+                        return $item->{ $input->tabletextcolumn };
+                    } catch (\Throwable $th) {
+                        return null;
+                    }
                 }
             }
         }

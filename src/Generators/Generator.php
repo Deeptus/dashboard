@@ -25,9 +25,11 @@ class Generator
         ob_start();
         include($path);
         $body = ob_get_clean();
-        $filePath = app_path('Models/' . $className . '.php');
 
-        file_put_contents($filePath, $body);
+        $filePath = app_path('Models/' . $className . '.php');
+        if ( !file_exists( $filePath ) ) {
+            file_put_contents($filePath, $body);
+        }
 
         return true;
     }
