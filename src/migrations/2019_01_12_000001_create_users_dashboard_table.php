@@ -17,11 +17,16 @@ class CreateUsersDashboardTable extends Migration
             // Se inicia una transacción
             DB::beginTransaction();
 			DB::statement('SET FOREIGN_KEY_CHECKS=0');
-			$users = DB::table("users")->get();
-			Schema::dropIfExists('users');
+			// For error:
+			// SQLSTATE[HY000]: General error: 1364 Field 'id' doesn't have a default value (SQL: insert into `migrations` (`migration`, `batch`) values (2019_01_12_000001_create_users_dashboard_table, 2))
+			DB::statement('ALTER TABLE `migrations` CHANGE `id` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT');
+			if (Schema::hasTable('users')) {
+				$users = DB::table("users")->get();
+				Schema::dropIfExists('users');
+			}			
 			Schema::create('users', function (Blueprint $table) {
 				$table->bigIncrements('id');
-				$table->uuid('uuid');
+				$table->uuid('uuid')->nullable();
 				//
 				$table->boolean('root')->default(0);
 				$table->string('username')->unique();
@@ -35,8 +40,10 @@ class CreateUsersDashboardTable extends Migration
 				$table->timestamps();
 				$table->softDeletes();
 			});
-			foreach($users as $user) {
-				DB::table('users')->insert(get_object_vars($user));
+			if (isset($users)) {
+				foreach($users as $user) {
+					DB::table('users')->insert(get_object_vars($user));
+				}
 			}
 			DB::statement('SET FOREIGN_KEY_CHECKS=1');
             DB::commit();
@@ -54,6 +61,8 @@ class CreateUsersDashboardTable extends Migration
 	 */
 	public function down()
 	{
+		DB::statement('SET FOREIGN_KEY_CHECKS=0');
 		Schema::dropIfExists('users');
+		DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	}
 }
