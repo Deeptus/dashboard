@@ -48,6 +48,18 @@ if (!function_exists('__active')) {
         return '';
     }
 }
+
+if (!function_exists('__collapsed')) {
+    function __collapsed($var, $active)
+    {
+        if ($var == $active) {
+            return 'true';
+        }
+        return 'false';
+    }
+}
+
+
 if (!function_exists('display_price')) {
     function display_price($price)
     {

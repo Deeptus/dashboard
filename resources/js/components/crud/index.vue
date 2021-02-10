@@ -1,5 +1,12 @@
 <template>
+
+
+
+
     <div class="row">
+
+
+
         <div class="col-md-12">
             <div class="row justify-content-center" v-if="loaded == 0">
                 <h3><center><i class="fas fa-sync fa-spin"></i><br>Cargando</center></h3>
@@ -33,7 +40,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    {{ table.name['es'] }}
+                   <h5> {{ table.name['es'] }} </h5>
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
@@ -42,15 +49,11 @@
                 </div>
             </div>
             <div class="d-sm-flex align-items-center justify-content-between mt-4">
-                <a :href="urlBack" class="btn btn-sm btn-warning">
-                    <i class="fas fa-step-backward fa-sm text-white-50"></i>
-                    Volver Atras
-                </a>
 
-                <button type="button" @click="sendForm()" class="btn btn-lg btn-primary">
+                <Button type="button" @click="sendForm()" class="btn btn-lg btn-primary">
                     <i class="fas fa-save fa-sm text-white-50"></i>
                     Guardar
-                </button>
+                </Button>
             </div>
         </div>
     </div>
@@ -60,6 +63,8 @@
     import InputLayout from './InputLayout'
     import Swal from 'sweetalert2'
     
+    import CrudService from './../../../../../../../resources/js/service/CrudService';
+
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
         props: {
@@ -94,8 +99,36 @@
             }
         },
         created() {
+        this.CrudService = new CrudService();
+
+            this.tablename = this.$route.params.table
+            //this.CrudService.getTable(this.tablename).then(data => this.inputs = data.inputs);
             this.$nextTick(() => {
-                axios.get(this.urlData).then((response) => {
+                this.CrudService.getTable(this.tablename).then((response) => {
+                    console.log(response)
+                    this.languages = response.languages
+                    this.tablename = response.tablename
+                    this.table     = response.table
+                    this.inputs    = response.inputs
+                    this.relations = response.relations
+                    this.inputs.forEach(input => {
+                        this.content[input.columnname] = {
+                            value: input.default,
+                            errors: []
+                        }
+                    });
+                    if(response.content) {
+                        this.inputs.forEach(input => {
+                            this.content[input.columnname].value = response.content[input.columnname]
+                        });
+                    }
+                    this.loaded = 1
+                });
+            });
+/*
+
+            this.$nextTick(() => {
+                axios.get('this.urlData').then((response) => {
                     this.languages = response.data.languages
                     this.tablename = response.data.tablename
                     this.table     = response.data.table
@@ -114,7 +147,7 @@
                     }
                     this.loaded = 1
                 });
-            });
+            });*/
         },
         mounted () {},
         watch: {
@@ -145,11 +178,11 @@
                 });
 
 
-                axios.post(this.urlAction, formData).then((response) => {
+                axios.post('/adm/crud/' + this.tablename, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
                         //this.loaded = 1
-                        window.location.href = this.urlBack
+                        window.location.href = '/adm/crud/' + this.tablename
                     }, 1000);
                 }).catch((error) => {
                     if (error.response.data.message == 'CSRF token mismatch.') {

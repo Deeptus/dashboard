@@ -1,5 +1,5 @@
 <template>
-    <div :class="'col-md-' + input.gridcols">
+    <div :class="'p-col-' + input.gridcols">
 
 
         <InputText  :value="value" :input="input" v-if="layout[input.type] == 'basic'" ></InputText>
@@ -9,6 +9,10 @@
 
 
         <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'" ></InputDate>
+
+
+        <input type="file" v-if="layout[input.type] == 'file'" name="file"  :input="input" />
+
 
     </div>
 
@@ -78,6 +82,7 @@
                     "checkbox": 'select',
                     "select2": 'select',
                     "select2multiple": 'select',
+                    "file": 'file',
                 }
             }
         },

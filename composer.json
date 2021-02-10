@@ -11,7 +11,8 @@
         "doctrine/dbal": "^3.0",
         "mateusjunges/laravel-acl": "^2.4",
         "mcamara/laravel-localization": "^1.6",
-        "diglactic/laravel-breadcrumbs": "^6.0"
+        "diglactic/laravel-breadcrumbs": "^6.0",
+        "barryvdh/laravel-dompdf": "^0.8.7"
     },
     "autoload": {
         "files": [

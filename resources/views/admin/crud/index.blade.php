@@ -1,6 +1,62 @@
 @extends('Dashboard::layouts.dashboard')
 @section('content')
+
+<?php
+
+$tabletype = 'ales0sa';
+//dd($inputs);
+$inputs2 = json_encode($inputs);
+
+
+
+
+?>
+
+@if($tabletype == 'ales0sa')
+
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+
+
+    <div>
+
+        @can($tablename.'-edit')
+
+        @endcan
+
+        <a href="{{ route('admin.crud.create', ['tablename' => $tablename]) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i>
+            Añadir
+        </a>
+
+
+        @if (isset($trash) && $trash == true)
+        <a href="{{ route('admin.crud', ['tablename' => $tablename]) }}" class="d-none  d-sm-inline-block btn btn-sm btn-warning shadow-sm">
+            <i class="fas fa-step-backward fa-sm text-white-50"></i>
+            Salir de la Papelera
+        </a>
+        @else
+        <a href="{{ route('admin.crud.trash', ['tablename' => $tablename]) }}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm text-white">
+            <i class="fas fa-trash fa-sm text-white-50"></i>
+            Papelera
+        </a>
+        @endif
+
+
+
+    </div>
+</div>
+<x-dashboard-messages/>
+
+
+
+<DashTable :table="{{ $data }}" :inputs="{{ $inputs2 }}" tablename="{{ $tablename }}" title="{{ $table->name->es }}"/>
+
+
+@else
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+
 
     <div>
         @if (isset($trash) && $trash == true)
@@ -32,6 +88,7 @@
     <div class="col-xl-12 col-md-12 mb-12">
 
         <div class="table-responsive">
+
         @foreach ($data as $item)
             @if ($loop->first)
             <!-- <table class="data_table table table-striped table-bordered display"> ------>
@@ -84,6 +141,7 @@
 
                         @elseif($input->type == 'true_or_false')
 
+                          
                             @if($item->{$input->columnname} == 0)
                             <div class="badge bg-danger">
                             <i class="fas fa-times"></i>
@@ -138,4 +196,7 @@
         </div>
     </div>
 </div>
+
+@endif
+
 @endsection

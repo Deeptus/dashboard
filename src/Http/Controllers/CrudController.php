@@ -80,8 +80,9 @@ class CrudController extends Controller
 
     public function index()
     {
-        $data = $this->model::paginate(20);
-        return view('Dashboard::admin.crud.index', [
+        $data = $this->model::get();
+        
+        return response()->json([
             'data'           => $data,
             'tablename'      => $this->tablename,
             'table'          => $this->table,
@@ -137,6 +138,7 @@ class CrudController extends Controller
 
            $item->{$input->columnname} = $request->{$input->columnname};
         }
+        
         $item->save();
 
         return response()->json(['message' => 'Se ' . $action . ' con éxito.']);
