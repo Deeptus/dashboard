@@ -182,7 +182,7 @@
                     this.loaded = 3
                     setTimeout(() => {
                         //this.loaded = 1
-                        window.location.href = '/adm/crud/' + this.tablename
+                        window.location.href = '/adm/home#/crud/' + this.tablename
                     }, 1000);
                 }).catch((error) => {
                     if (error.response.data.message == 'CSRF token mismatch.') {
