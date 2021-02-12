@@ -1,12 +1,15 @@
 <template>
     <div class="form-floating mb-3">
+
         <label class="form-label">{{ input.label[lang()] }}</label>
-        <select class="form-select" v-model="value.value">
+
+
+        <select class="p-fieldex" v-model="value.value">
             <option value="0"  v-if="!mode">Si</option>
             <option value="1" v-if="!mode" selected="">No</option>
             <option :value="key" v-for="(option, key) in options" :key="key" v-if="mode == 'table'">{{ option }}</option>
             <option :value="option.key" v-for="(option, key) in options" :key="key" v-if="mode == 'values'">{{ option.text }}</option>
-        </select>
+        </select> 
         
     </div>
 </template>
@@ -29,14 +32,22 @@
         components: {},
         data(){
             return{
-                options: {},                
+                options: {},
+                optionsA: [],                
                 mode: this.input.valueoriginselector
             }
         },
         created() {
 
             if (this.mode == 'table') {
-                this.options = this.relations[this.input.tabledata]
+
+                   this.options = this.relations[this.input.tabledata]
+
+                   const objectArray = Object.entries(this.options);
+                   this.optionsA = Object.fromEntries(objectArray)
+
+
+
             }else if(this.mode == 'values'){
                 this.options = this.input.options
             }

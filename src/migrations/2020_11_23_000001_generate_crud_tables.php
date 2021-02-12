@@ -78,6 +78,11 @@ class GenerateCrudTables extends Migration
 
             $cols[]  = $input->columnname;
 
+
+            if(isset($input->nomigrate)) {
+               
+            }else{
+
             if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
                 $change = true;
             }
@@ -112,6 +117,8 @@ class GenerateCrudTables extends Migration
 
             if ($change) {
                 $col->change();
+            }
+
             }
         }
 

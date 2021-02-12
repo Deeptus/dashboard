@@ -1,5 +1,5 @@
 <template>
-    <div :class="'p-col-' + input.gridcols">
+    <div :class="'p-field p-col-12 p-md-' + input.gridcols">
 
 
         <InputText  :value="value" :input="input" v-if="layout[input.type] == 'basic'" ></InputText>
@@ -11,7 +11,9 @@
         <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'" ></InputDate>
 
 
-        <input type="file" v-if="layout[input.type] == 'file'" name="file"  :input="input" />
+<input type="file" v-if="layout[input.type] == 'file'" name="file"  :input="input"   @change="upload($event)" /> 
+        <!---<
+        <FileUpload  v-if="layout[input.type] == 'file'"  name="files[]" url="/adm/inge/up" :multiple="true" />--->
 
 
     </div>
@@ -113,7 +115,16 @@
         },
         methods: {
 
+ upload(event){
+    let data = new FormData();
+    let file = event.target.files[0];
 
+    data.append('name', 'my-file')
+    data.append('file', file)
+
+
+
+  },
         },
         computed: {
         }

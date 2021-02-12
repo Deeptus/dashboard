@@ -1,8 +1,8 @@
 <template>
-    <div class="form-floating mb-3">
-        <input type="text" class="form-control" v-model="value.value" :placeholder="input.label[lang()]">
-        <label>{{ input.label[lang()] }}</label>
-    </div>
+<span class="p-float-label">
+        <InputText type="text" class="p-inputtext-lg"   v-model="value.value"   :id="value" />
+        <label for="value">{{ input.label[lang()] }}</label>
+</span>
 </template>
 <script>
 

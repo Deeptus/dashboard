@@ -4,7 +4,7 @@
 
 
     <div class="row">
-
+<Toast position="top-right" />
 
 
         <div class="col-md-12">
@@ -15,27 +15,11 @@
                 <h3><center><i class="fas fa-sync fa-spin"></i><br>Guardando</center></h3>
             </div>
             <div class="row justify-content-center" v-if="loaded == 3">
-                <div class="col-xl-12 col-md-12 mb-12">
-                    <div class="card border-left-success shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Mensaje</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    Se ha guardado el <strong>Contenido</strong> con éxito
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-comment fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Message severity="success">Se guardo correctamente.</Message>
             </div>
         </div>
 
-        <div class="col-md-12" v-if="loaded == 1">
+        <div class="p-col-12" v-if="loaded == 1">
 
 
             <div class="card">
@@ -43,17 +27,14 @@
                    <h5> {{ table.name['es'] }} </h5>
                 </div>
                 <div class="card-body pb-0">
-                    <div class="row">
+                    <div class="p-fluid p-grid p-formgrid">
                         <InputLayout :relations="relations" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk" ></InputLayout>
                     </div>
                 </div>
             </div>
             <div class="d-sm-flex align-items-center justify-content-between mt-4">
 
-                <Button type="button" @click="sendForm()" class="btn btn-lg btn-primary">
-                    <i class="fas fa-save fa-sm text-white-50"></i>
-                    Guardar
-                </Button>
+                <Button type="button" @click="sendForm()" class="btn btn-lg btn-primary" icon="pi pi-save" label="Guardar" />
             </div>
         </div>
     </div>
@@ -62,9 +43,9 @@
     import draggable from 'vuedraggable'
     import InputLayout from './InputLayout'
     import Swal from 'sweetalert2'
-    
+    import Toast from 'primevue/toast';
     import CrudService from './../../../../../../../resources/js/service/CrudService';
-
+    import Message from 'primevue/message';
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
         props: {
@@ -86,25 +67,39 @@
             }
         },
         components: {
-            InputLayout
+            InputLayout,
+            Message
         },
         data(){
             return{
                 languages: {},
+                messages: [],
                 tablename: '',
                 table: {},
                 inputs: [],
                 content: {},
+                edit: null,
                 loaded: 0
             }
         },
         created() {
+
         this.CrudService = new CrudService();
 
             this.tablename = this.$route.params.table
+
+            this.edit = this.$route.params.id
             //this.CrudService.getTable(this.tablename).then(data => this.inputs = data.inputs);
             this.$nextTick(() => {
-                this.CrudService.getTable(this.tablename).then((response) => {
+                let nurl = ''
+                let url = this.tablename
+                if(this.edit){
+                    nurl = '../../crud/' + url + '/api/data/' + this.edit
+                }else{
+                    nurl = url
+                }
+
+                this.CrudService.getTable(nurl).then((response) => {
                     console.log(response)
                     this.languages = response.languages
                     this.tablename = response.tablename
@@ -125,29 +120,7 @@
                     this.loaded = 1
                 });
             });
-/*
 
-            this.$nextTick(() => {
-                axios.get('this.urlData').then((response) => {
-                    this.languages = response.data.languages
-                    this.tablename = response.data.tablename
-                    this.table     = response.data.table
-                    this.inputs    = response.data.inputs
-                    this.relations = response.data.relations
-                    this.inputs.forEach(input => {
-                        this.content[input.columnname] = {
-                            value: input.default,
-                            errors: []
-                        }
-                    });
-                    if(response.data.content) {
-                        this.inputs.forEach(input => {
-                            this.content[input.columnname].value = response.data.content[input.columnname]
-                        });
-                    }
-                    this.loaded = 1
-                });
-            });*/
         },
         mounted () {},
         watch: {
@@ -177,8 +150,12 @@
                     formData.append(input.columnname, this.content[input.columnname].value);
                 });
 
-
-                axios.post('/adm/crud/' + this.tablename, formData).then((response) => {
+                let edcheck = ''
+                if(this.edit){
+                    edcheck = '/'+this.edit
+                }
+                
+                axios.post('/adm/crud/' + this.tablename + edcheck, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
                         //this.loaded = 1
@@ -208,23 +185,16 @@
                         let parsedErrors  = '';
                         let errorData = error.response.data.errors
 
-                        Object.keys(error.response.data.errors).forEach(item =>  
-                            
-                            parsedErrors = parsedErrors + '<div style="text-align: center;"> ' + errorData[item] + ' </div>'
-                        );
+                        Object.keys(error.response.data.errors).forEach(item =>  {
+                            //console.log(errorData[item][0])
+                            this.$toast.add({severity:'error', summary: 'Error', detail: errorData[item][0], life: 5000})
 
-                        Swal.fire({
-                            title: 'Error',
-                            icon: 'error',
-                            html: parsedErrors,
-                            showCancelButton: false,
-                            confirmButtonText: 'Aceptar',                            
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.value) {
-                                
                             }
-                        })
+                            //parsedErrors = parsedErrors + '<div style="text-align: center;"> ' + errorData[item] + ' </div>'
+                        ).bind(this);
+
+                            
+
 
 
                     }

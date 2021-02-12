@@ -126,15 +126,15 @@
                     </div>
                 </div>
             </div>
-            <fieldset class="mt-3">
+            <fieldset class="p-fluid">
                 <legend>Campos / Inputs :</legend>
                 <div class="card mt-3" v-for="( input, inputKey ) in inputs" :key="inputKey">
                     <div class="card-header">
                         Columna / Input {{ input.columnname }}
                         <div class="card-header-btns">
-                            <div class="btn btn-warning" @click="inputUp(inputKey)" v-if="inputKey > 0"><i class="fas fa-angle-up"></i></div>
-                            <div class="btn btn-warning" @click="inputDown(inputKey)" v-if="inputKey < ( inputs.length - 1 ) && inputs.length > 1"><i class="fas fa-angle-down"></i></div>
-                            <div class="btn btn-danger"  @click="rmInput(inputKey)"><i class="fas fa-trash"></i></div>
+    <Button icon="pi pi-arrow-up" class="p-button-rounded p-button-secondary p-button-outlined" @click="inputUp(inputKey)" v-if="inputKey > 0"></Button>
+    <Button icon="pi pi-arrow-down" class="p-button-rounded p-button-secondary p-button-outlined" @click="inputDown(inputKey)" v-if="inputKey < ( inputs.length - 1 ) && inputs.length > 1"></Button>
+                            <Button class="p-button-rounded p-button-danger p-button-outlined" icon="pi pi-times" @click="rmInput(inputKey)"></Button>
                         </div>
                     </div>
                     <div class="card-body pb-0">
@@ -387,7 +387,7 @@
         },
         created() {
             this.$nextTick(() => {
-                axios.get(this.urlData).then((response) => {
+                axios.get('/adm/crud-generator/api/data/'+this.$route.params.file).then((response) => {
                     this.languages = response.data.languages
                     if(response.data.content) {
                         this.table  = response.data.content.table
@@ -541,7 +541,7 @@
                     inputs: this.inputs
                 }));
 
-                axios.post(this.urlAction, formData).then((response) => {
+                axios.post('./crud-generator/', formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
                         this.loaded = 1

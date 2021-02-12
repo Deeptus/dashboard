@@ -83,6 +83,7 @@
 
             window.authUser={!! json_encode(Auth::user()); !!};
             window.authPermissions={!! json_encode(Auth::user()->getAllPermissions()); !!};
+            window.authGroup={!! json_encode(Auth::user()->groups()->get()); !!};
 
      </script>
     @else

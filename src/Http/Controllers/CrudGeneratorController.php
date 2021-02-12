@@ -23,11 +23,16 @@ class CrudGeneratorController extends Controller
     {
         $dirPath = __crudFolder();
         $data = File::allFiles($dirPath);
-        
-        return view('Dashboard::admin.crud-generator.index', [
-            'data'           => $data,
-            '__admin_active' => 'Dashboard::admin.crud-generator'
-        ]);
+       //dd($data);
+        $jsonfiles = array();
+
+        foreach($data as $f){
+            $jsonfiles[] = $f->getfilename();
+        }
+        return $jsonfiles;
+
+
+
     }
 
     public function data($table = false)
@@ -36,7 +41,7 @@ class CrudGeneratorController extends Controller
         $content = null;
         if($table) {
             $dirPath  = app_path('Dashboard');
-            $filePath = $dirPath . '/' . $table . '.json';
+            $filePath = $dirPath . '/' . $table;// . '.json';
             if (file_exists($filePath)) {
                 $content = json_decode(file_get_contents($filePath));
             }

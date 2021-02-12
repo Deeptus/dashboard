@@ -160,7 +160,9 @@ class CrudController extends Controller
     {
         $item = $this->model::findOrFail($id);
         $item->delete();
-        return redirect()->route('admin.crud', ['tablename' => $tablename, 'id' => $item->id])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
+
+                return response()->json(['message' => 'Se  elimino con éxito.']);
+       /* return redirect()->route('admin.crud', ['tablename' => $tablename, 'id' => $item->id])->with('status', 'Se elimino un <strong>item</strong> con éxito.');*/
     }
     public function trash($tablename)
     {

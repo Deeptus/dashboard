@@ -50,9 +50,9 @@ class DashboardServiceProvider extends ServiceProvider
             $bar->advance();
             Artisan::call('storage:link');
             $bar->advance();
-            Artisan::call('migrate:fresh', [
+            /*Artisan::call('migrate:fresh', [
                 '--seed' => true
-            ]);
+            ]);*/
             $bar->advance();
             DB::table('users')->insert([
                 'uuid'     => __uuid(),
