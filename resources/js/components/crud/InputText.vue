@@ -1,7 +1,9 @@
 <template>
 <span class="p-float-label">
-        <InputText type="text" class="p-inputtext-lg"   v-model="value.value"   :id="value" />
-        <label for="value">{{ input.label[lang()] }}</label>
+
+        <InputText type="text"   v-model="value.value"   :id="value.value" />
+        <label :for="value.value">{{ input.label[lang()] }}</label>
+
 </span>
 </template>
 <script>
@@ -28,7 +30,7 @@
         watch: {},
         methods: {
             lang() {
-                return document.documentElement.lang
+                return this.$parent.lang
             }
         },
         computed: {

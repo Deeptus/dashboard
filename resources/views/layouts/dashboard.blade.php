@@ -34,11 +34,6 @@
 
     <title>{{ config('app.name', 'Panel') }}</title>
 
-    <!-- FontAwesome JS-->
-    <script defer src="{{ url('/') }}/assets/plugins/fontawesome/js/all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-
-    <!-- App CSS -->  
 
 <link href="https://unpkg.com/primevue/resources/themes/saga-blue/theme.css " rel="stylesheet">
 <link href="https://unpkg.com/primevue/resources/primevue.min.css " rel="stylesheet">
@@ -59,34 +54,25 @@
     <!-- Hardcodeada temporal -->  
 
 </head>
-<body class="app">
+<body >
 
-
-
-    @auth
+    @if (Auth::check())
     <div id="app" class="p-2">
-
-    
-
-                    @yield('content')
-                
-
-
     </div>
-    @endauth
+
         <!-- Scripts -->
         <script src="{{ asset('js/dashboard.js') }}?{{ $assets_version }}" defer></script>
 
 
-    @if (Auth::check())
          <script>
 
             window.authUser={!! json_encode(Auth::user()); !!};
-            window.authPermissions={!! json_encode(Auth::user()->getAllPermissions()); !!};
-            window.authGroup={!! json_encode(Auth::user()->groups()->get()); !!};
+            window.authPermissions= [1]
+            window.authGroup= [1]
 
      </script>
     @else
+
          <script>window.authUser=null;</script>
     @endif
 

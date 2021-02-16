@@ -34,6 +34,16 @@ class CrudGeneratorController extends Controller
 
 
     }
+    public function index2()
+    {
+        $dirPath = __crudFolder();
+        $data = File::allFiles($dirPath);
+        
+        return view('Dashboard::admin.crud-generator.index', [
+            'data'           => $data,
+            '__admin_active' => 'admin.crud-generator'
+        ]);
+    }
 
     public function data($table = false)
     {
@@ -69,6 +79,8 @@ class CrudGeneratorController extends Controller
 
         $data     = json_decode($request->data);
         $filePath = $dirPath . '/' . $data->table->tablename . '.json';
+
+
         file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT));
 
         DB::table('permissions')->upsert([

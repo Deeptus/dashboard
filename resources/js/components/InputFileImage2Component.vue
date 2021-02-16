@@ -48,6 +48,12 @@
             }
         },
         methods: {
+            getValidFileSize(){
+                return 11111111111111111;
+            },
+            checkValidFileSize(){
+                return true;
+            },
             onFileChange(e) {
                 this.displayImage = false
                 let file = e.target.files[0];
@@ -105,7 +111,7 @@
             getPreviewImage() {
                 let file = this.image
 
-                if (!this.$root.checkValidFileSize(file)) {
+                if (!this.checkValidFileSize(file)) {
                     return publicPATH + '/images/icons/Emblem-important-red.svg'
                 }
 

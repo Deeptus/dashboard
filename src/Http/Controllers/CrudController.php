@@ -34,7 +34,9 @@ class CrudController extends Controller
                 $content      = json_decode(file_get_contents($filePath));
                 $this->table  = $content->table;
                 $this->inputs = $content->inputs;
+
             }
+//            dd($temp);
 
             $className = str_replace(['_', '-', '.'], ' ', $this->tablename);
             $className = ucwords($className);
@@ -44,18 +46,30 @@ class CrudController extends Controller
 
     }
 
+
     public function data($tablename, $id = false)
     {
-        $languages = [];
+        //$languages = [ 'es', 'en', 'pt'];
         $content = null;
         $relations = [];
+        $languages = [];
+//        $langs = [ 'es' => 'Español', 'en' => 'Ingles', 'pt' => 'Portugues' ];
         foreach (LaravelLocalization::getLocalesOrder() as $key => $value) {
-            $languages[$key] = $value['name'];
+                $flag = 'es';
+            if($key == 'pt'){
+                $flag = 'br';
+            }
+            if($key == 'en') {
+                $flag = 'us';
+            }
+            $languages[] = [ 'key' => $value['name'], 'value' => $key, 'flag' => $flag];
         }
         if ($id) {
             $item = $this->model::where('id', $id)->firstOrFail();
             foreach ($this->inputs as $inputKey => $input) {
                 $content[$input->columnname] = $item->{$input->columnname};
+                $content[$input->columnname.'_en'] = $item->{$input->columnname.'_en'};
+                $content[$input->columnname.'_pt'] = $item->{$input->columnname.'_pt'};
             }    
         }
 
@@ -66,6 +80,9 @@ class CrudController extends Controller
                                 ->whereNull('deleted_at')
                                 ->pluck($input->tabletextcolumn, $input->tablekeycolumn);
             }
+
+
+
         }    
         return response()->json([
             'languages' => $languages,
@@ -81,10 +98,25 @@ class CrudController extends Controller
     public function index()
     {
         $data = $this->model::get();
-        
+        $languages = [];
+
+        foreach (LaravelLocalization::getLocalesOrder() as $key => $value) {
+
+                $flag = 'es';
+            if($key == 'pt'){
+                $flag = 'br';
+            }
+            if($key == 'en') {
+                $flag = 'us';
+            }
+            $languages[] = [ 'key' => $value['name'], 'value' => $key, 'flag' => $flag];
+        }
+
+
         return response()->json([
             'data'           => $data,
             'tablename'      => $this->tablename,
+            'languages'      => $languages,
             'table'          => $this->table,
             'inputs'         => $this->inputs,
             '__admin_active' => 'admin.crud.' . $this->tablename
@@ -136,7 +168,22 @@ class CrudController extends Controller
 
             //echo $input->columnname;
 
-           $item->{$input->columnname} = $request->{$input->columnname};
+            if($input->type == 'file'){
+
+            $path = $request->file->store('public/content/' . $this->tablename . '/');
+
+
+            $item->{$input->columnname} = $path;
+
+
+            }else{
+
+                $item->{$input->columnname.'_pt'} = $request->{$input->columnname.'_pt'};
+                $item->{$input->columnname.'_en'} = $request->{$input->columnname.'_en'};
+
+                $item->{$input->columnname} = $request->{$input->columnname};
+
+            }
         }
         
         $item->save();

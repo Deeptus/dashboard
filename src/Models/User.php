@@ -39,7 +39,5 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function sucursal() {
-        return $this->belongsTo('App\Models\Sucursal', 'sucursal_id');
-    }
+
 }

@@ -4,11 +4,11 @@ namespace AporteWeb\Dashboard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Translatable\HasTranslations;
+//use Spatie\Translatable\HasTranslations;
 
 class Content extends Model
 {
-    use HasTranslations, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'contents';
 	protected $fillable = [

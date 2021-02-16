@@ -22,32 +22,47 @@
         <div class="p-col-12" v-if="loaded == 1">
 
 
+
+<SelectButton v-model="selectedlang" :options="languages" dataKey="value" >
+    <template #option="slotProps">
+        <span :class="'flag flag-' + slotProps.option.flag.toLowerCase()" />
+
+    </template>
+</SelectButton>
+
+
             <div class="card">
                 <div class="card-header">
-                   <h5> {{ table.name['es'] }} </h5>
+                   <h5> {{ table.name[selectedlang.value] }} </h5>
                 </div>
                 <div class="card-body pb-0">
                     <div class="p-fluid p-grid p-formgrid">
-                        <InputLayout :relations="relations" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk" ></InputLayout>
+                        <InputLayout :relations="relations" :value="content[input.columnname+'_en']" :input="input" v-for="(input, inputk) in inputs" :key="inputk"  @input="addFile" :lang="selectedlang.value" v-if="selectedlang.value == 'en'"></InputLayout>
+                        <InputLayout :relations="relations" :value="content[input.columnname+'_pt']" :input="input" v-for="(input, inputk) in inputs" :key="inputk"  @input="addFile" :lang="selectedlang.value"  v-if="selectedlang.value == 'pt'"></InputLayout>
+                        <InputLayout :relations="relations" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"  @input="addFile" :lang="selectedlang.value" v-if="selectedlang.value == 'es'"></InputLayout>
+                        
                     </div>
                 </div>
             </div>
+
             <div class="d-sm-flex align-items-center justify-content-between mt-4">
 
-                <Button type="button" @click="sendForm()" class="btn btn-lg btn-primary" icon="pi pi-save" label="Guardar" />
+                <Button type="button" @click="sendForm()" class="p-button-success" icon="pi pi-save" label="Guardar" />
             </div>
         </div>
     </div>
 </template>
 <script>
-    import draggable from 'vuedraggable'
+  //  import draggable from 'vuedraggable'
     import InputLayout from './InputLayout'
     import Swal from 'sweetalert2'
     import Toast from 'primevue/toast';
-    import CrudService from './../../../../../../../resources/js/service/CrudService';
+    import CrudService from './../../service/CrudService';
     import Message from 'primevue/message';
+    import axios from 'axios'
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
+
         props: {
             formName: {
                 type: String,
@@ -73,12 +88,17 @@
         data(){
             return{
                 languages: {},
+
+                selectedlang: { flag: 'es', key: 'Español', value: 'es' },
                 messages: [],
                 tablename: '',
                 table: {},
                 inputs: [],
+                inputs2: [],
                 content: {},
                 edit: null,
+                files:  [],
+                file: null,
                 loaded: 0
             }
         },
@@ -91,30 +111,46 @@
             this.edit = this.$route.params.id
             //this.CrudService.getTable(this.tablename).then(data => this.inputs = data.inputs);
             this.$nextTick(() => {
-                let nurl = ''
+                
                 let url = this.tablename
-                if(this.edit){
-                    nurl = '../../crud/' + url + '/api/data/' + this.edit
-                }else{
-                    nurl = url
-                }
 
-                this.CrudService.getTable(nurl).then((response) => {
+                if(this.edit){
+
+                    url = url + '/data/' + this.edit
+                }
+                
+                this.CrudService.getTable(url).then((response) => {
                     console.log(response)
                     this.languages = response.languages
                     this.tablename = response.tablename
                     this.table     = response.table
                     this.inputs    = response.inputs
+
+
+
                     this.relations = response.relations
                     this.inputs.forEach(input => {
+
+
                         this.content[input.columnname] = {
                             value: input.default,
                             errors: []
                         }
+                        this.content[input.columnname+'_en'] = {
+                            value: input.default,
+                            errors: []
+                        }
+                        this.content[input.columnname+'_pt'] = {
+                            value: input.default,
+                            errors: []
+                        }
                     });
+
                     if(response.content) {
                         this.inputs.forEach(input => {
                             this.content[input.columnname].value = response.content[input.columnname]
+                            this.content[input.columnname+'_en'].value = response.content[input.columnname+'_en']
+                            this.content[input.columnname+'_pt'].value = response.content[input.columnname+'_pt']
                         });
                     }
                     this.loaded = 1
@@ -122,10 +158,19 @@
             });
 
         },
-        mounted () {},
+        mounted () {
+
+
+
+        },
         watch: {
         },
         methods: {
+            addFile(event){
+                //console.log(event)
+                this.file = event[0]
+                console.log(this.file)
+            },
             sendForm() {
                 Swal.fire({
                     title: 'Enviar',
@@ -145,9 +190,18 @@
             postForm() {
                 let formData = new FormData()
 
+                if(this.file){
+
+                formData.append('file', this.file);
+
+                }
+
+
                 this.inputs.forEach(input => {
-                    console.log(this.content[input.columnname].value)
+                    //console.log(this.content[input.columnname].value)
                     formData.append(input.columnname, this.content[input.columnname].value);
+                    formData.append(input.columnname+'_en', this.content[input.columnname+'_en'].value);
+                    formData.append(input.columnname+'_pt', this.content[input.columnname+'_pt'].value);
                 });
 
                 let edcheck = ''
@@ -159,7 +213,7 @@
                     this.loaded = 3
                     setTimeout(() => {
                         //this.loaded = 1
-                        window.location.href = '/adm/home#/crud/' + this.tablename
+                         this.$router.back();
                     }, 1000);
                 }).catch((error) => {
                     if (error.response.data.message == 'CSRF token mismatch.') {

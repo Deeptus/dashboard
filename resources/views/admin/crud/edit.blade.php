@@ -5,7 +5,7 @@
     <div>
         <a href="{{ route('admin.crud', ['tablename' => $tablename]) }}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
             <i class="fas fa-step-backward fa-sm text-white-50"></i>
-            Volver Atras
+            Volver Atrass
         </a>
     </div>
 </div>

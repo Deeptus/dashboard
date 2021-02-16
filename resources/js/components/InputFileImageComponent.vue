@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="mb-3">
-            <div v-if="!$root.checkValidFileSize(image)" style="color: #FC3939; font-weight: bold; font-size: .9em;">El Archivo pesa mas de lo permitido, peso maximo permitido: <strong>{{ $root.getValidFileSize('h') }}</strong></div>
+            <div v-if="checkValidFileSize(image)" style="color: #FC3939; font-weight: bold; font-size: .9em;">El Archivo pesa mas de lo permitido, peso maximo permitido: <strong>{{ this.getValidFileSize('h') }}</strong></div>
         </div>
     </div>
 </template>
@@ -49,6 +49,12 @@
             }
         },
         methods: {
+            getValidFileSize(){
+                return 11111111111111111;
+            },
+            checkValidFileSize(){
+                return true;
+            },
             removeImage () {
                 this.image      = {}
                 this.image.url  = ''
@@ -111,9 +117,7 @@
             },
             getPreviewImage() {
                 let file = this.image
-                if (!this.$root.checkValidFileSize(file)) {
-                    return publicPATH + '/images/icons/Emblem-important-red.svg'
-                }
+
 
                 if (!file || !file.type) {
                     if (file.url) {

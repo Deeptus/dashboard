@@ -1,0 +1,14 @@
+.p-button-primary {
+background: #000;
+border: 3px solid #fff;
+font-weight: bolder;
+border-radius: 7px;
+}
+
+.p-button-primary:enabled:hover {
+background: #fff;
+border: 3px solid #000;
+color: #000;
+font-weight: bolder;
+border-radius: 7px;
+}

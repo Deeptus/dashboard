@@ -1,8 +1,7 @@
 <template>
     <div :class="'p-field p-col-12 p-md-' + input.gridcols">
 
-
-        <InputText  :value="value" :input="input" v-if="layout[input.type] == 'basic'" ></InputText>
+        <InputTextDash  :value="value" :input="input" v-if="layout[input.type] == 'basic'" ></InputTextDash>
 
 
         <InputSelect :relations="relations" :value="value" :input="input" v-if="layout[input.type] == 'select'"></InputSelect>
@@ -11,21 +10,28 @@
         <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'" ></InputDate>
 
 
-<input type="file" v-if="layout[input.type] == 'file'" name="file"  :input="input"   @change="upload($event)" /> 
-        <!---<
-        <FileUpload  v-if="layout[input.type] == 'file'"  name="files[]" url="/adm/inge/up" :multiple="true" />--->
+<Editor v-model="value.value" :value="value" :input="input" v-if="layout[input.type] == 'textarea'" editorStyle="height: 320px"/> 
+
+
+
+<FileUpload  v-if="layout[input.type] == 'file'" mode="basic" name="demo[]" 
+accept="image/*" :maxFileSize="1000000"  :customUpload="true" @uploader="myUploader" :auto="true"/>
 
 
     </div>
 
 </template>
 <script>
-    import InputText from './InputText'
+    import InputTextDash from './InputText'
     import InputDate from './InputDate'
     import InputSelect from './InputSelect'
 
+
     export default {
         props: {
+            lang: {type: String,
+                default: 'es'
+            },
             input: {
                 type: Object,
                 default: {}
@@ -51,12 +57,14 @@
 
         },
         components: {
-            InputText,
+            InputTextDash,
             InputSelect,
+
             InputDate
         },
         data(){
             return{
+
                 propObject: {
                     0: null,
                     1: null,
@@ -67,7 +75,7 @@
                 },
                 layout: {
                     "text": 'basic',
-                    "textarea": 'basic',
+                    "textarea": 'textarea',
                     "email": 'basic',
                     "url": 'basic',
                     "tel": 'basic',
@@ -93,20 +101,6 @@
         mounted () {
 
 
-            this.$root.$on('setAfip', data => {
-
-                ///console.log(data)
-                let helper = data.split(',') 
-                this.propObject = Object.assign({}, helper);//{ ...[helper] }
-                
-               // console.log(data);
-                /*this.propObject.nombre                 = data.nombre
-                this.propObject.apellido               = data.apellido
-                this.propObject.tipoContribuyente      = data.tipoContribuyente
-                this.propObject.domicilioFiscal        = data.domicilioFiscal*/
-
-            });
-
 
         },
         watch: {
@@ -114,17 +108,12 @@
 
         },
         methods: {
+        myUploader(event) {
+            //event.files == files to upload
 
- upload(event){
-    let data = new FormData();
-    let file = event.target.files[0];
+            this.$emit('input', event.files);
+        }
 
-    data.append('name', 'my-file')
-    data.append('file', file)
-
-
-
-  },
         },
         computed: {
         }

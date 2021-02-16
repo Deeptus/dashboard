@@ -17,6 +17,7 @@ Route::group([
     'prefix'     => config('adashboard.prefix', 'adm'),
 ], function() {
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::get('salir', 'Auth\LoginController@logout')->name('salir');
     Route::post('login', 'Auth\LoginController@login')->name('.login');
 
 });
@@ -31,13 +32,15 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         //'namespace'  => 'Admin',
     ], function() {
 
-        Route::get('/home', 'HomeController@index')->name('adm.home');
+        Route::get('/', 'HomeController@index')->name('.home');
+        Route::get('/api/menu', 'HomeController@menu')->name('.menu');
 
         Route::group([
             'prefix' => 'crud-generator',
             'as' => '.crud-generator',
         ], function() {
             Route::get ('/', 'CrudGeneratorController@index');
+            Route::get ('/cg', 'CrudGeneratorController@index2')->name('.index');
             Route::get ('/create', 'CrudGeneratorController@create')->name('.create');
             Route::post('/', 'CrudGeneratorController@store')->name('.store');
             Route::get ('/{id}/edit', 'CrudGeneratorController@edit')->name('.edit');
@@ -63,7 +66,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/{tablename}/trash', 'CrudController@trash')->name('.trash');
             Route::get ('/{tablename}/{id}/restore', 'CrudController@restore')->name('.restore');
             //
-            Route::get ('/{tablename}/api/data/{id?}', 'CrudController@data')->name('.data');
+            Route::get ('/{tablename}/data/{id?}', 'CrudController@data')->name('.data');
             Route::get ('/{tablename}/{id}/copy', 'CrudController@copy')->name('.copy');
         });
 

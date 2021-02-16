@@ -1,5 +1,7 @@
+
+
 <template>
-<div class="row">
+<div class="container">
     <div class="col s12">
         <div class="row justify-content-center" v-if="loaded == 0">
             <h3><center><i class="fas fa-sync fa-spin"></i><br>Cargando</center></h3>
@@ -30,120 +32,139 @@
             <div class="col-xl-12 col-lg-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">IMÁGENES</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Google reCAPTCHA (AntiBots / AntiSpam)</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label :for="'config.recaptcha_publickey'">reCAPTCHA public-key</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    :id="'config.recaptcha_publickey'"
+                                    :name="'config.recaptcha_publickey'"
+                                    v-model="config.recaptcha_publickey"
+                                >
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label :for="'config.recaptcha_privatekey'">reCAPTCHA private-key</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    :id="'config.recaptcha_privatekey'"
+                                    :name="'config.recaptcha_privatekey'"
+                                    v-model="config.recaptcha_privatekey"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Header</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <link-info :model.sync="config.header_networks" :legend="'Social Networks:'"></link-info>
+                            </div>
+
+                            <div class="col-md-12">
+                                <link-info :model.sync="config.header_info" :legend="'Info:'" :icon="true"></link-info>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Footer</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <link-info :model.sync="config.footer_networks" :legend="'Social Networks:'"></link-info>
+                            </div>
+
+                            <div class="col-md-12">
+                                <link-info :model.sync="config.footer_info" :legend="'Info:'" :icon="true"></link-info>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Contact us</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label :for="'config.contact_target_send_email'">A qué correo electrónico llegarán los mensajes</label>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    :id="'config.contact_target_send_email'"
+                                    :name="'config.contact_target_send_email'"
+                                    v-model="config.contact_target_send_email"
+                                    placeholder="correo@servidor.com.ar"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Tienda</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label :for="'config.thousands_separator'">Separador de Miles</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    :id="'config.thousands_separator'"
+                                    :name="'config.thousands_separator'"
+                                    v-model="config.thousands_separator"
+                                >
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label :for="'config.decimal_separator'">Separador de Decimales</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    :id="'config.decimal_separator'"
+                                    :name="'config.decimal_separator'"
+                                    v-model="config.decimal_separator"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Administrador</h6>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input-file-image
-                                    :model.sync="logoHeader"
+                                <input-file-image2
+                                    :model.sync="config.admin_logo"
                                     id="input-logo-header"
-                                    label-text="Seleccione Logotipo"
-                                ></input-file-image>
+                                    label-text="Logo"
+                                    label-descript=""
+                                ></input-file-image2>
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input-file-image
-                                    :model.sync="logoFooter"
-                                    id="input-logo-footer"
-                                    label-text="Seleccione Logotipo Footer"
-                                ></input-file-image>
-                            </div>
-                            <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input-file-image
-                                    :model.sync="logoFavicon"
+                                <input-file-image2
+                                    :model.sync="config.admin_favicon"
                                     id="input-logo-favicon"
-                                    label-text="Seleccione Favicon"
-                                ></input-file-image>
+                                    label-text="Favicon"
+                                    label-descript=""
+                                ></input-file-image2>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-12 col-lg-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Teléfonos</h6>
-                        <div class="card-header-buttons">
-                            <button type="button" class="btn btn-info" @click="addPhone()">
-                                <i class="fas fa-plus"></i>
-                                Añadir
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <draggable v-model="phones" class="row" draggable=".draggable-item" @change="log">
-                            <div class="col-sm-12 col-md-6 col-lg-4 draggable-item" v-for="(item, index) in phones" :key="index">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <fieldset>
-                                            <select class="form-control" v-model="item.type">
-                                                <option value="tel">Teléfono</option>
-                                                <option value="cel">Celular</option>
-                                                <option value="wha">Whatsapp</option>
-                                            </select>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text" id="basic-addon1" v-if="item.type == 'tel'">
-                                                        <i class="fas fa-phone"></i>
-                                                    </div>
-                                                    <div class="input-group-text" id="basic-addon1" v-else-if="item.type == 'cel'">
-                                                        <i class="fas fa-mobile-alt"></i>
-                                                    </div>
-                                                    <div class="input-group-text" id="basic-addon1" v-else-if="item.type == 'wha'">
-                                                        <i class="fab fa-whatsapp"></i>
-                                                    </div>
-                                                </div>
-                                                <input v-model="item.numero" type="text" class="form-control" placeholder="1112345678">
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label :for="'config.admin_footer_text'">Pie del ADM</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    :id="'config.admin_footer_text'"
+                                    :name="'config.admin_footer_text'"
+                                    v-model="config.admin_footer_text"
+                                >
                             </div>
-                        </draggable>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-12 col-lg-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Email</h6>
-                        <div class="card-header-buttons">
-                            <button type="button" class="btn btn-info" @click="addEmail()">
-                                <i class="fas fa-plus"></i>
-                                Añadir
-                            </button>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <draggable v-model="emails" class="row" draggable=".draggable-item" @change="log">
-                            <div class="col-sm-12 col-md-6 col-lg-4 draggable-item" v-for="(item, index) in emails" :key="index">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <fieldset>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text" id="basic-addon1">
-                                                        <i class="fas fa-mail-bulk"></i>
-                                                    </div>
-                                                </div>
-                                                <input v-model="item.email" type="email" class="form-control" placeholder="ingrese@email">
-                                            </div>
-                                            <div class="custom-control custom-switch">
-                                                <input
-                                                type="checkbox"
-                                                v-bind:true-value="1"
-                                                v-bind:false-value="0"
-                                                v-model.number="item.notify_contact"
-                                                class="custom-control-input"
-                                                :id="'notify_contact'+index"
-                                                >
-                                                <label class="custom-control-label" :for="'notify_contact'+index">Se le notifica cuando se envie un mensaje en la sección contacto</label>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-                        </draggable>
                     </div>
                 </div>
             </div>
@@ -162,29 +183,27 @@
 
 <script>
     // import ClassicEditor from '@novicov/ckeditor5-build-classic-full';
-    import draggable from 'vuedraggable'
-    import tinymce from '@tinymce/tinymce-vue';
-    import InputFileImage from '../InputFileImageComponent';
+    import axios from 'axios'
+    import LinkInfo from './../LinkInfoComponent'
+    import InputFileImage2 from './../InputFileImage2Component';
+    import InputFileImage from './../InputFileImageComponent';
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
         props: {
-            urlData: '',
-            urlBack: '',
+            urlData: '/adm/companydata/api/data',
+            urlBack: '/adm/company-data/',
             urlAction: '',
             formName: '',
         },
         components: {
-            draggable,
-            'tinymce': tinymce,
+            'link-info': LinkInfo,
+            'input-file-image2': InputFileImage2,
             'input-file-image': InputFileImage
         },
         data(){
             return{
-                logoHeader: '',
-                logoFooter: '',
-                logoFavicon: '',
+                config: {},
                 phones: [],
-                emails: [],
                 formData: new FormData(),
                 languages: {},
                 loaded: 0,
@@ -193,11 +212,11 @@
         },
         created() {
             this.$nextTick(() => {
-                console.log(this.urlData)
-                axios.get(this.urlData).then((response) => {
+                //console.log(this.urlData)
+                axios.get('/adm/companydata/api/data').then((response) => {
                     this.languages = response.data.languages
                     if (response.data.content != null) {
-                        this.content = response.data.content
+                        this.config = response.data.content
                     }
                     this.loaded = 1
                 });
@@ -205,23 +224,52 @@
         },
         methods: {
             postForm() {
-                console.log(this.logoHeader)
-            },
-            addPhone() {
-                this.phones.push({
-                    type: 'tel',
-                    numero: ''
-                });
-            },
-            addEmail() {
-                this.emails.push({
-                    email: '',
-                    notify_contact: 0
-                });
-            },
-            log() {
+                this.loaded = 2
+                this.loaded = 1
+                var form = new FormData();
+                /***********************************************/
+                let images = [
+                    'admin_logo',
+                    'admin_favicon',
+                    'footer_logo',
+                    'header_logo'
+                ]
+                images.forEach(input => {
+                    if (this.config[input]) {
+                        if (this.config[input] instanceof File) {
+                            form.append(input, this.config[input])
+                        }
+                        if (this.config[input] instanceof Object && this.config[input].remove) {
+                            form.append(input, '--remove--')
+                        }
+                    }
+                })
+                let texts = [
+                    'thousands_separator',
+                    'decimal_separator',
+                    'admin_footer_text',
+                    'recaptcha_publickey',
+                    'recaptcha_privatekey',
+                    'comision',
+                    'header_networks',
+                    'header_info',
+                    'footer_networks',
+                    'footer_info',
+                    'contact_target_send_email',
+                ]
+                texts.forEach(input => {
+                    form.append(input, this.config[input])
+                })
+                /***********************************************/
 
-            }
+                axios.post('/adm/companydata/', form).then((response) => {
+                    this.loaded = 3
+                    setTimeout(function(){
+                        this.loaded = 1
+                        //window.location.href = this.urlBack
+                    }.bind(this), 1000);
+                })
+            },
         }
   }
 </script>

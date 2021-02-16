@@ -83,14 +83,43 @@ class GenerateCrudTables extends Migration
                
             }else{
 
+
             if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
                 $change = true;
             }
 
             if($input->type == 'text') {
+
+
+
+            if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_en')) {
+                $col = $table->string($input->columnname.'_en')->nullable();                
+
+            }
+
+
+            if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_pt')) {
+                $col = $table->string($input->columnname.'_pt')->nullable();                
+
+            }
+
+                $col = $table->string($input->columnname);
+            }
+            if($input->type == 'file') {
                 $col = $table->string($input->columnname);
             }
             if($input->type == 'textarea') {
+
+            if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_pt')) {
+                $col = $table->longText($input->columnname.'_pt')->nullable();                
+
+            }
+
+            if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_en')) {
+                $col = $table->longText($input->columnname.'_en')->nullable();                
+
+            }
+
                 $col = $table->longText($input->columnname);
             }
             if($input->type == 'date') {
@@ -105,6 +134,8 @@ class GenerateCrudTables extends Migration
             if($input->type == 'select') {
                 $col = $table->unsignedBigInteger($input->columnname);
             }
+
+            
             if($input->nullable == 1) {
                 $col->nullable();
             }/* else {

@@ -10,4 +10,6 @@ class ConfigVar extends Model {
         'config_key',
         'config_value',
     ];
+
+
 }
