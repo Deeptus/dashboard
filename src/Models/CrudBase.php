@@ -9,7 +9,45 @@ use AporteWeb\Dashboard\Models\Multimedia;
 use Illuminate\Support\Facades\Storage;
 
 trait CrudBase {
-    
+
+    public $listEnableMethods = [];
+
+    public function __construct() {
+
+        $dirPath  = app_path('Dashboard');
+        $filePath = $dirPath . '/' . $this->table . '.json';
+
+        if (file_exists($filePath)) {
+            $content = json_decode(file_get_contents($filePath));
+            $table   = $content->table;
+            foreach ($content->inputs as $key => $input) {
+                if ($input->type == 'gallery') {
+                    $methodName = str_replace(['_', '-', '.'], ' ', $input->columnname . '_rel_val');
+                    $methodName = ucwords($methodName);
+                    $methodName = 'get' . str_replace(' ', '', $methodName) . 'Attribute';
+
+                    $barFunc = function () use ($input) {
+                        $gallery = Gallery::with(['items'])->find($this->{$input->columnname});
+                        if ($gallery) {
+                            return $gallery->items;
+                        }
+                    };
+                    $this->listEnableMethods[$methodName] = \Closure::bind($barFunc, $this, get_class());
+                }
+            }
+        }
+        return parent::__construct();
+    }
+    function __call($method, $args) {
+        if (array_key_exists($method, $this->listEnableMethods)) {
+            if(is_callable($this->listEnableMethods[$method])) {
+                return call_user_func_array($this->listEnableMethods[$method], $args);
+            }
+        } else {
+            return parent::__call($method, $args);
+        }
+    }
+
     public function __get($key) {
         $dirPath  = app_path('Dashboard');
         $filePath = $dirPath . '/' . $this->table . '.json';
@@ -43,6 +81,17 @@ trait CrudBase {
                         ];
                     }
                 }
+                if ($input && $input->type == 'gallery') {
+                    $file = Multimedia::find($this->{$input->columnname . '_id'});
+                    if ($file) {
+                        return [
+                            'url'  => asset(Storage::url($file->path)),
+                            'path' => $file->path,
+                            'id'   => $file->id,
+                            'type' => Storage::mimeType($file->path)
+                        ];
+                    }
+                }
             }
         }
         if (Str::endsWith($key, '_rel_val')) {
@@ -63,32 +112,38 @@ trait CrudBase {
                 );
                 
                 $input = array_shift($input);
-                
-                if ($input->valueoriginselector == 'values') {
-                    $option = array_filter(
-                        $input->options,
-                        function ($e) use (&$column) {
-                            return $e->key == $this->getAttribute($column);
+                if ($input->type == 'select') {
+                    if ($input->valueoriginselector == 'values') {
+                        $option = array_filter(
+                            $input->options,
+                            function ($e) use (&$column) {
+                                return $e->key == $this->getAttribute($column);
+                            }
+                        );
+                        $option = array_shift($option);
+                        try {
+                            return $option->text;
+                        } catch (\Throwable $th) {
+                            return null;
                         }
-                    );
-                    $option = array_shift($option);
-                    try {
-                        return $option->text;
-                    } catch (\Throwable $th) {
-                        return null;
+                    }
+                    if ($input->valueoriginselector == 'table') {
+                        $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
+                        $className = ucwords($className);
+                        $className = str_replace(' ', '', $className);
+                        $subModel = "\\App\\Models\\" . $className;
+                        $item = $subModel::where($input->tablekeycolumn, $this->id)->first();
+                        try {
+                            return $item->{ $input->tabletextcolumn };
+                        } catch (\Throwable $th) {
+                            return null;
+                        }
                     }
                 }
-                if ($input->valueoriginselector == 'table') {
-                    $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
-                    $className = ucwords($className);
-                    $className = str_replace(' ', '', $className);
-                    $subModel = "\\App\\Models\\" . $className;
-                    $item = $subModel::where($input->tablekeycolumn, $this->id)->first();
-                    try {
-                        return $item->{ $input->tabletextcolumn };
-                    } catch (\Throwable $th) {
-                        return null;
-                    }
+                if ($input->type == 'gallery') {
+                    $column = str_replace('_rel_val', '', $key);
+                    return Gallery::with(['items'])->find($this->getAttribute($column))->items;
+                    return $this->belongsToMany(Multimedia::class, 'gallery_multimedia', 'gallery_id', 'multimedia_id');
                 }
             }
         }

@@ -22,8 +22,8 @@ class Multimedia extends Model
         'disk',
         'meta_value'
 	];
-	protected $casts = [
-	];
+	protected $casts = [];
+	protected $appends = ['url'];
     public $translatable = [];
 
     public function getUrlAttribute(Type $var = null)
