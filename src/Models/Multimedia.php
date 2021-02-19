@@ -32,6 +32,9 @@ class Multimedia extends Model
     }
     public function getTypeAttribute(Type $var = null)
     {
-        return Storage::mimeType($this->getAttribute('path'));
+        if (Storage::exists($this->getAttribute('path'))) {
+            return Storage::mimeType($this->getAttribute('path'));
+        }
+        return null;
     }
 }
