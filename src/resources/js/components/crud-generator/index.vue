@@ -66,6 +66,15 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating">
+                                        <select class="form-select" id="order_index" v-model="table.order_index">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                        <label for="order_index">Order Index</label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating">
                                         <select class="form-select" id="uuid" v-model="table.uuid">
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
@@ -107,6 +116,15 @@
                                             <option value="0">No</option>
                                         </select>
                                         <label for="slug_global">SLUG GLOBAL</label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="is_authenticatable" v-model="table.is_authenticatable">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                        <label for="is_authenticatable">Is Authenticatable</label>
                                     </div>
                                 </div>
                             </div>
@@ -371,12 +389,14 @@
                 table: {
                     id: 1,
                     uuid: 0,
+                    order_index: 0,
                     tablename: '',
                     name: {},
                     timestamps: 1,
                     softDeletes: 1,
                     slug: 0,
-                    slug_global: 0
+                    slug_global: 0,
+                    is_authenticatable: 0
                 },
                 inputs: [],
                 loaded: 0

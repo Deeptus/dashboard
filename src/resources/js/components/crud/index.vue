@@ -207,8 +207,8 @@
                 axios.post(this.urlAction, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
-                        // this.loaded = 1
-                        window.location.href = this.urlBack
+                        this.loaded = 1
+                        // window.location.href = this.urlBack
                     }, 1000);
                 }).catch((error) => {
                     if (error.response.data.message == 'CSRF token mismatch.') {

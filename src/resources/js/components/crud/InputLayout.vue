@@ -3,7 +3,7 @@
         <InputText :value="value" :input="input" v-if="layout[input.type] == 'basic'"></InputText>
         <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'"></InputDate>
         <InputSelect :relations="relations" :value="value" :input="input" v-if="layout[input.type] == 'select'"></InputSelect>
-        <SubForm :relations="{}" :value="value" :subForm="subForm" :input="input" v-if="layout[input.type] == 'subForm'"></SubForm>
+        <SubForm :relations="relations" :value="value" :subForm="subForm" :input="input" v-if="layout[input.type] == 'subForm'"></SubForm>
         <CustomGallery :label="input.label[lang()]" :model.sync="value" v-if="input.type == 'gallery'"></CustomGallery>
         <MapSelectLatLon :value="value" :input="input" v-if="input.type == 'map-select-lat-lng'"></MapSelectLatLon>
         <MultimediaFile :value="value" :input="input" v-if="input.type == 'multimedia_file'"></MultimediaFile>

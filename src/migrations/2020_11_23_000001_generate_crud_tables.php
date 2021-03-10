@@ -39,11 +39,10 @@ class GenerateCrudTables extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
     }
-    public function table($table, $content)
-    {
+
+    public function table($table, $content) {
         // added support double to change
         if (!Type::hasType('double')) {
             Type::addType('double', FloatType::class);
@@ -55,6 +54,27 @@ class GenerateCrudTables extends Migration
         if (!Schema::hasColumn($content->table->tablename, 'uuid')) {
             $table->uuid('uuid');
         }
+        if ($content->table->is_authenticatable) {
+            if (!Schema::hasColumn($content->table->tablename, 'email_verified_at')) {
+                $table->timestamp('email_verified_at')->nullable();
+            }
+            if (!Schema::hasColumn($content->table->tablename, 'password')) {
+                $table->string('password');
+            }
+            if (!Schema::hasColumn($content->table->tablename, 'remember_token')) {
+                $table->rememberToken();
+            }
+        }
+        try {
+            if ($content->table->order_index) {
+                if (!Schema::hasColumn($content->table->tablename, 'order_index')) {
+                    $table->bigInteger('order_index')->default(0);
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         foreach ($content->inputs as $inputKey => $input) {
             // saltar inputs que no son campos realmente
             $col = [];
@@ -68,6 +88,9 @@ class GenerateCrudTables extends Migration
             if($input->type == 'text') {
                 $col[] = $table->string($input->columnname);
             }
+            if($input->type == 'email') {
+                $col[] = $table->string($input->columnname);
+            }
             if($input->type == 'textarea') {
                 $col[] = $table->longText($input->columnname);
             }
@@ -75,6 +98,9 @@ class GenerateCrudTables extends Migration
                 $col[] = $table->longText($input->columnname);
             }
             if($input->type == 'number') {
+                $col[] = $table->double($input->columnname);
+            }
+            if($input->type == 'money') {
                 $col[] = $table->double($input->columnname);
             }
             if($input->type == 'date') {
@@ -129,5 +155,5 @@ class GenerateCrudTables extends Migration
         if (!Schema::hasColumn($content->table->tablename, 'deleted_at')) {
             $table->softDeletes();
         }
-}
+    }
 }

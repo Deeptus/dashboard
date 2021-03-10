@@ -36,11 +36,18 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $request = request()->all();
+        /*
         foreach ($request as $key => $value) {
             if ($request[$key] == 'undefined' || $request[$key] == 'null' || $request[$key] == 'NULL') {
                 $request[$key] = null;
             }
         }
+        */
+        array_walk_recursive($request, function (&$item, $clave) {
+            if ($item == 'undefined' || $item == 'null' || $item == 'NULL') {
+                $item = null;
+            }
+        });
         request()->merge($request);
 
         \Illuminate\Database\Query\Builder::macro('toRawSql', function(){

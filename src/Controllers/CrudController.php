@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use AporteWeb\Dashboard\Models\Gallery;
 use AporteWeb\Dashboard\Models\Multimedia;
+use Illuminate\Support\Facades\Schema;
 
 class CrudController extends Controller
 {
@@ -50,7 +51,9 @@ class CrudController extends Controller
         if ($input->type == 'select' && $input->valueoriginselector == 'table') {
             $found = true;
             $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
-            $content[$input->columnname] = $item->{$input->columnname};
+            if ($item) {
+                $content[$input->columnname] = $item->{$input->columnname};
+            }
         }
 
         if ($input->type == 'map-select-lat-lng') {
@@ -61,14 +64,16 @@ class CrudController extends Controller
 
         if ($input->type == 'multimedia_file') {
             $found = true;
-            $file = Multimedia::find($item->{$input->columnname . '_id'});
-            if ($file) {
-                $content[$input->columnname] = [
-                    'url'  => asset(Storage::url($file->path)),
-                    'path' => $file->path,
-                    'id'   => $file->id,
-                    'type' => Storage::mimeType($file->path)
-                ];
+            if ($item) {
+                $file = Multimedia::find($item->{$input->columnname . '_id'});
+                if ($file) {
+                    $content[$input->columnname] = [
+                        'url'  => asset(Storage::url($file->path)),
+                        'path' => $file->path,
+                        'id'   => $file->id,
+                        'type' => Storage::mimeType($file->path)
+                    ];
+                }
             }
         }
 
@@ -87,6 +92,7 @@ class CrudController extends Controller
                 }
             }
         }
+
         if ($input->type == 'subForm') {
             $found = true;
             $dirPath  = app_path('Dashboard');
@@ -103,8 +109,30 @@ class CrudController extends Controller
                     'table'  => $subFormLayout->table,
                     'inputs' => $subFormLayout->inputs
                 ];
+
+                foreach ($subFormLayout->inputs as $subInputKey => $subInput) {
+                    $results = $this->getInput(
+                        false, // ID false
+                        $subInput,
+                        null,
+                        $relations,
+                        $galleries,
+                        $subForm,
+                        null
+                    );
+                    // $input     = $results['input'];
+                    // $content   = $results['content'];
+                    $relations = $results['relations'];
+                    $galleries = $results['galleries'];
+                    $subForm   = $results['subForm'];
+                }        
+
                 if ($id) {
-                    $subForm[$input->columnname]['content'] = $subModel::where($input->tablekeycolumn, $item->id)->get();
+                    $subItems = $subModel::where($input->tablekeycolumn, $item->id);
+                    if (Schema::hasColumn($subFormLayout->table->tablename, 'order_index')) {
+                        $subItems = $subItems->orderBy('order_index', 'asc');
+                    }
+                    $subForm[$input->columnname]['content'] = $subItems->get();
                     foreach ($subForm[$input->columnname]['content'] as $itemKey => $item) {
                         foreach ($subFormLayout->inputs as $subkKy => $subInputs) {
                             if ($subInputs->type == 'multimedia_file') {
@@ -165,7 +193,8 @@ class CrudController extends Controller
             $relations = $results['relations'];
             $galleries = $results['galleries'];
             $subForm   = $results['subForm'];
-        }    
+        }
+
         return response()->json([
             'languages' => $languages,
             'locale'    => App::getLocale(),
@@ -280,40 +309,51 @@ class CrudController extends Controller
         }
 
         if ($input->type == 'subForm') {
-
             $dirPath  = app_path('Dashboard');
             $filePath = $dirPath . '/' . $input->tabledata . '.json';
-
+            
             if (file_exists($filePath)) {
                 $content   = json_decode(file_get_contents($filePath));
                 $subTable  = $content->table;
                 $subInputs = $content->inputs;
             }
-
+            
             $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
             $className = ucwords($className);
             $className = str_replace(' ', '', $className);
             $subModel = "\\App\\Models\\" . $className;
             try {
-                foreach ($data[$input->columnname] as $subFormItem) {
-                    if ( array_key_exists('id', $subFormItem) ) {
-                        $subItem = $subModel::find($subFormItem['id']);
-                    } else {
-                        $subItem = new $subModel;
-                    }
-                    foreach ($subInputs as $subInputKey => $subInput) {
-                        $subFormItem[$input->tablekeycolumn] = $item->id;
-                        $this->attachInput($subItem, $subInput, $subFormItem);
+                if (array_key_exists($input->columnname, $data)) {
+                    foreach ($data[$input->columnname] as $subFormKey =>  $subFormItem) {
+                        if ( array_key_exists('id', $subFormItem) ) {
+                            $subItem = $subModel::find($subFormItem['id']);
+                        } else {
+                            $subItem = new $subModel;
+                        }
+                        if (Schema::hasColumn($subTable->tablename, 'order_index')) {
+                            $subItem->order_index = $subFormKey;
+                        }
+                        foreach ($subInputs as $subInputKey => $subInput) {
+                            $subFormItem[$input->tablekeycolumn] = $item->id;
+                            $this->attachInput($subItem, $subInput, $subFormItem);
+                        }
+                        $subItem->save();
                     }
                 }
             } catch (\Throwable $th) {
+                dd($th);
                 // dd($data);
             }
 
             return true;
         }
+        if ($input->type == 'password') {
+            $item->{$input->columnname} = bcrypt($data[$input->columnname]);
+            $item->save();
+            return true;
+        }
         $item->{$input->columnname} = $data[$input->columnname];
-        $item->save();
+        
     }
     public function store(Request $request, $tablename, $id = false)
     {
@@ -343,6 +383,7 @@ class CrudController extends Controller
         foreach ($this->inputs as $inputKey => $input) {
             $this->attachInput($item, $input, $request->all());
         }
+        $item->save();
 
         return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);
     }

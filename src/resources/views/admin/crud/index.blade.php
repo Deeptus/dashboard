@@ -53,6 +53,10 @@
                     ?>
                     @if ($input->type == 'select')
                         <td>{{ $item->{$input->columnname . '_rel_val'} }}</td>
+                    @elseif($input->type == 'multimedia_file')
+                        <td><div style="background-image: url('{{ $item->{$input->columnname}['url'] }}');width: 50px;height: 50px;background-position: center;background-size: cover;background-repeat: no-repeat;margin: auto;"></div></td>
+                    @elseif($input->type == 'subForm')
+                        <td>{{ $item->{$input->columnname}->count() }}</td>
                     @else
                         <td>{{ $item->{$input->columnname} }}</td>
                     @endif

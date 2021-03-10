@@ -23,7 +23,7 @@
         data(){
             return{
                 displayImage: false,
-                image: '',
+                image: {},
             }
         },
         created() {
@@ -32,18 +32,18 @@
         mounted () {},
         watch: {
             image: function(val, oldVal) {
-                console.log(this.image)
                 this.value.value = this.image || []
             }
         },
         methods: {
             async selectFile() {
                 await this.fileManager().open().then((callback) => {
+                    this.image = {}
                     if (callback) {
-                        this.image.id   = callback.id
-                        this.image.path = callback.path
-                        this.image.type = callback.type
-                        this.image.url  = callback.url
+                        this.$set(this.image, 'id',   callback.id)
+                        this.$set(this.image, 'path', callback.path)
+                        this.$set(this.image, 'type', callback.type)
+                        this.$set(this.image, 'url',  callback.url)
                     }
                 })
             },

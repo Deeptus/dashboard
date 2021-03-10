@@ -88,8 +88,8 @@
                         return file.id == this.selected_id
                     })
                     if (fileSelected) {
-                        let fileSelectedObservable = {}
                         /*
+                        let fileSelectedObservable = {}
                         this.$set(fileSelectedObservable, 'id', fileSelected.id)
                         this.$set(fileSelectedObservable, 'path', fileSelected.path)
                         this.$set(fileSelectedObservable, 'type', fileSelected.type)
@@ -209,12 +209,13 @@
             text-align: center;
         }
         &__files {
-            flex-grow: 1;
+            flex-grow: inherit;
             overflow-y: auto;
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             grid-gap: 15px;
             padding: 7.5px;
+            margin-bottom: 15px;
         }
         &__file {
             background-size: cover;
@@ -256,7 +257,7 @@
         &__controls {
             display: flex;
             justify-content: flex-end;
-            margin-top: 15px;
+            margin-top: auto;
         }
     }
 </style>
