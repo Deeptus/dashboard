@@ -16,6 +16,7 @@ Vue.component('InputLayout', require('./components/crud/InputLayout.vue').defaul
 Vue.component('select2', require('./components/Select2Component.vue').default);
 
 Vue.component('file-manager', require('./components/file-manager').default);
+Vue.component('CustomGallery', require('./components/CustomGalleryComponent').default);
 
 window.toCurrency = (numero) => {
     let decimales = 2

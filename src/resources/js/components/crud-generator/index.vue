@@ -132,6 +132,39 @@
                     </div>
                 </div>
             </div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    Conditions
+                </div>
+                <div class="card-body pb-0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row mb-3" v-for="( condition, conditionKey ) in conditions" :key="conditionKey">
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <select class="form-select" v-model="condition.type">
+                                            <option value="crud_listing">CRUD Listing</option>
+                                        </select>
+                                        <label>Type</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" v-model="condition.condition">
+                                        <label for="floatingInput">Condition</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-sm-flex align-items-center justify-content-center mb-3">
+                        <button type="button" @click="addCondition()" class="btn btn-secondary">
+                            <i class="fas fa-plus fa-sm text-white-50"></i>
+                            Add Condition
+                        </button>
+                    </div>
+                </div>
+            </div>
             <fieldset class="mt-3">
                 <legend>Inputs:</legend>
                 <div class="card mt-3" v-for="( input, inputKey ) in inputs" :key="inputKey">
@@ -256,6 +289,17 @@
                                                 <option value="1">Yes</option>
                                             </select>
                                             <label>NULLABLE</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md" v-if="inputParams(input).includes('settable')">
+                                        <div class="form-floating">
+                                            <select class="form-select" v-model="input.settable">
+                                                <option value="0">Edit y Create</option>
+                                                <option value="1">On Create</option>
+                                                <option value="2">On Edit</option>
+                                                <option value="3">Never</option>
+                                            </select>
+                                            <label>SETTABLE IN</label>
                                         </div>
                                     </div>
                                     <div class="col-md" v-if="inputParams(input).includes('max')">
@@ -399,6 +443,7 @@
                     is_authenticatable: 0
                 },
                 inputs: [],
+                conditions: [],
                 loaded: 0
             }
         },
@@ -409,6 +454,11 @@
                     if(response.data.content) {
                         this.table  = response.data.content.table
                         this.inputs = response.data.content.inputs
+                        if ( Object.prototype.toString.call(response.data.content.conditions) === '[object Array]' ) {
+                            this.conditions = response.data.content.conditions
+                        } else {
+                            this.conditions = []
+                        }
                     }
                     this.loaded = 1
                 });
@@ -417,6 +467,12 @@
         mounted () {},
         watch: {},
         methods: {
+            addCondition() {
+                this.conditions.push({
+                    type: '',
+                    condition: '',
+                })
+            },
             addOption(input) {
                 if (!Array.isArray(input.options)) {
                     this.$set(input, 'options', [])
@@ -447,85 +503,86 @@
                     tabledata: '',
                     tablekeycolumn: '',
                     tabletextcolumn: '',
+                    settable: 0
                 })
             },
             inputParams(input) {
                 let params = []
                 if (input.type == 'text') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'card-header') {
                 }
                 if (input.type == 'textarea') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'wysiwyg') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'email') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'url') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'tel') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'number') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'bigInteger') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'money') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'password') {
-                    params.push('listable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'true_or_false') {
-                    params.push('label', 'default', 'gridcols')
+                    params.push('label', 'settable', 'default', 'gridcols')
                 }
 
                 if (input.type == 'multimedia_file') {
-                    params.push('listable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'gallery') {
-                    params.push('listable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'map-select-lat-lng') {
-                    params.push('listable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
 
                 if (input.type == 'date') {
-                    params.push('listable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'time') {
-                    params.push('listable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'datetime') {
-                    params.push('listable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'week') {
-                    params.push('listable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'select') {
-                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
+                    params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'radio') {
-                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
+                    params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'checkbox') {
-                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
+                    params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'select2') {
-                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
+                    params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'select2multiple') {
-                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
+                    params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'subForm') {
-                    params.push('listable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'tabledata', 'tablekeycolumn')
+                    params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'tabledata', 'tablekeycolumn')
                 }
                 return params;
             },
@@ -572,7 +629,8 @@
 
                 formData.append('data', JSON.stringify({
                     table: this.table,
-                    inputs: this.inputs
+                    inputs: this.inputs,
+                    conditions: this.conditions
                 }));
 
                 axios.post(this.urlAction, formData).then((response) => {

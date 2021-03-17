@@ -19,6 +19,7 @@ class <?php print $className ?> extends Model
 	protected $table = '<?php print $this->table->tablename ?>';
 
     protected $fillable = [
+        'id',
 <?php foreach ($this->inputs as $key => $input): ?>
 <?php
 if ($input->type == 'card-header') {

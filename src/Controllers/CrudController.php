@@ -20,6 +20,7 @@ class CrudController extends Controller
     private $tablename;
     private $table;
     private $inputs;
+    private $conditions;
 
     public function __construct()
     {
@@ -32,9 +33,10 @@ class CrudController extends Controller
             $filePath = $dirPath . '/' . $this->tablename . '.json';
 
             if (file_exists($filePath)) {
-                $content      = json_decode(file_get_contents($filePath));
-                $this->table  = $content->table;
-                $this->inputs = $content->inputs;
+                $content          = json_decode(file_get_contents($filePath));
+                $this->table      = $content->table;
+                $this->inputs     = $content->inputs;
+                $this->conditions = $content->conditions;
             }
 
             $className = str_replace(['_', '-', '.'], ' ', $this->tablename);
@@ -210,8 +212,32 @@ class CrudController extends Controller
 
     public function index()
     {
-        // $data = $this->model::paginate(20);
-        $data = $this->model::get();
+        $appends = [];
+        $data = new $this->model;
+        foreach ($this->conditions as $key => $condition) {
+            $data = $data->whereRaw($condition->condition);
+        }
+        if (request()->has('s')) {
+            $appends['s'] = request()->s;
+            $cols = \DB::getSchemaBuilder()->getColumnListing((new $this->model)->getTable());
+            $data->where(function ($query) use ($cols) {
+                foreach ($cols as $col) {
+                    $query->orWhere($col, 'like', '%'.request()->s.'%');
+                }
+            });
+        }
+        if (request()->has('paginate')) {
+            $data = $data->paginate(request()->paginate);
+            $appends['paginate'] = request()->paginate;
+        } else {
+            $data = $data->paginate(20);
+        }
+        $data->appends($appends);
+        // $data = $data->toSql();
+        // dd($data);
+        // 😒
+        // $data = $this->model::get();
+        // return response()->json($this->model::first());
         return view('Dashboard::admin.crud.index', [
             'data'           => $data,
             'tablename'      => $this->tablename,
@@ -381,7 +407,9 @@ class CrudController extends Controller
         */
 
         foreach ($this->inputs as $inputKey => $input) {
-            $this->attachInput($item, $input, $request->all());
+            if ($input->settable == 0) {
+                $this->attachInput($item, $input, $request->all());
+            }
         }
         $item->save();
 

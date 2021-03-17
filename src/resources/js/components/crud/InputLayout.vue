@@ -1,5 +1,5 @@
 <template>
-    <div :class="getClass(input)">
+    <div :class="getClass(input)" v-if="input.settable == 0">
         <InputText :value="value" :input="input" v-if="layout[input.type] == 'basic'"></InputText>
         <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'"></InputDate>
         <InputSelect :relations="relations" :value="value" :input="input" v-if="layout[input.type] == 'select'"></InputSelect>

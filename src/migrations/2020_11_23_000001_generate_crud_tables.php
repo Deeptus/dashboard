@@ -109,6 +109,9 @@ class GenerateCrudTables extends Migration
             if($input->type == 'bigInteger') {
                 $col[] = $table->bigInteger($input->columnname);
             }
+            if($input->type == 'datetime') {
+                $col[] = $table->dateTime($input->columnname);
+            }
             if($input->type == 'true_or_false') {
                 $col[] = $table->boolean($input->columnname);
             }
@@ -143,6 +146,9 @@ class GenerateCrudTables extends Migration
                     $colItem->nullable(true);
                 } else {
                     $colItem->nullable(false);
+                }
+                if($input->default != '') {
+                    $colItem->default($input->default);
                 }
                 if ($change) {
                     $colItem->change();

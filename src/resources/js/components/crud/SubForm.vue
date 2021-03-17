@@ -118,7 +118,7 @@
                 this.items.push(newItem)
             },
             removeItem(index) {
-                this.items.splice(index, 1);
+                this.items.splice(index, 1)
             },
             move(array, index, delta) {
                 var newIndex = index + delta;

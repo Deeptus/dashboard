@@ -21,6 +21,28 @@
     </div>
 </div>
 <x-dashboard-messages/>
+<form class="row mb-3">
+    <div class="form-group offset-md-4 col-md-4">
+        <label for="search_s">Buscar</label>
+        <input id="search_s" type="text" class="form-control" value="{{ request()->has('s')?request()->s:'' }}" name="s">
+    </div>
+    <div class="form-group col-md-2">
+        <label>Mostrar</label>
+        <select class="form-select" name="paginate">
+            @foreach ([10, 20, 50, 100] as $paginate)
+            <option value="{{ $paginate }}" {{ request()->has('paginate') && request()->paginate == $paginate ? 'selected' : '' }}>{{ $paginate }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group col-md-2">
+        <label for="search_p" style="opacity: 0">s</label> <br>
+        <button class="btn btn-outline-secondary w-100 text-nowrap" type="submit">
+            <i class="fas fa-search"></i>
+            Buscar
+        </button>
+    </div>
+</form>
+
 <!-- Content Row -->
 <div class="row">
 
@@ -28,7 +50,7 @@
     <div class="col-xl-12 col-md-12 mb-12">
         @foreach ($data as $item)
             @if ($loop->first)
-            <table class="data_table table table-striped table-bordered display">
+            <table class="table table-striped table-bordered display">
                 <thead>
                     <tr>
                         @foreach ($inputs as $inputKey => $input)
@@ -37,7 +59,11 @@
                                 continue;
                             }
                             ?>
-                            <th>{{ $input->label->{App::getLocale()} }}</th>
+                            <?php try { ?>
+                                <th>{{ $input->label->{App::getLocale()} }}</th>
+                            <?php } catch (\Throwable $th) { ?>
+                                @dd($input);
+                            <?php } ?>
                         @endforeach                
                         <th class="no-sort"></th>
                     </tr>
@@ -46,6 +72,7 @@
                 @endif
                 <tr>
                     @foreach ($inputs as $inputKey => $input)
+                    <?php try { ?>
                     <?php
                     if ( $input->type == 'card-header' || ( property_exists($input, 'listable') && $input->listable == 0 ) ) {
                         continue;
@@ -54,12 +81,20 @@
                     @if ($input->type == 'select')
                         <td>{{ $item->{$input->columnname . '_rel_val'} }}</td>
                     @elseif($input->type == 'multimedia_file')
+                    @if ($item->{$input->columnname})
                         <td><div style="background-image: url('{{ $item->{$input->columnname}['url'] }}');width: 50px;height: 50px;background-position: center;background-size: cover;background-repeat: no-repeat;margin: auto;"></div></td>
+                    @else
+                        <td></td>
+                    @endif
                     @elseif($input->type == 'subForm')
                         <td>{{ $item->{$input->columnname}->count() }}</td>
                     @else
                         <td>{{ $item->{$input->columnname} }}</td>
                     @endif
+                    <?php } catch (\Throwable $th) { ?>
+                        @dump($th->getMessage())
+                        @dd($item);
+                    <?php } ?>
                     @endforeach
                     <td>
                         @if (!$item->trashed())
@@ -88,6 +123,7 @@
             </table>
             @endif
         @endforeach
+        {{ $data->links() }}
     </div>
 </div>
 @endsection

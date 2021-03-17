@@ -13,12 +13,14 @@
         "diglactic/laravel-breadcrumbs": "6.x",
         "mcamara/laravel-localization": "^1.6",
         "phpoffice/phpspreadsheet": "^1.16",
-        "mateusjunges/laravel-acl": "^2.5",
+        "mateusjunges/laravel-acl": "^2.6",
         "spatie/laravel-translatable": "^4.6",
         "barryvdh/laravel-debugbar": "^3.5",
         "arcanedev/log-viewer": "^8.0",
         "webpatser/laravel-uuid": "^4.0",
-        "jenssegers/date": "^4.0"
+        "jenssegers/date": "^4.0",
+        "fabpot/goutte": "^4.0",
+        "guzzlehttp/guzzle": "^7.0.1"
     },
     "autoload": {
         "files": [
