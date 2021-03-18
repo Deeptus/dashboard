@@ -66,6 +66,15 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating">
+                                        <select class="form-select" id="id" v-model="table.single_record">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                        <label for="id">Single Record</label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating">
                                         <select class="form-select" id="order_index" v-model="table.order_index">
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
@@ -197,6 +206,7 @@
                                             <option value="email">email</option>
                                             <option value="url">url</option>
                                             <option value="tel">tel</option>
+                                            <option value="color">Color Picker</option>
                                         </optgroup>
                                         <optgroup label="Numeric">
                                             <option value="number">number</option>
@@ -432,6 +442,7 @@
                 languages: {},
                 table: {
                     id: 1,
+                    single_record: 0,
                     uuid: 0,
                     order_index: 0,
                     tablename: '',
@@ -510,6 +521,9 @@
                 let params = []
                 if (input.type == 'text') {
                     params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                }
+                if (input.type == 'color') {
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable')
                 }
                 if (input.type == 'card-header') {
                 }

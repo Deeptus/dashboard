@@ -214,6 +214,26 @@ class CrudController extends Controller
     {
         $appends = [];
         $data = new $this->model;
+        if (intval($this->table->single_record)) {
+            $item = $data->first();
+            if ($item) {
+                return view('Dashboard::admin.crud.edit', [
+                    'item'           => $item,
+                    'tablename'      => $this->tablename,
+                    'table'          => $this->table,
+                    'inputs'         => $this->inputs,
+                    '__admin_active' => 'admin.crud-' . $this->tablename
+                ]);
+            } else {
+                return view('Dashboard::admin.crud.create', [
+                    'tablename'      => $this->tablename,
+                    'table'          => $this->table,
+                    'inputs'         => $this->inputs,
+                    '__admin_active' => 'admin.crud-' . $this->tablename
+                ]);        
+            }
+        }
+
         foreach ($this->conditions as $key => $condition) {
             $data = $data->whereRaw($condition->condition);
         }
@@ -312,25 +332,27 @@ class CrudController extends Controller
             $item->save();
 
             $ids = [];
-            foreach ($data[$input->columnname] as $key => $value) {
-                if(is_string($value)) {
-                    $ids[$value] = [ 'order' => $key ];
-                } else {
-                    $path = $value->store('public/content/' . $this->tablename . '/');
-                    $multimedia = new Multimedia;
-                    $multimedia->path          = $path;
-                    $multimedia->order         = null;
-                    $multimedia->filename      = null;
-                    $multimedia->alt           = null;
-                    $multimedia->caption       = null;
-                    $multimedia->original_name = null;
-                    $multimedia->disk          = null;
-                    $multimedia->meta_value    = null;
-                    $multimedia->save();
-                    $ids[$multimedia->id] = [ 'order' => $key ];
+            if (array_key_exists($input->columnname, $data) && is_array($data[$input->columnname])) {
+                foreach ($data[$input->columnname] as $key => $value) {
+                    if(is_string($value)) {
+                        $ids[$value] = [ 'order' => $key ];
+                    } else {
+                        $path = $value->store('public/content/' . $this->tablename . '/');
+                        $multimedia = new Multimedia;
+                        $multimedia->path          = $path;
+                        $multimedia->order         = null;
+                        $multimedia->filename      = null;
+                        $multimedia->alt           = null;
+                        $multimedia->caption       = null;
+                        $multimedia->original_name = null;
+                        $multimedia->disk          = null;
+                        $multimedia->meta_value    = null;
+                        $multimedia->save();
+                        $ids[$multimedia->id] = [ 'order' => $key ];
+                    }
                 }
+                $gallery->items()->sync($ids);
             }
-            $gallery->items()->sync($ids);
             return true;
         }
 
@@ -350,9 +372,12 @@ class CrudController extends Controller
             $subModel = "\\App\\Models\\" . $className;
             try {
                 if (array_key_exists($input->columnname, $data)) {
+                    //
+                    // By AleSosa 🤦‍♂️
+                    $subModel::where(''.$input->tablekeycolumn.'', $item->id)->delete();
                     foreach ($data[$input->columnname] as $subFormKey =>  $subFormItem) {
                         if ( array_key_exists('id', $subFormItem) ) {
-                            $subItem = $subModel::find($subFormItem['id']);
+                            $subItem = $subModel::withTrashed()->find($subFormItem['id']);
                         } else {
                             $subItem = new $subModel;
                         }
@@ -363,6 +388,7 @@ class CrudController extends Controller
                             $subFormItem[$input->tablekeycolumn] = $item->id;
                             $this->attachInput($subItem, $subInput, $subFormItem);
                         }
+                        $subItem->deleted_at = null;
                         $subItem->save();
                     }
                 }

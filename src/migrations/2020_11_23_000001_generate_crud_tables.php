@@ -88,6 +88,9 @@ class GenerateCrudTables extends Migration
             if($input->type == 'text') {
                 $col[] = $table->string($input->columnname);
             }
+            if($input->type == 'color') {
+                $col[] = $table->string($input->columnname);
+            }
             if($input->type == 'email') {
                 $col[] = $table->string($input->columnname);
             }
