@@ -12,4 +12,5 @@ class ConfigVar extends Model {
     ];
 
 
+
 }

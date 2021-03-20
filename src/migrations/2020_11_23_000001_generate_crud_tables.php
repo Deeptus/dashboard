@@ -61,7 +61,7 @@ class GenerateCrudTables extends Migration
 
 
         // added support double to change
-        if (!Type::hasType('double')) {
+     if (!Type::hasType('double')) {
             Type::addType('double', FloatType::class);
         }
 
@@ -90,7 +90,7 @@ class GenerateCrudTables extends Migration
 
             if($input->type == 'text') {
 
-
+/*
 
             if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_en')) {
                 $col = $table->string($input->columnname.'_en')->nullable();                
@@ -101,7 +101,7 @@ class GenerateCrudTables extends Migration
             if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_pt')) {
                 $col = $table->string($input->columnname.'_pt')->nullable();                
 
-            }
+            }*/
 
                 $col = $table->string($input->columnname);
             }
@@ -110,7 +110,7 @@ class GenerateCrudTables extends Migration
             }
             if($input->type == 'textarea') {
 
-            if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_pt')) {
+           /* if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_pt')) {
                 $col = $table->longText($input->columnname.'_pt')->nullable();                
 
             }
@@ -118,7 +118,7 @@ class GenerateCrudTables extends Migration
             if (!Schema::hasColumn($content->table->tablename, $input->columnname.'_en')) {
                 $col = $table->longText($input->columnname.'_en')->nullable();                
 
-            }
+            }*/
 
                 $col = $table->longText($input->columnname);
             }
@@ -128,13 +128,16 @@ class GenerateCrudTables extends Migration
             if($input->type == 'number') {
                 $col = $table->double($input->columnname);
             }
-            if($input->type == 'true_or_false') {
-                $col = $table->boolean($input->columnname);
+            if($input->type == 'boolean') {
+                $col = $table->boolean($input->columnname)->nullable()->default(0);
             }
-            if($input->type == 'select') {
+            if($input->type == 'select' || $input->type == 'radio' ) {
                 $col = $table->unsignedBigInteger($input->columnname);
             }
-
+            if($input->type == 'checkbox') {
+                $col = $table->text($input->columnname)->nullable();
+                //$col = $table->jsonb($input->columnname);
+            }
             
             if($input->nullable == 1) {
                 $col->nullable();
@@ -155,7 +158,9 @@ class GenerateCrudTables extends Migration
 
         //$drops = array_diff($cols, $colsInTable);
         //$table->dropColumn($drops);    
-
+        if (!Schema::hasColumn($content->table->tablename, 'uuid')) {
+            $table->uuid('uuid');
+        }
    
         if (!Schema::hasColumn($content->table->tablename, 'created_at')) {
             $table->timestamps();

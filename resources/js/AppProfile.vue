@@ -10,11 +10,9 @@
         <transition name="layout-submenu-wrapper">
             <ul v-show="expanded">
 
-
-                <li><router-link :to="{ name: 'webconfig' }" style="color: white; font-weight: bolder;" class="p-link text-white" ><button class="p-link"><i class="pi pi-cog"></i><span>Sitio Web</span></button></router-link></li>
-
+				
+                <li><router-link :to="{ name: 'webconfig' }" style="color: white; font-weight: bolder;" class="p-link text-white" ><button class="p-link"><i class="pi pi-globe"></i><span>Sitio Web</span></button></router-link></li>
                 <li><router-link :to="{ name: 'crudgenerator' }" style="color: white; font-weight: bolder;" class="p-link text-white" ><button class="p-link"><i class="pi pi-cog"></i><span>Desarrollador</span></button></router-link></li>
-
 
                 <li><a href="/adm/logout" style="color: white; font-weight: bolder;" class="p-link text-white" ><button class="p-link"><i class="pi pi-fw pi-power-off"></i><span>Salir</span></button></a></li>
             </ul>
@@ -27,7 +25,7 @@
 	export default {
 		data() {
 			return {
-				expanded: false
+				expanded: true
 			}
 		},
 		methods: {

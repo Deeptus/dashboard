@@ -1,5 +1,3 @@
-
-
 <template>
 <div class="container">
     <div class="col s12">
@@ -28,71 +26,64 @@
                 </div>
             </div>
         </div>
+
+
         <div class="row" v-if="loaded == 1">
-            <div class="col-xl-12 col-lg-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Google reCAPTCHA (AntiBots / AntiSpam)</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label :for="'config.recaptcha_publickey'">reCAPTCHA public-key</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :id="'config.recaptcha_publickey'"
-                                    :name="'config.recaptcha_publickey'"
-                                    v-model="config.recaptcha_publickey"
-                                >
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label :for="'config.recaptcha_privatekey'">reCAPTCHA private-key</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :id="'config.recaptcha_privatekey'"
-                                    :name="'config.recaptcha_privatekey'"
-                                    v-model="config.recaptcha_privatekey"
-                                >
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Header</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <link-info :model.sync="config.header_networks" :legend="'Social Networks:'"></link-info>
-                            </div>
 
-                            <div class="col-md-12">
-                                <link-info :model.sync="config.header_info" :legend="'Info:'" :icon="true"></link-info>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Footer</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <link-info :model.sync="config.footer_networks" :legend="'Social Networks:'"></link-info>
-                            </div>
 
-                            <div class="col-md-12">
-                                <link-info :model.sync="config.footer_info" :legend="'Info:'" :icon="true"></link-info>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Contact us</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label :for="'config.contact_target_send_email'">A qué correo electrónico llegarán los mensajes</label>
+<div class="p-grid nested-grid">
+
+        <div class="p-grid">
+            <div class="p-col-4">
+                <div class="box">
+
+                                <input-file-image2
+                                    :model.sync="config.header_logo"
+                                    id="input-logo-header"
+                                    label-text="Logo Web Superior"
+                                    label-descript=""
+                                ></input-file-image2>
+
+                </div>
+            </div>
+            <div class="p-col-4">
+                <div class="box">
+
+                                <input-file-image2
+                                    :model.sync="config.header_portrait"
+                                    id="input-logo-header"
+                                    label-text="Fondo portada"
+                                    label-descript=""
+                                ></input-file-image2>
+
+                </div>
+            </div>
+            <div class="p-col-4">
+                <div class="box">
+                                <input-file-image2
+                                    :model.sync="config.footer_logo"
+                                    id="input-logo-header"
+                                    label-text="Logo Web Inferior"
+                                    label-descript=""
+                                ></input-file-image2>
+                </div>
+            </div>
+           <!--- <div class="p-col-4">
+                <div class="box">
+                                <input-file-image2
+                                    :model.sync="config.admin_favicon"
+                                    id="input-logo-favicon"
+                                    label-text="Favicon"
+                                    label-descript=""
+                                ></input-file-image2>
+                </div>
+            </div> --->
+        </div>
+
+
+                        <div class="p-col-12">
+                            <div class="box">
+                                <label :for="'config.contact_target_send_email'">A qué correo electrónico llegarán los mensajes ?</label>
                                 <input
                                     type="email"
                                     class="form-control"
@@ -102,87 +93,41 @@
                                     placeholder="correo@servidor.com.ar"
                                 >
                             </div>
+
                         </div>
-                    </div>
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Tienda</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label :for="'config.thousands_separator'">Separador de Miles</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :id="'config.thousands_separator'"
-                                    :name="'config.thousands_separator'"
-                                    v-model="config.thousands_separator"
-                                >
+
+                            <div class="p-col-12 ">
+                                <div class="">
+                                <link-info :model.sync="config.header_networks" :legend="'Social Networks'" :icon="true"></link-info>
+                                </div>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label :for="'config.decimal_separator'">Separador de Decimales</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :id="'config.decimal_separator'"
-                                    :name="'config.decimal_separator'"
-                                    v-model="config.decimal_separator"
-                                >
+
+                            <div class="p-col-12 ">
+                                <div class="">
+                                <link-info :model.sync="config.footer_info" :legend="'Contacto'" :icon="true" :label="true"></link-info>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Administrador</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input-file-image2
-                                    :model.sync="config.admin_logo"
-                                    id="input-logo-header"
-                                    label-text="Logo"
-                                    label-descript=""
-                                ></input-file-image2>
-                            </div>
-                            <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input-file-image2
-                                    :model.sync="config.admin_favicon"
-                                    id="input-logo-favicon"
-                                    label-text="Favicon"
-                                    label-descript=""
-                                ></input-file-image2>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label :for="'config.admin_footer_text'">Pie del ADM</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :id="'config.admin_footer_text'"
-                                    :name="'config.admin_footer_text'"
-                                    v-model="config.admin_footer_text"
-                                >
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+</div>
+
+
+
             </div>
+
         </div>
         <div class="row" v-if="loaded == 1">
-            <div class="col-xl-12 col-lg-12 d-sm-flex align-items-center justify-content-between">
-                <button type="button" @click="postForm()" class="d-none d-sm-inline-block btn btn-lg btn-primary shadow-sm">
-                    <i class="fas fa-save fa-sm text-white-50"></i>
-                    Guardar
-                </button>
+            <div class="">
+                <Button label="Guardar" type="button" @click="postForm()" class="d-none d-sm-inline-block btn btn-lg btn-primary shadow-sm">                   
+                    
+                </Button>
             </div>
         </div>
     </div>
-</div>
+
 </template>
 
 <script>
-    // import ClassicEditor from '@novicov/ckeditor5-build-classic-full';
+
     import axios from 'axios'
     import LinkInfo from './../LinkInfoComponent'
     import InputFileImage2 from './../InputFileImage2Component';
@@ -190,12 +135,13 @@
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
         props: {
-            urlData: '/adm/companydata/api/data',
+            urlData: '/adm/company-data/api/data',
             urlBack: '/adm/company-data/',
-            urlAction: '',
+            urlAction: '/adm/company-data/update',
             formName: '',
         },
         components: {
+
             'link-info': LinkInfo,
             'input-file-image2': InputFileImage2,
             'input-file-image': InputFileImage
@@ -211,9 +157,11 @@
             }
         },
         created() {
+
+            console.log('wololo')
             this.$nextTick(() => {
                 //console.log(this.urlData)
-                axios.get('/adm/companydata/api/data').then((response) => {
+                axios.get('/adm/company-data/api/data').then((response) => {
                     this.languages = response.data.languages
                     if (response.data.content != null) {
                         this.config = response.data.content
@@ -230,6 +178,7 @@
                 /***********************************************/
                 let images = [
                     'admin_logo',
+                    'header_portrait',
                     'admin_favicon',
                     'footer_logo',
                     'header_logo'
@@ -262,18 +211,29 @@
                 })
                 /***********************************************/
 
-                axios.post('/adm/companydata/', form).then((response) => {
+                axios.post('/adm/company-data/update', form).then((response) => {
                     this.loaded = 3
                     setTimeout(function(){
                         this.loaded = 1
-                        //window.location.href = this.urlBack
+                        console.log(response)
                     }.bind(this), 1000);
                 })
             },
         }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+
+.box {
+    background-color: var(--surface-e);
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+}
+
     .draggable-item {
         cursor: move;
     }
@@ -287,4 +247,47 @@
             display: flex;
         }
     }
+
+    .flexgrid-demo {
+    .box {
+        background-color: var(--surface-e);
+        text-align: center;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+    }
+
+    .box-stretched {
+        height: 100%;
+    }
+
+    .vertical-container {
+        margin: 0;
+        height: 200px;
+        background: var(--surface-d);
+        border-radius: 4px;
+    }
+
+    .nested-grid .p-col-4 {
+        padding-bottom: 1rem;
+    }
+
+    .dynamic-box-enter-active, .dynamic-box-leave-active {
+        transition: all .5s;
+    }
+
+    .dynamic-box-enter, .dynamic-box-leave-to {
+        opacity: 0;
+    }
+
+    .dynamic-box-enter, .dynamic-box-leave-to {
+        transform: translateX(30px);
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
 </style>

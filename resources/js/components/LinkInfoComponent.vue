@@ -1,83 +1,690 @@
 <template>
     <div class="row mb-3">
-        <div class="col-md-12">
-            <fieldset>
-                <legend>{{ legend }}</legend>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th v-if="icon">Ícono</th>
-                                    <th>Texto a mostrar</th>
-                                    <th>Enlace</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(item, index) in data" :key="index">
-                                    <td style="width: 1px">
-                                        <button @click="removeItem(index)" class="btn btn-danger">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                    <td v-if="icon">
-                                        <input
-                                            type="email"
-                                            class="form-control"
-                                            :id="'item.icon'"
-                                            :name="'item.icon'"
-                                            v-model="item.icon"
-                                        >
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="email"
-                                            class="form-control"
+        <Toolbar class="p-p-0 p-p-sm-1 p-p-md-2 p-p-lg-3">
+            <template #left>
+                        <h3>{{ legend }}</h3>
+            </template>
+            <template #right>
+                        <Button @click="addItem" label="Añadir" icon="pi pi-plus" class="p-button-rounded p-button-success p-button p-component" />
+            </template>
+        </Toolbar>
+
+        <div class="box">
+                <div class="">
+                    <div class="p-col-12 p-px-5">
+
+                                <div v-for="(item, index) in data" :key="index" class="p-d-flex p-jc-between p-fluid p-formgrid p-grid">
+
+                                    <div v-if="icon"  class="p-field p-col-12 p-md-3">
+<template>
+    <div>
+
+
+    <Dropdown v-model="item.icon" :options="options" :filter="true"
+     optionLabel="icon" optionValue="icon" dataKey="icon" placeholder="Seleccione un icono">
+
+    <template #value="slotProps">
+        <div class="country-item country-item-value" v-if="item.icon">
+            <i :class="item.icon" /> {{ item.icon }}
+
+        </div>
+        <span v-else>
+            Seleccione un icono
+        </span>
+    </template>
+    <template #option="slotProps">
+
+            <i :class="slotProps.option.icon" /> {{ slotProps.option.icon }}
+
+    </template>
+
+    </Dropdown>
+        
+
+    </div>
+</template>
+                                        
+                                    </div>
+                                    <div class="p-fieldo p-col-md-3">
+                                        <InputText
+                                            type="text"
+                                            
                                             :id="'item.text'"
                                             :name="'item.text'"
                                             v-model="item.text"
-                                        >
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="email"
-                                            class="form-control"
+                                        />
+                                    </div>
+                                    <div  class="p-field p-col-md-3">
+                                        <InputText
+                                            type="text"
+                                            
                                             :id="'item.link'"
                                             :name="'item.link'"
                                             v-model="item.link"
                                             placeholder="https://www.com/, mailto:, tel:"
-                                        >
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td :colspan="cols">
-                                        <button @click="addItem" class="btn btn-primary btn-block">
-                                            <i class="fas fa-plus"></i> Añadir
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        />
+                                    </div>
+                                    <div>
+
+                                        <Button @click="removeItem(index)"  icon="pi pi-times" class="p-button-rounded p-button-danger" />
+                                    </div>
+
+
+                            </div>
+
                     </div>
                 </div>
-            </fieldset>
+
         </div>
     </div>
 
 </template>
 
 <script>
+    import InputFontAwesome2 from './crud/InputFontAwesome2'
+
     export default {
+
         props: ['model', 'legend', 'icon'],
         components: {
         },
         data(){
             return{
+ options: [
+    {icon: "fa fa-500px", text: "500px"},
+    {icon: "fa fa-adjust", text: "Adjust"},
+    {icon: "fa fa-adn", text: "Adn"},
+    {icon: "fa fa-align-center", text: "Align center"},
+    {icon: "fa fa-align-justify", text: "Align justify"},
+    {icon: "fa fa-align-left", text: "Align left"},
+    {icon: "fa fa-align-right", text: "Align right"},
+    {icon: "fa fa-amazon", text: "Amazon"},
+    {icon: "fa fa-ambulance", text: "Ambulance"},
+    {icon: "fa fa-anchor", text: "Anchor"},
+    {icon: "fa fa-android", text: "Android"},
+    {icon: "fa fa-angellist", text: "Angellist"},
+    {icon: "fa fa-angle-double-down", text: "Angle double down"},
+    {icon: "fa fa-angle-double-left", text: "Angle double left"},
+    {icon: "fa fa-angle-double-right", text: "Angle double right"},
+    {icon: "fa fa-angle-double-up", text: "Angle double up"},
+    {icon: "fa fa-angle-down", text: "Angle down"},
+    {icon: "fa fa-angle-left", text: "Angle left"},
+    {icon: "fa fa-angle-right", text: "Angle right"},
+    {icon: "fa fa-angle-up", text: "Angle up"},
+    {icon: "fa fa-apple", text: "Apple"},
+    {icon: "fa fa-archive", text: "Archive"},
+    {icon: "fa fa-area-chart", text: "Area chart"},
+    {icon: "fa fa-arrow-circle-down", text: "Arrow circle down"},
+    {icon: "fa fa-arrow-circle-left", text: "Arrow circle left"},
+    {icon: "fa fa-arrow-circle-o-down", text: "Arrow circle o down"},
+    {icon: "fa fa-arrow-circle-o-left", text: "Arrow circle o left"},
+    {icon: "fa fa-arrow-circle-o-right", text: "Arrow circle o right"},
+    {icon: "fa fa-arrow-circle-o-up", text: "Arrow circle o up"},
+    {icon: "fa fa-arrow-circle-right", text: "Arrow circle right"},
+    {icon: "fa fa-arrow-circle-up", text: "Arrow circle up"},
+    {icon: "fa fa-arrow-down", text: "Arrow down"},
+    {icon: "fa fa-arrow-left", text: "Arrow left"},
+    {icon: "fa fa-arrow-right", text: "Arrow right"},
+    {icon: "fa fa-arrow-up", text: "Arrow up"},
+    {icon: "fa fa-arrows", text: "Arrows"},
+    {icon: "fa fa-arrows-alt", text: "Arrows alt"},
+    {icon: "fa fa-arrows-h", text: "Arrows h"},
+    {icon: "fa fa-arrows-v", text: "Arrows v"},
+    {icon: "fa fa-asterisk", text: "Asterisk"},
+    {icon: "fa fa-at", text: "At"},
+    {icon: "fa fa-backward", text: "Backward"},
+    {icon: "fa fa-balance-scale", text: "Balance scale"},
+    {icon: "fa fa-ban", text: "Ban"},
+    {icon: "fa fa-bar-chart", text: "Bar chart"},
+    {icon: "fa fa-barcode", text: "Barcode"},
+    {icon: "fa fa-bars", text: "Bars"},
+    {icon: "fa fa-battery-empty", text: "Battery empty"},
+    {icon: "fa fa-battery-full", text: "Battery full"},
+    {icon: "fa fa-battery-half", text: "Battery half"},
+    {icon: "fa fa-battery-quarter", text: "Battery quarter"},
+    {icon: "fa fa-battery-three-quarters", text: "Battery three quarters"},
+    {icon: "fa fa-bed", text: "Bed"},
+    {icon: "fa fa-beer", text: "Beer"},
+    {icon: "fa fa-behance", text: "Behance"},
+    {icon: "fa fa-behance-square", text: "Behance square"},
+    {icon: "fa fa-bell", text: "Bell"},
+    {icon: "fa fa-bell-o", text: "Bell o"},
+    {icon: "fa fa-bell-slash", text: "Bell slash"},
+    {icon: "fa fa-bell-slash-o", text: "Bell slash o"},
+    {icon: "fa fa-bicycle", text: "Bicycle"},
+    {icon: "fa fa-binoculars", text: "Binoculars"},
+    {icon: "fa fa-birthday-cake", text: "Birthday cake"},
+    {icon: "fa fa-bitbucket", text: "Bitbucket"},
+    {icon: "fa fa-bitbucket-square", text: "Bitbucket square"},
+    {icon: "fa fa-black-tie", text: "Black tie"},
+    {icon: "fa fa-bold", text: "Bold"},
+    {icon: "fa fa-bolt", text: "Bolt"},
+    {icon: "fa fa-bomb", text: "Bomb"},
+    {icon: "fa fa-book", text: "Book"},
+    {icon: "fa fa-bookmark", text: "Bookmark"},
+    {icon: "fa fa-bookmark-o", text: "Bookmark o"},
+    {icon: "fa fa-briefcase", text: "Briefcase"},
+    {icon: "fa fa-btc", text: "Btc"},
+    {icon: "fa fa-bug", text: "Bug"},
+    {icon: "fa fa-building", text: "Building"},
+    {icon: "fa fa-building-o", text: "Building o"},
+    {icon: "fa fa-bullhorn", text: "Bullhorn"},
+    {icon: "fa fa-bullseye", text: "Bullseye"},
+    {icon: "fa fa-bus", text: "Bus"},
+    {icon: "fa fa-buysellads", text: "Buysellads"},
+    {icon: "fa fa-calculator", text: "Calculator"},
+    {icon: "fa fa-calendar", text: "Calendar"},
+    {icon: "fa fa-calendar-check-o", text: "Calendar check o"},
+    {icon: "fa fa-calendar-minus-o", text: "Calendar minus o"},
+    {icon: "fa fa-calendar-o", text: "Calendar o"},
+    {icon: "fa fa-calendar-plus-o", text: "Calendar plus o"},
+    {icon: "fa fa-calendar-times-o", text: "Calendar times o"},
+    {icon: "fa fa-camera", text: "Camera"},
+    {icon: "fa fa-camera-retro", text: "Camera retro"},
+    {icon: "fa fa-car", text: "Car"},
+    {icon: "fa fa-caret-down", text: "Caret down"},
+    {icon: "fa fa-caret-left", text: "Caret left"},
+    {icon: "fa fa-caret-right", text: "Caret right"},
+    {icon: "fa fa-caret-square-o-down", text: "Caret square o down"},
+    {icon: "fa fa-caret-square-o-left", text: "Caret square o left"},
+    {icon: "fa fa-caret-square-o-right", text: "Caret square o right"},
+    {icon: "fa fa-caret-square-o-up", text: "Caret square o up"},
+    {icon: "fa fa-caret-up", text: "Caret up"},
+    {icon: "fa fa-cart-arrow-down", text: "Cart arrow down"},
+    {icon: "fa fa-cart-plus", text: "Cart plus"},
+    {icon: "fa fa-cc", text: "Cc"},
+    {icon: "fa fa-cc-amex", text: "Cc amex"},
+    {icon: "fa fa-cc-diners-club", text: "Cc diners club"},
+    {icon: "fa fa-cc-discover", text: "Cc discover"},
+    {icon: "fa fa-cc-jcb", text: "Cc jcb"},
+    {icon: "fa fa-cc-mastercard", text: "Cc mastercard"},
+    {icon: "fa fa-cc-paypal", text: "Cc paypal"},
+    {icon: "fa fa-cc-stripe", text: "Cc stripe"},
+    {icon: "fa fa-cc-visa", text: "Cc visa"},
+    {icon: "fa fa-certificate", text: "Certificate"},
+    {icon: "fa fa-chain-broken", text: "Chain broken"},
+    {icon: "fa fa-check", text: "Check"},
+    {icon: "fa fa-check-circle", text: "Check circle"},
+    {icon: "fa fa-check-circle-o", text: "Check circle o"},
+    {icon: "fa fa-check-square", text: "Check square"},
+    {icon: "fa fa-check-square-o", text: "Check square o"},
+    {icon: "fa fa-chevron-circle-down", text: "Chevron circle down"},
+    {icon: "fa fa-chevron-circle-left", text: "Chevron circle left"},
+    {icon: "fa fa-chevron-circle-right", text: "Chevron circle right"},
+    {icon: "fa fa-chevron-circle-up", text: "Chevron circle up"},
+    {icon: "fa fa-chevron-down", text: "Chevron down"},
+    {icon: "fa fa-chevron-left", text: "Chevron left"},
+    {icon: "fa fa-chevron-right", text: "Chevron right"},
+    {icon: "fa fa-chevron-up", text: "Chevron up"},
+    {icon: "fa fa-child", text: "Child"},
+    {icon: "fa fa-chrome", text: "Chrome"},
+    {icon: "fa fa-circle", text: "Circle"},
+    {icon: "fa fa-circle-o", text: "Circle o"},
+    {icon: "fa fa-circle-o-notch", text: "Circle o notch"},
+    {icon: "fa fa-circle-thin", text: "Circle thin"},
+    {icon: "fa fa-clipboard", text: "Clipboard"},
+    {icon: "fa fa-clock-o", text: "Clock o"},
+    {icon: "fa fa-clone", text: "Clone"},
+    {icon: "fa fa-cloud", text: "Cloud"},
+    {icon: "fa fa-cloud-download", text: "Cloud download"},
+    {icon: "fa fa-cloud-upload", text: "Cloud upload"},
+    {icon: "fa fa-code", text: "Code"},
+    {icon: "fa fa-code-fork", text: "Code fork"},
+    {icon: "fa fa-codepen", text: "Codepen"},
+    {icon: "fa fa-coffee", text: "Coffee"},
+    {icon: "fa fa-cog", text: "Cog"},
+    {icon: "fa fa-cogs", text: "Cogs"},
+    {icon: "fa fa-columns", text: "Columns"},
+    {icon: "fa fa-comment", text: "Comment"},
+    {icon: "fa fa-comment-o", text: "Comment o"},
+    {icon: "fa fa-commenting", text: "Commenting"},
+    {icon: "fa fa-commenting-o", text: "Commenting o"},
+    {icon: "fa fa-comments", text: "Comments"},
+    {icon: "fa fa-comments-o", text: "Comments o"},
+    {icon: "fa fa-compass", text: "Compass"},
+    {icon: "fa fa-compress", text: "Compress"},
+    {icon: "fa fa-connectdevelop", text: "Connectdevelop"},
+    {icon: "fa fa-contao", text: "Contao"},
+    {icon: "fa fa-copyright", text: "Copyright"},
+    {icon: "fa fa-creative-commons", text: "Creative commons"},
+    {icon: "fa fa-credit-card", text: "Credit card"},
+    {icon: "fa fa-crop", text: "Crop"},
+    {icon: "fa fa-crosshairs", text: "Crosshairs"},
+    {icon: "fa fa-css3", text: "Css3"},
+    {icon: "fa fa-cube", text: "Cube"},
+    {icon: "fa fa-cubes", text: "Cubes"},
+    {icon: "fa fa-cutlery", text: "Cutlery"},
+    {icon: "fa fa-dashcube", text: "Dashcube"},
+    {icon: "fa fa-database", text: "Database"},
+    {icon: "fa fa-delicious", text: "Delicious"},
+    {icon: "fa fa-desktop", text: "Desktop"},
+    {icon: "fa fa-deviantart", text: "Deviantart"},
+    {icon: "fa fa-diamond", text: "Diamond"},
+    {icon: "fa fa-digg", text: "Digg"},
+    {icon: "fa fa-dot-circle-o", text: "Dot circle o"},
+    {icon: "fa fa-download", text: "Download"},
+    {icon: "fa fa-dribbble", text: "Dribbble"},
+    {icon: "fa fa-dropbox", text: "Dropbox"},
+    {icon: "fa fa-drupal", text: "Drupal"},
+    {icon: "fa fa-eject", text: "Eject"},
+    {icon: "fa fa-ellipsis-h", text: "Ellipsis h"},
+    {icon: "fa fa-ellipsis-v", text: "Ellipsis v"},
+    {icon: "fa fa-empire", text: "Empire"},
+    {icon: "fa fa-envelope", text: "Envelope"},
+    {icon: "fa fa-envelope-o", text: "Envelope o"},
+    {icon: "fa fa-envelope-square", text: "Envelope square"},
+    {icon: "fa fa-eraser", text: "Eraser"},
+    {icon: "fa fa-eur", text: "Eur"},
+    {icon: "fa fa-exchange", text: "Exchange"},
+    {icon: "fa fa-exclamation", text: "Exclamation"},
+    {icon: "fa fa-exclamation-circle", text: "Exclamation circle"},
+    {icon: "fa fa-exclamation-triangle", text: "Exclamation triangle"},
+    {icon: "fa fa-expand", text: "Expand"},
+    {icon: "fa fa-expeditedssl", text: "Expeditedssl"},
+    {icon: "fa fa-external-link", text: "External link"},
+    {icon: "fa fa-external-link-square", text: "External link square"},
+    {icon: "fa fa-eye", text: "Eye"},
+    {icon: "fa fa-eye-slash", text: "Eye slash"},
+    {icon: "fa fa-eyedropper", text: "Eyedropper"},
+    {icon: "fa fa-facebook", text: "Facebook"},
+    {icon: "fa fa-facebook-official", text: "Facebook official"},
+    {icon: "fa fa-facebook-square", text: "Facebook square"},
+    {icon: "fa fa-fast-backward", text: "Fast backward"},
+    {icon: "fa fa-fast-forward", text: "Fast forward"},
+    {icon: "fa fa-fax", text: "Fax"},
+    {icon: "fa fa-female", text: "Female"},
+    {icon: "fa fa-fighter-jet", text: "Fighter jet"},
+    {icon: "fa fa-file", text: "File"},
+    {icon: "fa fa-file-archive-o", text: "File archive o"},
+    {icon: "fa fa-file-audio-o", text: "File audio o"},
+    {icon: "fa fa-file-code-o", text: "File code o"},
+    {icon: "fa fa-file-excel-o", text: "File excel o"},
+    {icon: "fa fa-file-image-o", text: "File image o"},
+    {icon: "fa fa-file-o", text: "File o"},
+    {icon: "fa fa-file-pdf-o", text: "File pdf o"},
+    {icon: "fa fa-file-powerpoint-o", text: "File powerpoint o"},
+    {icon: "fa fa-file-text", text: "File text"},
+    {icon: "fa fa-file-text-o", text: "File text o"},
+    {icon: "fa fa-file-video-o", text: "File video o"},
+    {icon: "fa fa-file-word-o", text: "File word o"},
+    {icon: "fa fa-files-o", text: "Files o"},
+    {icon: "fa fa-film", text: "Film"},
+    {icon: "fa fa-filter", text: "Filter"},
+    {icon: "fa fa-fire", text: "Fire"},
+    {icon: "fa fa-fire-extinguisher", text: "Fire extinguisher"},
+    {icon: "fa fa-firefox", text: "Firefox"},
+    {icon: "fa fa-flag", text: "Flag"},
+    {icon: "fa fa-flag-checkered", text: "Flag checkered"},
+    {icon: "fa fa-flag-o", text: "Flag o"},
+    {icon: "fa fa-flask", text: "Flask"},
+    {icon: "fa fa-flickr", text: "Flickr"},
+    {icon: "fa fa-floppy-o", text: "Floppy o"},
+    {icon: "fa fa-folder", text: "Folder"},
+    {icon: "fa fa-folder-o", text: "Folder o"},
+    {icon: "fa fa-folder-open", text: "Folder open"},
+    {icon: "fa fa-folder-open-o", text: "Folder open o"},
+    {icon: "fa fa-font", text: "Font"},
+    {icon: "fa fa-fonticons", text: "Fonticons"},
+    {icon: "fa fa-forumbee", text: "Forumbee"},
+    {icon: "fa fa-forward", text: "Forward"},
+    {icon: "fa fa-foursquare", text: "Foursquare"},
+    {icon: "fa fa-frown-o", text: "Frown o"},
+    {icon: "fa fa-futbol-o", text: "Futbol o"},
+    {icon: "fa fa-gamepad", text: "Gamepad"},
+    {icon: "fa fa-gavel", text: "Gavel"},
+    {icon: "fa fa-gbp", text: "Gbp"},
+    {icon: "fa fa-genderless", text: "Genderless"},
+    {icon: "fa fa-get-pocket", text: "Get pocket"},
+    {icon: "fa fa-gg", text: "Gg"},
+    {icon: "fa fa-gg-circle", text: "Gg circle"},
+    {icon: "fa fa-gift", text: "Gift"},
+    {icon: "fa fa-git", text: "Git"},
+    {icon: "fa fa-git-square", text: "Git square"},
+    {icon: "fa fa-github", text: "Github"},
+    {icon: "fa fa-github-alt", text: "Github alt"},
+    {icon: "fa fa-github-square", text: "Github square"},
+    {icon: "fa fa-glass", text: "Glass"},
+    {icon: "fa fa-globe", text: "Globe"},
+    {icon: "fa fa-google", text: "Google"},
+    {icon: "fa fa-google-plus", text: "Google plus"},
+    {icon: "fa fa-google-plus-square", text: "Google plus square"},
+    {icon: "fa fa-google-wallet", text: "Google wallet"},
+    {icon: "fa fa-graduation-cap", text: "Graduation cap"},
+    {icon: "fa fa-gratipay", text: "Gratipay"},
+    {icon: "fa fa-h-square", text: "H square"},
+    {icon: "fa fa-hacker-news", text: "Hacker news"},
+    {icon: "fa fa-hand-lizard-o", text: "Hand lizard o"},
+    {icon: "fa fa-hand-o-down", text: "Hand o down"},
+    {icon: "fa fa-hand-o-left", text: "Hand o left"},
+    {icon: "fa fa-hand-o-right", text: "Hand o right"},
+    {icon: "fa fa-hand-o-up", text: "Hand o up"},
+    {icon: "fa fa-hand-paper-o", text: "Hand paper o"},
+    {icon: "fa fa-hand-peace-o", text: "Hand peace o"},
+    {icon: "fa fa-hand-pointer-o", text: "Hand pointer o"},
+    {icon: "fa fa-hand-rock-o", text: "Hand rock o"},
+    {icon: "fa fa-hand-scissors-o", text: "Hand scissors o"},
+    {icon: "fa fa-hand-spock-o", text: "Hand spock o"},
+    {icon: "fa fa-hdd-o", text: "Hdd o"},
+    {icon: "fa fa-header", text: "Header"},
+    {icon: "fa fa-headphones", text: "Headphones"},
+    {icon: "fa fa-heart", text: "Heart"},
+    {icon: "fa fa-heart-o", text: "Heart o"},
+    {icon: "fa fa-heartbeat", text: "Heartbeat"},
+    {icon: "fa fa-history", text: "History"},
+    {icon: "fa fa-home", text: "Home"},
+    {icon: "fa fa-hospital-o", text: "Hospital o"},
+    {icon: "fa fa-hourglass", text: "Hourglass"},
+    {icon: "fa fa-hourglass-end", text: "Hourglass end"},
+    {icon: "fa fa-hourglass-half", text: "Hourglass half"},
+    {icon: "fa fa-hourglass-o", text: "Hourglass o"},
+    {icon: "fa fa-hourglass-start", text: "Hourglass start"},
+    {icon: "fa fa-houzz", text: "Houzz"},
+    {icon: "fa fa-html5", text: "Html5"},
+    {icon: "fa fa-i-cursor", text: "I cursor"},
+    {icon: "fa fa-ils", text: "Ils"},
+    {icon: "fa fa-inbox", text: "Inbox"},
+    {icon: "fa fa-indent", text: "Indent"},
+    {icon: "fa fa-industry", text: "Industry"},
+    {icon: "fa fa-info", text: "Info"},
+    {icon: "fa fa-info-circle", text: "Info circle"},
+    {icon: "fa fa-inr", text: "Inr"},
+    {icon: "fa fa-instagram", text: "Instagram"},
+    {icon: "fa fa-internet-explorer", text: "Internet explorer"},
+    {icon: "fa fa-ioxhost", text: "Ioxhost"},
+    {icon: "fa fa-italic", text: "Italic"},
+    {icon: "fa fa-joomla", text: "Joomla"},
+    {icon: "fa fa-jpy", text: "Jpy"},
+    {icon: "fa fa-jsfiddle", text: "Jsfiddle"},
+    {icon: "fa fa-key", text: "Key"},
+    {icon: "fa fa-keyboard-o", text: "Keyboard o"},
+    {icon: "fa fa-krw", text: "Krw"},
+    {icon: "fa fa-language", text: "Language"},
+    {icon: "fa fa-laptop", text: "Laptop"},
+    {icon: "fa fa-lastfm", text: "Lastfm"},
+    {icon: "fa fa-lastfm-square", text: "Lastfm square"},
+    {icon: "fa fa-leaf", text: "Leaf"},
+    {icon: "fa fa-leanpub", text: "Leanpub"},
+    {icon: "fa fa-lemon-o", text: "Lemon o"},
+    {icon: "fa fa-level-down", text: "Level down"},
+    {icon: "fa fa-level-up", text: "Level up"},
+    {icon: "fa fa-life-ring", text: "Life ring"},
+    {icon: "fa fa-lightbulb-o", text: "Lightbulb o"},
+    {icon: "fa fa-line-chart", text: "Line chart"},
+    {icon: "fa fa-link", text: "Link"},
+    {icon: "fa fa-linkedin", text: "Linkedin"},
+    {icon: "fa fa-linkedin-square", text: "Linkedin square"},
+    {icon: "fa fa-linux", text: "Linux"},
+    {icon: "fa fa-list", text: "List"},
+    {icon: "fa fa-list-alt", text: "List alt"},
+    {icon: "fa fa-list-ol", text: "List ol"},
+    {icon: "fa fa-list-ul", text: "List ul"},
+    {icon: "fa fa-location-arrow", text: "Location arrow"},
+    {icon: "fa fa-lock", text: "Lock"},
+    {icon: "fa fa-long-arrow-down", text: "Long arrow down"},
+    {icon: "fa fa-long-arrow-left", text: "Long arrow left"},
+    {icon: "fa fa-long-arrow-right", text: "Long arrow right"},
+    {icon: "fa fa-long-arrow-up", text: "Long arrow up"},
+    {icon: "fa fa-magic", text: "Magic"},
+    {icon: "fa fa-magnet", text: "Magnet"},
+    {icon: "fa fa-male", text: "Male"},
+    {icon: "fa fa-map", text: "Map"},
+    {icon: "fa fa-map-marker", text: "Map marker"},
+    {icon: "fa fa-map-o", text: "Map o"},
+    {icon: "fa fa-map-pin", text: "Map pin"},
+    {icon: "fa fa-map-signs", text: "Map signs"},
+    {icon: "fa fa-mars", text: "Mars"},
+    {icon: "fa fa-mars-double", text: "Mars double"},
+    {icon: "fa fa-mars-stroke", text: "Mars stroke"},
+    {icon: "fa fa-mars-stroke-h", text: "Mars stroke h"},
+    {icon: "fa fa-mars-stroke-v", text: "Mars stroke v"},
+    {icon: "fa fa-maxcdn", text: "Maxcdn"},
+    {icon: "fa fa-meanpath", text: "Meanpath"},
+    {icon: "fa fa-medium", text: "Medium"},
+    {icon: "fa fa-medkit", text: "Medkit"},
+    {icon: "fa fa-meh-o", text: "Meh o"},
+    {icon: "fa fa-mercury", text: "Mercury"},
+    {icon: "fa fa-microphone", text: "Microphone"},
+    {icon: "fa fa-microphone-slash", text: "Microphone slash"},
+    {icon: "fa fa-minus", text: "Minus"},
+    {icon: "fa fa-minus-circle", text: "Minus circle"},
+    {icon: "fa fa-minus-square", text: "Minus square"},
+    {icon: "fa fa-minus-square-o", text: "Minus square o"},
+    {icon: "fa fa-mobile", text: "Mobile"},
+    {icon: "fa fa-money", text: "Money"},
+    {icon: "fa fa-moon-o", text: "Moon o"},
+    {icon: "fa fa-motorcycle", text: "Motorcycle"},
+    {icon: "fa fa-mouse-pointer", text: "Mouse pointer"},
+    {icon: "fa fa-music", text: "Music"},
+    {icon: "fa fa-neuter", text: "Neuter"},
+    {icon: "fa fa-newspaper-o", text: "Newspaper o"},
+    {icon: "fa fa-object-group", text: "Object group"},
+    {icon: "fa fa-object-ungroup", text: "Object ungroup"},
+    {icon: "fa fa-odnoklassniki", text: "Odnoklassniki"},
+    {icon: "fa fa-odnoklassniki-square", text: "Odnoklassniki square"},
+    {icon: "fa fa-opencart", text: "Opencart"},
+    {icon: "fa fa-openid", text: "Openid"},
+    {icon: "fa fa-opera", text: "Opera"},
+    {icon: "fa fa-optin-monster", text: "Optin monster"},
+    {icon: "fa fa-outdent", text: "Outdent"},
+    {icon: "fa fa-pagelines", text: "Pagelines"},
+    {icon: "fa fa-paint-brush", text: "Paint brush"},
+    {icon: "fa fa-paper-plane", text: "Paper plane"},
+    {icon: "fa fa-paper-plane-o", text: "Paper plane o"},
+    {icon: "fa fa-paperclip", text: "Paperclip"},
+    {icon: "fa fa-paragraph", text: "Paragraph"},
+    {icon: "fa fa-pause", text: "Pause"},
+    {icon: "fa fa-paw", text: "Paw"},
+    {icon: "fa fa-paypal", text: "Paypal"},
+    {icon: "fa fa-pencil", text: "Pencil"},
+    {icon: "fa fa-pencil-square", text: "Pencil square"},
+    {icon: "fa fa-pencil-square-o", text: "Pencil square o"},
+    {icon: "fa fa-phone", text: "Phone"},
+    {icon: "fa fa-phone-square", text: "Phone square"},
+    {icon: "fa fa-picture-o", text: "Picture o"},
+    {icon: "fa fa-pie-chart", text: "Pie chart"},
+    {icon: "fa fa-pied-piper", text: "Pied piper"},
+    {icon: "fa fa-pied-piper-alt", text: "Pied piper alt"},
+    {icon: "fa fa-pinterest", text: "Pinterest"},
+    {icon: "fa fa-pinterest-p", text: "Pinterest p"},
+    {icon: "fa fa-pinterest-square", text: "Pinterest square"},
+    {icon: "fa fa-plane", text: "Plane"},
+    {icon: "fa fa-play", text: "Play"},
+    {icon: "fa fa-play-circle", text: "Play circle"},
+    {icon: "fa fa-play-circle-o", text: "Play circle o"},
+    {icon: "fa fa-plug", text: "Plug"},
+    {icon: "fa fa-plus", text: "Plus"},
+    {icon: "fa fa-plus-circle", text: "Plus circle"},
+    {icon: "fa fa-plus-square", text: "Plus square"},
+    {icon: "fa fa-plus-square-o", text: "Plus square o"},
+    {icon: "fa fa-power-off", text: "Power off"},
+    {icon: "fa fa-print", text: "Print"},
+    {icon: "fa fa-puzzle-piece", text: "Puzzle piece"},
+    {icon: "fa fa-qq", text: "Qq"},
+    {icon: "fa fa-qrcode", text: "Qrcode"},
+    {icon: "fa fa-question", text: "Question"},
+    {icon: "fa fa-question-circle", text: "Question circle"},
+    {icon: "fa fa-quote-left", text: "Quote left"},
+    {icon: "fa fa-quote-right", text: "Quote right"},
+    {icon: "fa fa-random", text: "Random"},
+    {icon: "fa fa-rebel", text: "Rebel"},
+    {icon: "fa fa-recycle", text: "Recycle"},
+    {icon: "fa fa-reddit", text: "Reddit"},
+    {icon: "fa fa-reddit-square", text: "Reddit square"},
+    {icon: "fa fa-refresh", text: "Refresh"},
+    {icon: "fa fa-registered", text: "Registered"},
+    {icon: "fa fa-renren", text: "Renren"},
+    {icon: "fa fa-repeat", text: "Repeat"},
+    {icon: "fa fa-reply", text: "Reply"},
+    {icon: "fa fa-reply-all", text: "Reply all"},
+    {icon: "fa fa-retweet", text: "Retweet"},
+    {icon: "fa fa-road", text: "Road"},
+    {icon: "fa fa-rocket", text: "Rocket"},
+    {icon: "fa fa-rss", text: "Rss"},
+    {icon: "fa fa-rss-square", text: "Rss square"},
+    {icon: "fa fa-rub", text: "Rub"},
+    {icon: "fa fa-safari", text: "Safari"},
+    {icon: "fa fa-scissors", text: "Scissors"},
+    {icon: "fa fa-search", text: "Search"},
+    {icon: "fa fa-search-minus", text: "Search minus"},
+    {icon: "fa fa-search-plus", text: "Search plus"},
+    {icon: "fa fa-sellsy", text: "Sellsy"},
+    {icon: "fa fa-server", text: "Server"},
+    {icon: "fa fa-share", text: "Share"},
+    {icon: "fa fa-share-alt", text: "Share alt"},
+    {icon: "fa fa-share-alt-square", text: "Share alt square"},
+    {icon: "fa fa-share-square", text: "Share square"},
+    {icon: "fa fa-share-square-o", text: "Share square o"},
+    {icon: "fa fa-shield", text: "Shield"},
+    {icon: "fa fa-ship", text: "Ship"},
+    {icon: "fa fa-shirtsinbulk", text: "Shirtsinbulk"},
+    {icon: "fa fa-shopping-cart", text: "Shopping cart"},
+    {icon: "fa fa-sign-in", text: "Sign in"},
+    {icon: "fa fa-sign-out", text: "Sign out"},
+    {icon: "fa fa-signal", text: "Signal"},
+    {icon: "fa fa-simplybuilt", text: "Simplybuilt"},
+    {icon: "fa fa-sitemap", text: "Sitemap"},
+    {icon: "fa fa-skyatlas", text: "Skyatlas"},
+    {icon: "fa fa-skype", text: "Skype"},
+    {icon: "fa fa-slack", text: "Slack"},
+    {icon: "fa fa-sliders", text: "Sliders"},
+    {icon: "fa fa-slideshare", text: "Slideshare"},
+    {icon: "fa fa-smile-o", text: "Smile o"},
+    {icon: "fa fa-sort", text: "Sort"},
+    {icon: "fa fa-sort-alpha-asc", text: "Sort alpha asc"},
+    {icon: "fa fa-sort-alpha-desc", text: "Sort alpha desc"},
+    {icon: "fa fa-sort-amount-asc", text: "Sort amount asc"},
+    {icon: "fa fa-sort-amount-desc", text: "Sort amount desc"},
+    {icon: "fa fa-sort-asc", text: "Sort asc"},
+    {icon: "fa fa-sort-desc", text: "Sort desc"},
+    {icon: "fa fa-sort-numeric-asc", text: "Sort numeric asc"},
+    {icon: "fa fa-sort-numeric-desc", text: "Sort numeric desc"},
+    {icon: "fa fa-soundcloud", text: "Soundcloud"},
+    {icon: "fa fa-space-shuttle", text: "Space shuttle"},
+    {icon: "fa fa-spinner", text: "Spinner"},
+    {icon: "fa fa-spoon", text: "Spoon"},
+    {icon: "fa fa-spotify", text: "Spotify"},
+    {icon: "fa fa-square", text: "Square"},
+    {icon: "fa fa-square-o", text: "Square o"},
+    {icon: "fa fa-stack-exchange", text: "Stack exchange"},
+    {icon: "fa fa-stack-overflow", text: "Stack overflow"},
+    {icon: "fa fa-star", text: "Star"},
+    {icon: "fa fa-star-half", text: "Star half"},
+    {icon: "fa fa-star-half-o", text: "Star half o"},
+    {icon: "fa fa-star-o", text: "Star o"},
+    {icon: "fa fa-steam", text: "Steam"},
+    {icon: "fa fa-steam-square", text: "Steam square"},
+    {icon: "fa fa-step-backward", text: "Step backward"},
+    {icon: "fa fa-step-forward", text: "Step forward"},
+    {icon: "fa fa-stethoscope", text: "Stethoscope"},
+    {icon: "fa fa-sticky-note", text: "Sticky note"},
+    {icon: "fa fa-sticky-note-o", text: "Sticky note o"},
+    {icon: "fa fa-stop", text: "Stop"},
+    {icon: "fa fa-street-view", text: "Street view"},
+    {icon: "fa fa-strikethrough", text: "Strikethrough"},
+    {icon: "fa fa-stumbleupon", text: "Stumbleupon"},
+    {icon: "fa fa-stumbleupon-circle", text: "Stumbleupon circle"},
+    {icon: "fa fa-subscript", text: "Subscript"},
+    {icon: "fa fa-subway", text: "Subway"},
+    {icon: "fa fa-suitcase", text: "Suitcase"},
+    {icon: "fa fa-sun-o", text: "Sun o"},
+    {icon: "fa fa-superscript", text: "Superscript"},
+    {icon: "fa fa-table", text: "Table"},
+    {icon: "fa fa-tablet", text: "Tablet"},
+    {icon: "fa fa-tachometer", text: "Tachometer"},
+    {icon: "fa fa-tag", text: "Tag"},
+    {icon: "fa fa-tags", text: "Tags"},
+    {icon: "fa fa-tasks", text: "Tasks"},
+    {icon: "fa fa-taxi", text: "Taxi"},
+    {icon: "fa fa-television", text: "Television"},
+    {icon: "fa fa-tencent-weibo", text: "Tencent weibo"},
+    {icon: "fa fa-terminal", text: "Terminal"},
+    {icon: "fa fa-text-height", text: "Text height"},
+    {icon: "fa fa-text-width", text: "Text width"},
+    {icon: "fa fa-th", text: "Th"},
+    {icon: "fa fa-th-large", text: "Th large"},
+    {icon: "fa fa-th-list", text: "Th list"},
+    {icon: "fa fa-thumb-tack", text: "Thumb tack"},
+    {icon: "fa fa-thumbs-down", text: "Thumbs down"},
+    {icon: "fa fa-thumbs-o-down", text: "Thumbs o down"},
+    {icon: "fa fa-thumbs-o-up", text: "Thumbs o up"},
+    {icon: "fa fa-thumbs-up", text: "Thumbs up"},
+    {icon: "fa fa-ticket", text: "Ticket"},
+    {icon: "fa fa-times", text: "Times"},
+    {icon: "fa fa-times-circle", text: "Times circle"},
+    {icon: "fa fa-times-circle-o", text: "Times circle o"},
+    {icon: "fa fa-tint", text: "Tint"},
+    {icon: "fa fa-toggle-off", text: "Toggle off"},
+    {icon: "fa fa-toggle-on", text: "Toggle on"},
+    {icon: "fa fa-trademark", text: "Trademark"},
+    {icon: "fa fa-train", text: "Train"},
+    {icon: "fa fa-transgender", text: "Transgender"},
+    {icon: "fa fa-transgender-alt", text: "Transgender alt"},
+    {icon: "fa fa-trash", text: "Trash"},
+    {icon: "fa fa-trash-o", text: "Trash o"},
+    {icon: "fa fa-tree", text: "Tree"},
+    {icon: "fa fa-trello", text: "Trello"},
+    {icon: "fa fa-tripadvisor", text: "Tripadvisor"},
+    {icon: "fa fa-trophy", text: "Trophy"},
+    {icon: "fa fa-truck", text: "Truck"},
+    {icon: "fa fa-try", text: "Try"},
+    {icon: "fa fa-tty", text: "Tty"},
+    {icon: "fa fa-tumblr", text: "Tumblr"},
+    {icon: "fa fa-tumblr-square", text: "Tumblr square"},
+    {icon: "fa fa-twitch", text: "Twitch"},
+    {icon: "fa fa-twitter", text: "Twitter"},
+    {icon: "fa fa-twitter-square", text: "Twitter square"},
+    {icon: "fa fa-umbrella", text: "Umbrella"},
+    {icon: "fa fa-underline", text: "Underline"},
+    {icon: "fa fa-undo", text: "Undo"},
+    {icon: "fa fa-university", text: "University"},
+    {icon: "fa fa-unlock", text: "Unlock"},
+    {icon: "fa fa-unlock-alt", text: "Unlock alt"},
+    {icon: "fa fa-upload", text: "Upload"},
+    {icon: "fa fa-usd", text: "Usd"},
+    {icon: "fa fa-user", text: "User"},
+    {icon: "fa fa-user-md", text: "User md"},
+    {icon: "fa fa-user-plus", text: "User plus"},
+    {icon: "fa fa-user-secret", text: "User secret"},
+    {icon: "fa fa-user-times", text: "User times"},
+    {icon: "fa fa-users", text: "Users"},
+    {icon: "fa fa-venus", text: "Venus"},
+    {icon: "fa fa-venus-double", text: "Venus double"},
+    {icon: "fa fa-venus-mars", text: "Venus mars"},
+    {icon: "fa fa-viacoin", text: "Viacoin"},
+    {icon: "fa fa-video-camera", text: "Video camera"},
+    {icon: "fa fa-vimeo", text: "Vimeo"},
+    {icon: "fa fa-vimeo-square", text: "Vimeo square"},
+    {icon: "fa fa-vine", text: "Vine"},
+    {icon: "fa fa-vk", text: "Vk"},
+    {icon: "fa fa-volume-down", text: "Volume down"},
+    {icon: "fa fa-volume-off", text: "Volume off"},
+    {icon: "fa fa-volume-up", text: "Volume up"},
+    {icon: "fa fa-weibo", text: "Weibo"},
+    {icon: "fa fa-weixin", text: "Weixin"},
+    {icon: "fab fa-whatsapp", text: "Whatsapp"},
+    {icon: "fa fa-wheelchair", text: "Wheelchair"},
+    {icon: "fa fa-wifi", text: "Wifi"},
+    {icon: "fa fa-wikipedia-w", text: "Wikipedia w"},
+    {icon: "fa fa-windows", text: "Windows"},
+    {icon: "fa fa-wordpress", text: "Wordpress"},
+    {icon: "fa fa-wrench", text: "Wrench"},
+    {icon: "fa fa-xing", text: "Xing"},
+    {icon: "fa fa-xing-square", text: "Xing square"},
+    {icon: "fa fa-y-combinator", text: "Y combinator"},
+    {icon: "fa fa-yahoo", text: "Yahoo"},
+    {icon: "fa fa-yelp", text: "Yelp"},
+    {icon: "fa fa-youtube", text: "Youtube"},
+    {icon: "fa fa-youtube-play", text: "Youtube play"},
+    {icon: "fa fa-youtube-square", text: "Youtube square"}
+],
                 data: [],
                 cols: 3
             }
         },
+        components: {
+            'InputFontAwesome2': InputFontAwesome2
+        },
+
         watch: {
             data: {
                 handler(val){
@@ -134,6 +741,3 @@
         }
     }
 </script>
-<style lang="scss" scoped>
-
-</style>

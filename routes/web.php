@@ -166,11 +166,11 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::post('/{id}', 'SeoController@update')->name('.update');
         });
         Route::group([
-            'prefix' => 'companydata',
-            'as' => '.companydata',
+            'prefix' => 'company-data',
+            'as' => '.company-data',
         ], function() {
             Route::get ('/', 'CompanyDataController@index');
-            Route::post('/', 'CompanyDataController@update')->name('.update');
+            Route::post('/update', 'CompanyDataController@update')->name('.update');
             Route::get('/api/data', 'CompanyDataController@data')->name('.data');
         });
     });

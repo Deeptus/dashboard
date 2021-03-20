@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\App;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use AporteWeb\Dashboard\Generators\Generator;
 use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Console\Output\StreamOutput;
 
 class CrudGeneratorController extends Controller
 {
@@ -75,6 +76,10 @@ class CrudGeneratorController extends Controller
     public function store(Request $request)
     {
 
+        if (!defined('STDIN')) {
+            define('STDIN', fopen('php://stdin', 'r'));
+          }
+          
          $dirPath = __crudFolder();
 
         $data     = json_decode($request->data);
@@ -83,7 +88,7 @@ class CrudGeneratorController extends Controller
 
         file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT));
 
-        DB::table('permissions')->upsert([
+       /* DB::table('permissions')->upsert([
             [
                 'name'        => 'Crear ' . $data->table->name->{App::getLocale()},
                 'slug'        => $data->table->tablename . '-create',
@@ -104,12 +109,20 @@ class CrudGeneratorController extends Controller
                 'slug'        => $data->table->tablename . '-restore',
                 'description' => ''
             ]
-        ], ['slug'], ['name', 'description']);
+        ], ['slug'], ['name', 'description']);*/
+
+       // dd($data->inputs);
 
         (new Generator($data->table, $data->inputs))->crud();
-        return Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/2020_11_23_000001_generate_crud_tables.php');
+        $stream = fopen("php://output", "w");
+        Artisan::call('migrate:refresh', [
+            '--path' => 'vendor/aporteweb/dashboard/src/migrations/2020_11_23_000001_generate_crud_tables.php',
+            '--force' => true            
+        ], new StreamOutput($stream));
         return 1;
-        return redirect()->route('admin.crud-generator')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
+
+        //return Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/2020_11_23_000001_generate_crud_tables.php');
+         return response()->json([ 'status' => 'success' ]);// redirect()->route('admin.crud-generator')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
         /*
         $dirPath = __crudFolder();
 
@@ -156,8 +169,21 @@ class CrudGeneratorController extends Controller
 
     public function destroy($id)
     {
-        Group::find($id)->delete();
-        return redirect()->route('Dashboard::admin.crud-generator')->with('success', 'Se ha eliminado un <strong>Groupo</strong> con éxito.');
+        $dirPath = __crudFolder();
+        $filePath = $dirPath . '/' . $id;
+
+        $tablename = str_replace('.json','',$id);
+
+        \Schema::dropIfExists($tablename);
+
+        \File::delete($filePath);
+
+        return response()->json([
+            'status'   => 'success',
+            'data'     => $this::index()
+        ]);
+        
+
     }
     public function trash()
     {

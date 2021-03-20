@@ -11,6 +11,68 @@ if (!function_exists('fastcgi_finish_request')) {
     }
 }
 
+function __cf($key = 'header_logo', $isArray = null){
+
+    $keys = [
+        'header_logo' => '',
+        'header_portrait' => '/images/slider_img.png',
+        'footer_logo' => '',
+        'networks' => [ 
+            'link' => '/', 'icon' => 'fa fa-map-marker', 'text' => 'Argentina'
+         ],
+        'footer_info' => [ 
+           'link' => '/', 'icon' => 'fa fa-map-marker', 'text' => 'Argentina'
+        ],
+        'header_info' => '',
+        'whatsapp_button' => '+5492804582626',
+        'contact_target_send_email' => 'alesosa@gmail.com',
+        'recaptcha_publickey' => ''
+
+    ];
+
+    $vars = [];
+
+    if($isArray !== 'A'){
+
+        $cf = \AporteWeb\Dashboard\Models\ConfigVar::where('config_key', $key)->pluck('config_value')->toArray();
+        if($cf){
+            return $cf[0];
+        }else{
+            return $keys[$key];
+        }
+
+    }else{
+        $cf = \AporteWeb\Dashboard\Models\ConfigVar::where('config_key', $key)->get('config_value')->toArray();
+        return json_decode($cf[0]['config_value']);
+    }
+
+}
+
+function __crudSmall($json){
+
+
+    if($json) {
+        $dirPath  = app_path('Dashboard');
+        $filePath = $dirPath . '/' . $json . '.json';
+
+        $className = str_replace(['_', '-', '.'], ' ', $json);
+        $className = ucwords($className);
+        $className = str_replace(' ', '', $className);
+        $model = "\\App\\Models\\" . $className;
+
+        $data = $model::get();
+
+        return $data;
+
+    }else{
+
+        return [ 0, 1, 2 ];
+
+    }
+
+
+}
+
 if (!function_exists('__file_url')) {
     function __file_url($path, $default_file, $is_storage = false)
     {

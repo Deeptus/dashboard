@@ -4,9 +4,16 @@
 			<span class="pi pi-bars"></span>
 		</button>
 		<div class="layout-topbar-icons">
-					<button class="p-link "  @click="$router.go(-1)">
-			<span class="pi pi-chevron-left"> </span> VOLVER
-		</button>
+
+			<a href="/" target="_blank">
+			<Button class="p-link " >
+				<span class="pi pi-globe"> </span> Ir al sitio
+			</Button>
+			</a>
+
+			<Button class="p-link "  @click="$router.go(-1)">
+				<span class="pi pi-chevron-left"> </span> VOLVER
+			</Button>
 
 		</div>
 	</div>

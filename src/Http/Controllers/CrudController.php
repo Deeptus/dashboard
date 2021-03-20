@@ -49,13 +49,13 @@ class CrudController extends Controller
 
     public function data($tablename, $id = false)
     {
-        //$languages = [ 'es', 'en', 'pt'];
+
         $content = null;
         $relations = [];
         $languages = [];
-//        $langs = [ 'es' => 'Español', 'en' => 'Ingles', 'pt' => 'Portugues' ];
+
         foreach (LaravelLocalization::getLocalesOrder() as $key => $value) {
-                $flag = 'es';
+            $flag = 'es';
             if($key == 'pt'){
                 $flag = 'br';
             }
@@ -64,6 +64,7 @@ class CrudController extends Controller
             }
             $languages[] = [ 'key' => $value['name'], 'value' => $key, 'flag' => $flag];
         }
+
         if ($id) {
             $item = $this->model::where('id', $id)->firstOrFail();
             foreach ($this->inputs as $inputKey => $input) {
@@ -81,9 +82,8 @@ class CrudController extends Controller
                                 ->pluck($input->tabletextcolumn, $input->tablekeycolumn);
             }
 
-
-
         }    
+
         return response()->json([
             'languages' => $languages,
             'locale'    => App::getLocale(),
@@ -98,11 +98,12 @@ class CrudController extends Controller
     public function index()
     {
         $data = $this->model::get();
+        $relations = [];
         $languages = [];
 
         foreach (LaravelLocalization::getLocalesOrder() as $key => $value) {
 
-                $flag = 'es';
+            $flag = 'es';
             if($key == 'pt'){
                 $flag = 'br';
             }
@@ -112,10 +113,20 @@ class CrudController extends Controller
             $languages[] = [ 'key' => $value['name'], 'value' => $key, 'flag' => $flag];
         }
 
+        foreach ($this->inputs as $inputKey => $input) {
+            
+            if ($input->type == 'select' && $input->valueoriginselector == 'table') {
+                $relations[$input->tabledata] = DB::table($input->tabledata)
+                                ->whereNull('deleted_at')
+                                ->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            }
+
+        }    
 
         return response()->json([
             'data'           => $data,
             'tablename'      => $this->tablename,
+            'relations'      => $relations,
             'languages'      => $languages,
             'table'          => $this->table,
             'inputs'         => $this->inputs,
@@ -170,18 +181,31 @@ class CrudController extends Controller
 
             if($input->type == 'file'){
 
-            $path = $request->file->store('public/content/' . $this->tablename . '/');
+                if($request->hasFile('file')){
 
+                    $path = $request->file->store('public/content/' . $this->tablename . '/');
+                    $item->{$input->columnname} = $path;
 
-            $item->{$input->columnname} = $path;
-
-
+                }
+            }else if($input->type == 'boolean'){
+                if($request->{$input->columnname} == 'true'){
+                    $item->{$input->columnname} = 1;
+                }else{
+                    $item->{$input->columnname} = 0;
+                }
+                
             }else{
+                
+                if($input->translatable){
+                    $item->{$input->columnname.'_pt'} = $request->{$input->columnname.'_pt'};
+                    $item->{$input->columnname.'_en'} = $request->{$input->columnname.'_en'};
+                }
 
-                $item->{$input->columnname.'_pt'} = $request->{$input->columnname.'_pt'};
-                $item->{$input->columnname.'_en'} = $request->{$input->columnname.'_en'};
+                if($request->{$input->columnname} !== 'null' && $request->{$input->columnname} !== 'undefined' ){
+                    
+                    $item->{$input->columnname} = $request->{$input->columnname};
 
-                $item->{$input->columnname} = $request->{$input->columnname};
+                }
 
             }
         }

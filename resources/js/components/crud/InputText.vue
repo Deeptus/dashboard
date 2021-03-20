@@ -1,8 +1,8 @@
 <template>
 <span class="p-float-label">
 
-        <InputText type="text"   v-model="value.value"   :id="value.value" />
-        <label :for="value.value">{{ input.label[lang()] }}</label>
+        <InputText type="text"   v-model="val.value"   :id="input.columnname" style="width: 100%" />
+        <label :for="input.columnname">{{ input.label[lang()] }}</label>
 
 </span>
 </template>
@@ -22,6 +22,7 @@
         components: {},
         data(){
             return{
+                val: this.value
             }
         },
         created() {

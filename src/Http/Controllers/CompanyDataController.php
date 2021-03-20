@@ -32,7 +32,8 @@ class CompanyDataController extends Controller
             'admin_logo',
             'admin_favicon',
             'footer_logo',
-            'header_logo'
+            'header_logo',
+            'header_portrait'
         ];
         $content = [];
         foreach ($vars as $var_key => $var_value) {
@@ -86,6 +87,7 @@ class CompanyDataController extends Controller
             'admin_logo',
             'admin_favicon',
             'footer_logo',
+            'header_portrait',
             'header_logo'
         ];
         foreach ($keys as $key) {

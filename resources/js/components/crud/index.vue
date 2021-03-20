@@ -128,7 +128,7 @@
 
 
 
-                    this.relations = response.relations
+                    this.relations = response.relations 
                     this.inputs.forEach(input => {
 
 
@@ -261,7 +261,20 @@
         }
     }
 </script>
-<style lang="css" scoped>
+<style lang="css">
+.truncated {
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  padding: 20px;
+  font-size: 1.3rem;
+  margin: 0;
+  background: white;
+  resize: horizontal;
+}
+
 .form-label {
     margin-bottom: .5rem;
     font-weight: bold;

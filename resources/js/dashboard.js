@@ -12,6 +12,8 @@ import './assets/layout/layout.scss';
 import './assets/layout/flags/flags.css';
 import 'primevue/resources/primevue.min.css';
 
+
+import Slider from 'primevue/slider';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import Message from 'primevue/message';
@@ -40,7 +42,8 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import Editor from 'primevue/editor';
 import SelectButton from 'primevue/selectbutton';
 import Checkbox from 'primevue/checkbox';
-
+import Carousel from 'primevue/carousel';
+import Divider from 'primevue/divider';
 import Vuelidate from 'vuelidate'
 import moment from 'moment'
 import App from './App.vue';
@@ -55,7 +58,7 @@ window.Vue.use(Message);
 window.Vue.use(moment)
 window.Vue.use(Vuelidate)
 
-
+window.Vue.component('Carousel', Carousel);
 window.Vue.component('Checkbox', Checkbox);
 window.Vue.component('SelectButton', SelectButton);
 window.Vue.component('Editor', Editor);
@@ -81,7 +84,12 @@ window.Vue.component('Column', Column);
 window.Vue.component('DataTable', DataTable);
 window.Vue.component('DataView', DataTable);
 window.Vue.component('InputText', InputText);
-
+window.Vue.component('Divider', Divider);
+//window.Vue.component('Slider', Divider);
+import ToggleButton from 'primevue/togglebutton';
+window.Vue.component('ToggleButton', ToggleButton);
+import Chip from 'primevue/chip';
+window.Vue.component('Chip', Chip);
 
 window.Vue.component('dashtable', require('./components/DashTable.vue').default)
 window.Vue.component('users', require('./components/users/index.vue').default)
