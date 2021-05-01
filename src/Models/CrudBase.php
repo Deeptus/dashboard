@@ -94,8 +94,8 @@ trait CrudBase {
                 }
             }
         }
-        if (Str::endsWith($key, '_rel_val')) {
 
+        if (Str::endsWith($key, '_rel_val')) {
             $column = str_replace('_rel_val', '', $key);
             if (!$this->getAttribute($column)) {
                 return '';
@@ -128,11 +128,12 @@ trait CrudBase {
                         }
                     }
                     if ($input->valueoriginselector == 'table') {
+                        
                         $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
                         $className = ucwords($className);
                         $className = str_replace(' ', '', $className);
                         $subModel = "\\App\\Models\\" . $className;
-                        $item = $subModel::where($input->tablekeycolumn, $this->id)->first();
+                        $item = $subModel::where($input->tablekeycolumn, $this->getAttribute($column))->first();
                         try {
                             return $item->{ $input->tabletextcolumn };
                         } catch (\Throwable $th) {

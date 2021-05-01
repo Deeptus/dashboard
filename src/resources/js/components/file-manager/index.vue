@@ -22,7 +22,9 @@
                 <p>Tamaño máximo de archivo: 2 MB.</p>
             </div>
             <div class="file-manager__files" v-if="state == 'library'">
-                <div class="file-manager__file" @click="selected_id = file.id" :class="{ 'file-manager__file--selected': selected_id == file.id }" v-for="(file, key) in files" :key="key" :style="'background-image: url(' + file.url + ')'"></div>
+                <template v-for="(file, key) in files">
+                    <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key" :style="'background-image: url(' + file.url + ')'"></div>
+                </template>
             </div>
             <div class="file-manager__controls">
                 <div class="btn btn-primary" @click="selected()"><i class="fas fa-check"></i> Seleccionar</div>
@@ -45,7 +47,8 @@
                 files: [],
                 selected_id: 0,
                 uploadingFiles: false,
-                callback: null
+                callback: null,
+                excludeIds: []
             }
         },
         created() {
@@ -61,11 +64,14 @@
             selected_id: function(val, oldVal) {}
         },
         methods: {
-            open: function() {
+            open: function(property = {}) {
                 document.body.style.overflow = 'hidden'
                 this.returnSelected = null
                 this.selected_id = 0
                 this.display = true
+                if (property.excludeIds) {
+                    this.excludeIds = property.excludeIds
+                }
                 return this.callback = new Promise((resolve, reject) => {
                     Object.defineProperty(this, "returnSelected", {
                         set: value => {

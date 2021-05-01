@@ -8,9 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 <?php endif ?>
 use Illuminate\Support\Str;
 use AporteWeb\Dashboard\Models\CrudBase;
+<?php if($this->table->is_authenticatable): ?>
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
+use Junges\ACL\Traits\UsersTrait;
+<?php endif ?>
 
-class <?php print $className ?> extends Model
-{
+class <?php print $className ?> extends <?php print $this->table->is_authenticatable ? 'Authenticatable' : 'Model' ?> {
+<?php if($this->table->is_authenticatable): ?>
+    use HasFactory, Notifiable, UsersTrait;
+<?php endif ?>
 <?php if($this->table->softDeletes): ?>
     use SoftDeletes;
 <?php endif ?>
@@ -31,6 +39,13 @@ if ($input->type == 'card-header') {
 	];
 	protected $casts = [
 	];
+<?php if($this->table->is_authenticatable): ?>
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+<?php endif ?>
+
     public static function boot() {
         parent::boot();
 <?php if($this->table->uuid): ?>

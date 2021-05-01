@@ -42,4 +42,11 @@ class User extends Authenticatable
     public function sucursal() {
         return $this->belongsTo('App\Models\Sucursal', 'sucursal_id');
     }
+    public function getKey() {
+        if ($this->uuid) {
+            return $this->uuid;
+        } else {
+            return $this->id;
+        }
+    }
 }

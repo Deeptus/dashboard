@@ -62,6 +62,7 @@
                             <?php try { ?>
                                 <th>{{ $input->label->{App::getLocale()} }}</th>
                             <?php } catch (\Throwable $th) { ?>
+                                @dump('no tiene traduccion')
                                 @dd($input);
                             <?php } ?>
                         @endforeach                

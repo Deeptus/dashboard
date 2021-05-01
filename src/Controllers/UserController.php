@@ -9,6 +9,9 @@ use App\Models\Sucursal;
 use Junges\ACL\Http\Models\Group;
 use Junges\ACL\Http\Models\Permission;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -31,8 +34,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         $groups  = Group::get();
         if (class_exists('App\Models\Sucursal')) {
             $sucursales = Sucursal::with('tienda')->get();
@@ -54,6 +56,11 @@ class UserController extends Controller
      */
     public function store(Request $request, $uuid = null)
     {
+        request()->validate([
+            'email'    => ['required', 'unique:users'],
+            'username' => ['required', 'unique:users'],
+        ]);
+
         if($uuid){
             $item   = User::where('uuid', $uuid)->firstOrFail();
             $action = 'edito';
@@ -64,7 +71,9 @@ class UserController extends Controller
             $item       = new User;
             $action     = 'añadio';
             $item->root = 0;
-            $item->uuid = __uuid();
+            if (Schema::hasColumn($item->getTable(), 'uuid')) {
+                $item->uuid = __uuid();
+            }
         }
         $item->name       = $request->name;
         $item->username   = $request->username;
@@ -93,8 +102,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($uuid)
-    {
+    public function edit($keyValue) {
+
         // Verifico si es root
         if (auth()->user()->root) {
             // consulto Grupos
@@ -103,8 +112,10 @@ class UserController extends Controller
             // consulto Grupos
             $groups  = Group::where('display_only_root', 0)->get();
         }
+        
+        $element = __primary_key_usage(new User, $keyValue, true, ['groups']);
 
-        $element = User::with('groups')->where('uuid', $uuid)->first();
+        // dd($keyName, $keyValue);
         $user_groups = $element->groups()->pluck('id')->toArray();
         return view('Dashboard::admin.users.edit', [
             'groups' => $groups,
@@ -121,12 +132,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        $item = User::find($id);
+    public function update(Request $request, $keyValue) {
+
+        request()->validate([
+            'email'    => ['required', Rule::unique('users')->ignore( $keyValue, __primary_key_usage( new User, $keyValue ) )],
+            'username' => ['required', Rule::unique('users')->ignore( $keyValue, __primary_key_usage( new User, $keyValue ) )],
+        ]);
+
+        $item = __primary_key_usage(new User, $keyValue, true);
+
         if ($request->password != null && $request->password != '') {
             $item->password = bcrypt($request->password);
         }
+    
         $item->name       = $request->name;
         $item->username   = $request->username;
         $item->email      = $request->email;
@@ -143,9 +161,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        User::find($id)->delete();
+    public function destroy($keyValue) {
+
+        $item = __primary_key_usage(new User, $keyValue, true);
+        $item->delete();
+
         return redirect()->route('admin.user')->with('success', 'Se ha eliminado un <strong>Usuario</strong> con éxito.');
     }
     public function trash()
@@ -157,9 +177,9 @@ class UserController extends Controller
             '__admin_active' => 'admin.user'
         ]);
     }
-    public function restore($id)
-    {
-        $item = User::withTrashed()->find($id);
+    public function restore($keyValue) {
+
+        $item = __primary_key_usage(new User, $keyValue, true, false, true);
         $item->deleted_at = null;
         $item->save();
         return redirect()->route('admin.user.trash')->with('success', 'Se ha restaurado un <strong>Usuario</strong> con éxito.');
@@ -171,10 +191,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function permission($id)
+    public function permission($keyValue)
     {
+        $item = __primary_key_usage(new User, $keyValue, true);
+
         return view('Dashboard::admin.users.permission', [
-            'element' => User::with('permissions')->find($id),
+            'element' => $item,
             'permissions' => Permission::get(),
             '__admin_active' => 'admin.user'
         ]);
@@ -187,9 +209,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function updatePermission(Request $request, $id)
+    public function updatePermission(Request $request, $keyValue)
     {
-        $item = User::find($id);
+        $item = __primary_key_usage(new User, $keyValue, true);
         $item->permissions()->sync($request->permissions);
         return redirect()->route('admin.user')->with('success', 'Se ha editado un <strong>Usuario</strong> con éxito.');
     }

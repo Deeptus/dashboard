@@ -40,10 +40,10 @@ if (!function_exists('__t')) {
     }
 }
 if (!function_exists('__active')) {
-    function __active($var, $active)
+    function __active($var, $active, $class = 'active')
     {
         if ($var == $active) {
-            return 'active';
+            return $class;
         }
         return '';
     }
@@ -179,5 +179,30 @@ if (!function_exists('__dolar')) {
             return 63;
         }
 
+    }
+}
+
+use Illuminate\Support\Facades\Schema;
+if (!function_exists('__primary_key_usage')) {
+    function __primary_key_usage($model, $value, $returnItem = false, $with = false, $withTrashed = false) {
+        if ( 
+            Schema::hasColumn($model->getTable(), 'uuid')
+            && is_string($value)
+            && preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $value) === 1
+            ) {
+            $keyName = 'uuid';
+        } else {
+            $keyName = 'id';
+        }
+        if ($returnItem) {
+            if ($with) {
+                $model = $model->with($with);
+            }
+            if ($withTrashed) {
+                $model = $model->withTrashed();
+            }
+            return $model->where($keyName, $value)->first();
+        }
+        return $keyName;
     }
 }

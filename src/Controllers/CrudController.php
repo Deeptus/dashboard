@@ -60,8 +60,13 @@ class CrudController extends Controller
 
         if ($input->type == 'map-select-lat-lng') {
             $found = true;
-            $content[$input->columnname . '_lat'] = $item->{$input->columnname . '_lat'};
-            $content[$input->columnname . '_lng'] = $item->{$input->columnname . '_lng'};
+            try {
+                $content[$input->columnname . '_lat'] = $item->{$input->columnname . '_lat'};
+                $content[$input->columnname . '_lng'] = $item->{$input->columnname . '_lng'};
+            } catch (\Throwable $th) {
+                $content[$input->columnname . '_lat'] = null;
+                $content[$input->columnname . '_lng'] = null;
+            }
         }
 
         if ($input->type == 'multimedia_file') {
@@ -230,17 +235,16 @@ class CrudController extends Controller
                     'table'          => $this->table,
                     'inputs'         => $this->inputs,
                     '__admin_active' => 'admin.crud-' . $this->tablename
-                ]);        
+                ]);
             }
         }
-
         foreach ($this->conditions as $key => $condition) {
             $data = $data->whereRaw($condition->condition);
         }
         if (request()->has('s')) {
             $appends['s'] = request()->s;
             $cols = \DB::getSchemaBuilder()->getColumnListing((new $this->model)->getTable());
-            $data->where(function ($query) use ($cols) {
+            $data = $data->where(function ($query) use ($cols) {
                 foreach ($cols as $col) {
                     $query->orWhere($col, 'like', '%'.request()->s.'%');
                 }
@@ -371,10 +375,11 @@ class CrudController extends Controller
             $className = str_replace(' ', '', $className);
             $subModel = "\\App\\Models\\" . $className;
             try {
+                //
+                // By AleSosa 🤦‍♂️
+                $item->save();
+                $subModel::where(''.$input->tablekeycolumn.'', $item->id)->delete();
                 if (array_key_exists($input->columnname, $data)) {
-                    //
-                    // By AleSosa 🤦‍♂️
-                    $subModel::where(''.$input->tablekeycolumn.'', $item->id)->delete();
                     foreach ($data[$input->columnname] as $subFormKey =>  $subFormItem) {
                         if ( array_key_exists('id', $subFormItem) ) {
                             $subItem = $subModel::withTrashed()->find($subFormItem['id']);
@@ -433,12 +438,15 @@ class CrudController extends Controller
         */
 
         foreach ($this->inputs as $inputKey => $input) {
-            if ($input->settable == 0) {
-                $this->attachInput($item, $input, $request->all());
+            try {
+                if ($input->type != 'card-header' && $input->settable == 0) {
+                    $this->attachInput($item, $input, $request->all());
+                }
+            } catch (\Throwable $th) {
+                abort(500, json_encode([$input, $th]));
             }
         }
         $item->save();
-
         return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);
     }
 
@@ -462,7 +470,7 @@ class CrudController extends Controller
     }
     public function trash($tablename)
     {
-        $data = $this->model::onlyTrashed()->get();
+        $data = $this->model::onlyTrashed()->paginate(20);
         return view('Dashboard::admin.crud.index', [
             'trash'          => true,
             'data'           => $data,

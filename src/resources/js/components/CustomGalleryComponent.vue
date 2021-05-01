@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div slot="footer" class="col-md-3">
-                    <label class="gallery-item" :for="id">
+                    <label class="gallery-item" :for="id" v-if="useFileManager == false">
                         <input type="file" :id="id" class="d-none" @change="onFileGallery($event)" multiple>
                         <div class="gallery-item-overlay"></div>
                         <div class="gallery-item-container">
@@ -32,6 +32,18 @@
                             </div>
                         </div>
                     </label>
+                    <div class="gallery-item" @click="selectFile()">
+                        <div class="gallery-item-overlay"></div>
+                        <div class="gallery-item-container">
+                            <div class="gallery-item-container">
+                                <span class="text-center">
+                                    <i class="fas fa-upload fa-5x"></i>
+                                    <br>
+                                    Selccionar
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </draggable>
     </fieldset>
@@ -48,6 +60,10 @@
                 type: String,
                 default: 'Fotos del Producto'
             },
+            useFileManager: {
+                type: Boolean,
+                default: false
+            }
             /*id: {
                 type: String,
                 default: ''
@@ -109,6 +125,27 @@
             }
         },
         methods: {
+            async selectFile() {
+                var ids = this.gallery.map((a) => a.id)
+                await this.fileManager().open({ excludeIds: ids }).then((callback) => {
+                    this.image = {}
+                    if (callback) {
+                        this.gallery.push({
+                            id:   callback.id,
+                            path: callback.path,
+                            type: callback.type,
+                            url:  callback.url
+                        })
+                        // console.log(this.gallery)
+                        /*
+                        this.$set(this.image, 'id',   callback.id)
+                        this.$set(this.image, 'path', callback.path)
+                        this.$set(this.image, 'type', callback.type)
+                        this.$set(this.image, 'url',  callback.url)
+                        */
+                    }
+                })
+            },
             fileInfo(item) {
                 let info = {}
                 if (item instanceof File) {
@@ -261,6 +298,11 @@
         position: relative;
         width: 100%;
         margin-bottom: 5px;
+        cursor: pointer;
+        user-select: none;
+        &:hover {
+            background: #CCC;
+        }
     }
     .gallery-item-controls {
         position: absolute;
