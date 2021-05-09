@@ -174,6 +174,19 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/{id}/copy', 'DynamicContentController@copy')->name('.copy');
         });
         Route::group([
+            'prefix' => 'multimedia',
+            'as' => '.multimedia',
+        ], function() {
+            Route::get ('/', 'MultimediaController@index');
+            Route::get ('/create', 'MultimediaController@create')->name('.create');
+            Route::post('/', 'MultimediaController@store')->name('.store');
+            Route::get ('/{id}/edit', 'MultimediaController@edit')->name('.edit');
+            Route::post('/{id}', 'MultimediaController@update')->name('.update');
+            //
+            Route::get ('/{id}/delete', 'MultimediaController@destroy')->name('.destroy');
+            Route::get ('/{id}/restore', 'MultimediaController@restore')->name('.restore');
+        });
+        Route::group([
             'prefix' => 'translation',
             'as' => '.translation',
         ], function() {

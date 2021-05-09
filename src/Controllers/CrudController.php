@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use AporteWeb\Dashboard\Models\Content;
 use AporteWeb\Dashboard\Models\ContentMeta;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use AporteWeb\Dashboard\Models\Gallery;
@@ -201,7 +202,6 @@ class CrudController extends Controller
             $galleries = $results['galleries'];
             $subForm   = $results['subForm'];
         }
-
         return response()->json([
             'languages' => $languages,
             'locale'    => App::getLocale(),
@@ -446,6 +446,14 @@ class CrudController extends Controller
                 abort(500, json_encode([$input, $th]));
             }
         }
+        try {
+            if ($this->table->slug == 1 && ( $item->slug == null || $item->slug == '' ) ) {
+                $slug = Str::slug($request->{$this->table->slug_col} . ' ' . Str::random(6));
+                $item->slug = $slug;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         $item->save();
         return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);
     }
@@ -498,6 +506,14 @@ class CrudController extends Controller
                 $new->{$input->columnname} = NULL;
             }
             if ($input->type == 'subForm') {}
+        }
+        try {
+            if ( $this->table->slug == 1 ) {
+                $slug = Str::slug($new->{$this->table->slug_col} . ' ' . Str::random(6));
+                $new->slug = $slug;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
         $new->save();
         return redirect()->route('admin.crud.edit', ['tablename' => $tablename, 'id' => $new->id])->with('success', 'Se ha duplicado un <strong>item</strong> con éxito.');

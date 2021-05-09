@@ -54,6 +54,9 @@ class GenerateCrudTables extends Migration
         if (!Schema::hasColumn($content->table->tablename, 'uuid')) {
             $table->uuid('uuid');
         }
+        if (!Schema::hasColumn($content->table->tablename, 'slug')) {
+            $table->string('slug')->nullable();
+        }
         if ($content->table->is_authenticatable) {
             if (!Schema::hasColumn($content->table->tablename, 'email_verified_at')) {
                 $table->timestamp('email_verified_at')->nullable();

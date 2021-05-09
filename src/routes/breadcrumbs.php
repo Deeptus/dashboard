@@ -180,3 +180,26 @@ Breadcrumbs::for('admin.crud.trash', function ($trail, $table) {
     $trail->parent('admin.crud', $table);
     $trail->push('Papelera', route('admin.crud.trash', ['tablename' => $table->tablename]));
 });
+
+//*************************************************************//
+
+// Panel > Multimedia
+Breadcrumbs::for('admin.multimedia', function ($trail) {
+	$trail->parent('admin.home');
+	$trail->push('Multimedia', route('admin.multimedia'));
+});
+// Panel > Multimedia > Añadir
+Breadcrumbs::for('admin.multimedia.create', function ($trail) {
+	$trail->parent('admin.multimedia');
+	$trail->push('Añadir', route('admin.multimedia.create'));
+});
+// Panel > Multimedia > Editar
+Breadcrumbs::for('admin.multimedia.edit', function ($trail, $element) {
+	$trail->parent('admin.multimedia');
+	$trail->push('Editar a: ' . $element->name, route('admin.multimedia.edit', $element->id));
+});
+// Panel > Multimedia > Papelera
+Breadcrumbs::for('admin.multimedia.trash', function ($trail) {
+	$trail->parent('admin.multimedia');
+	$trail->push('Papelera', route('admin.multimedia.trash'));
+});

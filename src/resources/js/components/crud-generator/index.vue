@@ -119,6 +119,12 @@
                                     </div>
                                 </div>
                                 <div class="col-md" v-if="table.slug == 1">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" v-model="table.slug_col">
+                                        <label for="floatingInput">Slug Col</label>
+                                    </div>
+                                </div>
+                                <div class="col-md" v-if="table.slug == 1">
                                     <div class="form-floating">
                                         <select class="form-select" id="slug_global" v-model="table.slug_global">
                                             <option value="1">Yes</option>
@@ -443,13 +449,14 @@
                 table: {
                     id: 1,
                     single_record: 0,
-                    uuid: 0,
+                    uuid: 1,
                     order_index: 0,
                     tablename: '',
                     name: {},
                     timestamps: 1,
                     softDeletes: 1,
                     slug: 0,
+                    slug_col: '',
                     slug_global: 0,
                     is_authenticatable: 0
                 },
