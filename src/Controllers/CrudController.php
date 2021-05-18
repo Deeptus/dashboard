@@ -183,7 +183,7 @@ class CrudController extends Controller
             $languages[$key] = $value['name'];
         }
         if ($id) {
-            $item = $this->model::where('id', $id)->firstOrFail();
+            $item = $this->model::findByPKOrFail($id);
         }
 
         foreach ($this->inputs as $inputKey => $input) {
@@ -382,7 +382,7 @@ class CrudController extends Controller
                 if (array_key_exists($input->columnname, $data)) {
                     foreach ($data[$input->columnname] as $subFormKey =>  $subFormItem) {
                         if ( array_key_exists('id', $subFormItem) ) {
-                            $subItem = $subModel::withTrashed()->find($subFormItem['id']);
+                            $subItem = $subModel::withTrashed()->findByPK($subFormItem['id']);
                         } else {
                             $subItem = new $subModel;
                         }
@@ -415,7 +415,7 @@ class CrudController extends Controller
     public function store(Request $request, $tablename, $id = false)
     {
         if($id){
-            $item       = $this->model::where('id', $id)->firstOrFail();
+            $item       = $this->model::findByPKOrFail($id);
             $action     = 'edito';
         } else {
             $item       = new $this->model;
@@ -460,7 +460,7 @@ class CrudController extends Controller
 
     public function edit($tablename, $id)
     {
-        $item = $this->model::find($id);
+        $item = $this->model::findByPKOrFail($id);
         return view('Dashboard::admin.crud.edit', [
             'item'           => $item,
             'tablename'      => $this->tablename,
@@ -472,9 +472,9 @@ class CrudController extends Controller
 
     public function destroy($tablename, $id)
     {
-        $item = $this->model::find($id);
+        $item = $this->model::findByPK($id);
         $item->delete();
-        return redirect()->route('admin.crud', ['tablename' => $tablename, 'id' => $item->id])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
+        return redirect()->route('admin.crud', ['tablename' => $tablename])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
     }
     public function trash($tablename)
     {
@@ -490,14 +490,14 @@ class CrudController extends Controller
     }
     public function restore($tablename, $id)
     {
-        $item = $this->model::withTrashed()->find($id);
+        $item = $this->model::withTrashed()->findByPK($id)->first();
         $item->deleted_at = null;
         $item->save();
         return redirect()->route('admin.crud.trash', ['tablename' => $tablename])->with('success', 'Se ha restaurado un <strong>item</strong> con éxito.');
     }
     public function copy($tablename, $id)
     {
-        $new = $this->model::find($id)->replicate();
+        $new = $this->model::findByPK($id)->replicate();
         foreach ($this->inputs as $inputKey => $input) {
 
             if ($input->type == 'select' && $input->valueoriginselector == 'table') {}
@@ -516,6 +516,6 @@ class CrudController extends Controller
             //throw $th;
         }
         $new->save();
-        return redirect()->route('admin.crud.edit', ['tablename' => $tablename, 'id' => $new->id])->with('success', 'Se ha duplicado un <strong>item</strong> con éxito.');
+        return redirect()->route('admin.crud.edit', ['tablename' => $tablename, 'id' => $new->pkv])->with('success', 'Se ha duplicado un <strong>item</strong> con éxito.');
     }
 }

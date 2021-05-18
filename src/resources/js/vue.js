@@ -152,13 +152,19 @@ window.storagePath = (file) => {
     url = replaceAll(url, '\\', '/')
     return replaceAll(url, '//', '/')
 }
-
+// trim custon chars
+String.prototype.trimChars = function (c) {
+    var re = new RegExp("^[" + c + "]+|[" + c + "]+$", "g");
+    return this.replace(re,"");
+}
 window.slugify = (text, divider = '-') => {
     text = text
         .toString()       // Cast to string
         .toLowerCase()    // Convert the string to lowercase letters
         .normalize('NFD') // The normalize() method returns the Unicode Normalization Form of a given string.
-        .trim()           // Remove whitespace from both sides of a string
+        // .trim()           // Remove whitespace from both sides of a string
+        .trimChars(' ')
+        .trimChars('_')
 
     if (divider == '-') {
         text = text
@@ -170,10 +176,13 @@ window.slugify = (text, divider = '-') => {
         text = text
             .replace(/\s+/g, '_')     // Replace spaces with _
             .replace(/[^\w\-]+/g, '') // Remove all non_word chars
-            .replace(/\-+/g, '_')  // Replace multiple - with single -
+            .replace(/\-+/g, '_')     // Replace multiple - with single -
             .replace(/\_\_+/g, '_');  // Replace multiple - with single -
     }
     return text
+        // just in case
+        .trimChars(' ')
+        .trimChars('_')
 }
 Vue.filter('toCurrency',         window.toCurrency);
 Vue.filter('getFileSize',        window.getFileSize);

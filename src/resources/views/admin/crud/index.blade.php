@@ -101,20 +101,20 @@
                     @endforeach
                     <td>
                         @if (!$item->trashed())
-                        <a href="{{ route('admin.crud.edit', ['tablename' => $tablename, 'id' => $item->id]) }}" class="btn btn-primary btn-sm">
+                        <a href="{{ route('admin.crud.edit', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-sm text-white-50 fa-edit"></i>
                             Editar
                         </a>
-                        <a href="{{ route('admin.crud.copy', ['tablename' => $tablename, 'id' => $item->id]) }}" class="btn btn-warning btn-sm btn-confirm-copy">
+                        <a href="{{ route('admin.crud.copy', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-warning btn-sm btn-confirm-copy">
                             <i class="fas fa-sm text-white-50 fa-copy"></i>
                             Duplicar
                         </a>
-                        <a href="{{ route('admin.crud.destroy', ['tablename' => $tablename, 'id' => $item->id]) }}" class="btn btn-danger btn-sm btn-confirm-delete">
+                        <a href="{{ route('admin.crud.destroy', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-danger btn-sm btn-confirm-delete">
                             <i class="fas fa-sm text-white-50 fa-trash-alt"></i>
                             Eliminar
                         </a>
                         @else
-                        <a href="{{ route('admin.crud.restore', ['tablename' => $tablename, 'id' => $item->id]) }}" class="btn btn-warning btn-sm">
+                        <a href="{{ route('admin.crud.restore', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-warning btn-sm">
                             <i class="fas fa-sm text-white-50 fa-trash-restore"></i>
                             Restaurar
                         </a>

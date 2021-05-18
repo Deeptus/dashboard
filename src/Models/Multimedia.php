@@ -26,12 +26,11 @@ class Multimedia extends Model
 	protected $appends = ['url'];
     public $translatable = [];
 
-    public function getUrlAttribute(Type $var = null)
-    {
+    public function getUrlAttribute() {
         return asset(Storage::url($this->getAttribute('path')));
     }
-    public function getTypeAttribute(Type $var = null)
-    {
+
+    public function getTypeAttribute() {
         if (Storage::exists($this->getAttribute('path'))) {
             return Storage::mimeType($this->getAttribute('path'));
         }

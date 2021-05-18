@@ -37,7 +37,7 @@
                         <div class="col-md-12">
                             <div class="input-group mb-3">
                                 <div class="form-floating flex-grow-1">
-                                    <input type="text" class="form-control" v-model="table.tablename">
+                                    <input type="text" class="form-control" v-model="table.tablename" @blur="table.tablename = slugify(table.tablename, '_')">
                                     <label for="floatingInput">Table name</label>
                                 </div>
                                 <button class="btn btn-outline-secondary" type="button" @click="table.tablename = slugify(table.tablename, '_')"><i class="fas fa-hand-scissors"></i> Slug</button>
@@ -57,7 +57,7 @@
                             <div class="row">
                                 <div class="col-md">
                                     <div class="form-floating">
-                                        <select class="form-select" id="id" v-model="table.id">
+                                        <select class="form-select" id="id" v-model="table.id" disabled>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         </select>
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating">
-                                        <select class="form-select" id="uuid" v-model="table.uuid">
+                                        <select class="form-select" id="uuid" v-model="table.uuid" disabled>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         </select>
@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating">
-                                        <select class="form-select" id="timestamps" v-model="table.timestamps">
+                                        <select class="form-select" id="timestamps" v-model="table.timestamps" disabled>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         </select>
@@ -102,7 +102,7 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating">
-                                        <select class="form-select" id="softDeletes" v-model="table.softDeletes">
+                                        <select class="form-select" id="softDeletes" v-model="table.softDeletes" disabled>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         </select>
@@ -196,7 +196,7 @@
                             <div class="col-md-6">
                                 <div class="input-group mb-3">
                                     <div class="form-floating flex-grow-1">
-                                        <input type="text" class="form-control" v-model="input.columnname">
+                                        <input type="text" class="form-control" v-model="input.columnname" @blur="input.columnname = slugify(input.columnname, '_')">
                                         <label for="floatingInput">Column name</label>
                                     </div>
                                     <button class="btn btn-outline-secondary" type="button" @click="input.columnname = slugify(input.columnname, '_')"><i class="fas fa-hand-scissors"></i> Slug</button>
@@ -471,6 +471,12 @@
                     this.languages = response.data.languages
                     if(response.data.content) {
                         this.table  = response.data.content.table
+                        // required
+                        this.table.uuid  = 1
+                        this.table.id          = 1
+                        this.table.timestamps  = 1
+                        this.table.softDeletes = 1
+
                         this.inputs = response.data.content.inputs
                         if ( Object.prototype.toString.call(response.data.content.conditions) === '[object Array]' ) {
                             this.conditions = response.data.content.conditions

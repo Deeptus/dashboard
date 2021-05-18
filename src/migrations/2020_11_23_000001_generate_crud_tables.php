@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\App;
 use Doctrine\DBAL\Types\FloatType;
 use Doctrine\DBAL\Types\Type;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 class GenerateCrudTables extends Migration
 {
@@ -47,7 +49,7 @@ class GenerateCrudTables extends Migration
         if (!Type::hasType('double')) {
             Type::addType('double', FloatType::class);
         }
-
+        
         if (!Schema::hasColumn($content->table->tablename, 'id')) {
             $table->bigIncrements('id');
         }
@@ -57,16 +59,23 @@ class GenerateCrudTables extends Migration
         if (!Schema::hasColumn($content->table->tablename, 'slug')) {
             $table->string('slug')->nullable();
         }
-        if ($content->table->is_authenticatable) {
-            if (!Schema::hasColumn($content->table->tablename, 'email_verified_at')) {
-                $table->timestamp('email_verified_at')->nullable();
+        try {
+            if ($content->table->is_authenticatable) {
+                if (!Schema::hasColumn($content->table->tablename, 'email_verified_at')) {
+                    $table->timestamp('email_verified_at')->nullable();
+                }
+                if (!Schema::hasColumn($content->table->tablename, 'password')) {
+                    $table->string('password');
+                }
+                if (!Schema::hasColumn($content->table->tablename, 'remember_token')) {
+                    $table->rememberToken();
+                }
             }
-            if (!Schema::hasColumn($content->table->tablename, 'password')) {
-                $table->string('password');
-            }
-            if (!Schema::hasColumn($content->table->tablename, 'remember_token')) {
-                $table->rememberToken();
-            }
+        } catch (\Throwable $th) {
+            $outputStyle = new OutputFormatterStyle('white', 'red', ['bold', 'blink']);
+            $output = new ConsoleOutput();
+            $output->getFormatter()->setStyle('error', $outputStyle);
+            $output->writeln('<error>' . $content->table->tablename . ' is_authenticatable undifined</>');
         }
         try {
             if ($content->table->order_index) {

@@ -38,7 +38,25 @@ trait CrudBase {
         }
         return parent::__construct();
     }
+
     function __call($method, $args) {
+        if ($method == 'findByPK') {
+            $condition = $this->getConnection()
+                ->getSchemaBuilder()
+                ->hasColumn($this->getTable(), 'uuid');
+            if ($condition) {
+                return $this->firstWhere('uuid', $args[0]);
+            }
+        }
+        if ($method == 'findByPKOrFail') {
+            $condition = $this->getConnection()
+            ->getSchemaBuilder()
+            ->hasColumn($this->getTable(), 'uuid');
+            if ($condition) {
+                return $this->firstWhere('uuid', $args[0]) ?? abort(404);
+            }
+        }
+
         if (array_key_exists($method, $this->listEnableMethods)) {
             if(is_callable($this->listEnableMethods[$method])) {
                 return call_user_func_array($this->listEnableMethods[$method], $args);
@@ -149,5 +167,11 @@ trait CrudBase {
             }
         }
         return $this->getAttribute($key);
+    }
+    public function getPkvAttribute() {
+        if ($this->uuid) {
+            return $this->uuid;
+        }
+        return $this->id;
     }
 }

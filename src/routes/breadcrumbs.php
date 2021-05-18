@@ -173,7 +173,7 @@ Breadcrumbs::for('admin.crud.create', function ($trail, $table) {
 // Panel > CRUD > Editar
 Breadcrumbs::for('admin.crud.edit', function ($trail, $table, $item) {
     $trail->parent('admin.crud', $table);
-    $trail->push('Editar', route('admin.crud.edit', ['tablename' => $table->tablename, 'id' => $item->id]));
+    $trail->push('Editar', route('admin.crud.edit', ['tablename' => $table->tablename, 'id' => $item->pkv]));
 });
 // Panel > CRUD > Papelera
 Breadcrumbs::for('admin.crud.trash', function ($trail, $table) {

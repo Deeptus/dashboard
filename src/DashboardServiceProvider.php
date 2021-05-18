@@ -1,17 +1,16 @@
 <?php
-
 namespace AporteWeb\Dashboard;
 
 /**
-* SDClapServiceProvider
-*
-* The service provider for the modules. After being registered
-* it will make sure that each of the modules are properly loaded
-* i.e. with their routes, views etc.
-*
-* @author Alfonzo Diez <alfonzodiez@gmail.com>
-* @package AporteWeb\Dashboard
-*/
+ * SDClapServiceProvider
+ *
+ * The service provider for the modules. After being registered
+ * it will make sure that each of the modules are properly loaded
+ * i.e. with their routes, views etc.
+ *
+ * @author Alfonzo Diez <alfonzodiez@gmail.com>
+ * @package AporteWeb\Dashboard
+ */
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
@@ -25,6 +24,7 @@ use AporteWeb\Dashboard\Models\ConfigVar;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
 
 class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -35,6 +35,15 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
     }
     public function boot()
     {
+        Builder::macro('findByPK', function ($args) {
+            // $this->wheres
+            $condition = Schema::hasColumn($this->from, 'uuid');
+            if ($condition) {
+                return $this->where('uuid', $args);
+            } else {
+                return $this->where('id', $args);
+            }
+        });
         $request = request()->all();
         /*
         foreach ($request as $key => $value) {
