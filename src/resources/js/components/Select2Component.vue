@@ -18,12 +18,19 @@
         },
         mounted: function () {
             var vm = this
+            console.log(this.$el)
             $(this.$el)
             .select2({ data: this.options })
             .val(this.value)
             .trigger('change')
             .on('change', function () {
                 vm.$emit('input', $(this).val())
+            })
+            .on('select2:open', () => {
+                const input = document.querySelector('input.select2-search__field')
+                if (input) {
+                    input.focus()
+                }
             })
         },
         watch: {

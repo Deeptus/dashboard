@@ -172,6 +172,7 @@
             <!-- End of Content Wrapper -->
         </div>
         <file-manager ref="FileManager" url-data="{{ route('admin.file-manager') }}"></file-manager>
+        <chat-area ref="chatArea" url-data="{{ route('admin.chat-area') }}"></chat-area>
     </div>
     <!-- End of Page Wrapper -->
 
@@ -199,8 +200,8 @@
         </div>
     </div>
 
-        <!-- Scripts -->
-        <script src="{{ asset('js/dashboard.js') }}?{{ $assets_version }}" defer></script>
+    <!-- Scripts -->
+    <script src="{{ asset('js/dashboard.js') }}?{{ $assets_version }}" defer></script>
 
 </body>
 

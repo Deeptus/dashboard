@@ -86,7 +86,6 @@ class GenerateCrudTables extends Migration
         } catch (\Throwable $th) {
             //throw $th;
         }
-
         foreach ($content->inputs as $inputKey => $input) {
             // saltar inputs que no son campos realmente
             $col = [];
@@ -157,6 +156,18 @@ class GenerateCrudTables extends Migration
             }
 
             foreach ($col as $key => $colItem) {
+                $sm = Schema::getConnection()->getDoctrineSchemaManager();
+                $doctrineTable = $sm->listTableDetails($content->table->tablename);
+                $indexName = $content->table->tablename.'_'.$input->columnname.'_unique';
+                if($input->unique == 1) {
+                    if ( !$doctrineTable->hasIndex($indexName) ) {
+                        $colItem->unique();
+                    }
+                } else {
+                    if ( $doctrineTable->hasIndex($indexName) ) {
+                        $table->dropUnique($indexName);
+                    }
+                }
                 if($input->nullable == 1) {
                     $colItem->nullable(true);
                 } else {

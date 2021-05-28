@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </label>
-                    <div class="gallery-item" @click="selectFile()">
+                    <div class="gallery-item" v-else @click="selectFile()">
                         <div class="gallery-item-overlay"></div>
                         <div class="gallery-item-container">
                             <div class="gallery-item-container">

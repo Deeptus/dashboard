@@ -8,6 +8,9 @@ Vue.component('login-form-modal', require('./components/LoginFormModalComponent.
 
 Vue.component('crud-generator-form', require('./components/crud-generator/index.vue').default);
 
+Vue.component('chat-area', require('./components/chat/index.vue').default);
+Vue.component('button-chat-open', require('./components/chat/buttonOpen.vue').default);
+
 // Vue.component('company-data-form', require('./components/company-data/CompanyDataFormComponent.vue').default);
 
 Vue.component('crud-form', require('./components/crud/index.vue').default);
@@ -195,6 +198,12 @@ Vue.mixin({
   methods: {
     fileManager() {
         return this.$root.$refs.FileManager
+    },
+    closeChat(uuid) {
+        return this.$root.$refs.chatArea.closeChat(uuid)
+    },
+    openChat(uuid) {
+        return this.$root.$refs.chatArea.openChat(uuid)
     },
     slugify(text, divider = '-') {
         return window.slugify(text, divider)
