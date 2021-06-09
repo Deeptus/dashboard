@@ -202,8 +202,8 @@ Vue.mixin({
     closeChat(uuid) {
         return this.$root.$refs.chatArea.closeChat(uuid)
     },
-    openChat(uuid) {
-        return this.$root.$refs.chatArea.openChat(uuid)
+    openChat(params) {
+        return this.$root.$refs.chatArea.openChat(params)
     },
     slugify(text, divider = '-') {
         return window.slugify(text, divider)

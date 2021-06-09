@@ -59,6 +59,17 @@ class CrudController extends Controller
             }
         }
 
+        if ($input->type == 'checkbox' && $input->valueoriginselector == 'table') {
+            $found = true;
+            $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            if ($item) {
+                $pivot_name = $this->tablename.'_'.$input->tabledata.'_'.$input->columnname;
+                $content[$input->columnname] = DB::table($pivot_name)->where($this->tablename.'_id', $item->id)->pluck($input->tabledata.'_id')->toArray();
+            } else {
+                $content[$input->columnname] = [];
+            }
+        }
+
         if ($input->type == 'map-select-lat-lng') {
             $found = true;
             try {
@@ -290,6 +301,19 @@ class CrudController extends Controller
             dd($input);
         }
 
+        if ($input->type == 'checkbox') {
+            $item->save();
+            $pivot_name = $this->tablename.'_'.$input->tabledata.'_'.$input->columnname;
+            DB::table($pivot_name)->where($this->tablename.'_id', $item->id)->delete();
+            foreach (explode(',', $data[$input->columnname]) as $key => $value) {
+                DB::table($pivot_name)->insert([
+                    $this->tablename.'_id'  => $item->id,
+                    $input->tabledata.'_id' => $value
+                ]);
+            }
+            return true;
+        }
+        
         if ($input->type == 'map-select-lat-lng') {
             $item->{$input->columnname . '_lat'} = $data[$input->columnname . '_lat'];
             $item->{$input->columnname . '_lng'} = $data[$input->columnname . '_lng'];

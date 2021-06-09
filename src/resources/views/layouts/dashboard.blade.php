@@ -94,8 +94,17 @@
                             </li>
 
                             <div class="topbar-divider d-none d-sm-block"></div>
-
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-bell img-profile"></i>
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                    asds
+                                </div>
+                            </li>
                             <!-- Nav Item - User Information -->
+                            @if(count(LaravelLocalization::getSupportedLocales()) > 1)
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-globe img-profile"></i>
@@ -112,7 +121,7 @@
                                     @endforeach
                                 </div>
                             </li>
-
+                            @endif
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
@@ -172,7 +181,7 @@
             <!-- End of Content Wrapper -->
         </div>
         <file-manager ref="FileManager" url-data="{{ route('admin.file-manager') }}"></file-manager>
-        <chat-area ref="chatArea" url-data="{{ route('admin.chat-area') }}"></chat-area>
+        <chat-area ref="chatArea" endpoint="{{ route('admin.chat-area') }}"></chat-area>
     </div>
     <!-- End of Page Wrapper -->
 

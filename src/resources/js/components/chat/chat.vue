@@ -1,7 +1,7 @@
 <template>
     <div class="chat card" :class="{ 'chat--open': open == true }">
-        <div class="card-header" @click="openChat()">{{ uuid }} <i class="fas fa-times ms-4" @click="$root.closeChat(uuid)"></i></div>
-        <div class="card-body" v-if="open" :ref="'chatBody'+uuid">
+        <div class="card-header" @click="openChat()">{{ params.title }} <i class="fas fa-times ms-4" @click="$root.closeChat(params.uuid)"></i></div>
+        <div class="card-body" v-if="open" :ref="'chatBody'+params.uuid">
             <div v-for="message in messages" :key="message.id" :class="{ 'chat__message': true, 'chat__message--me': message.me }">
                 <div class="chat__username">{{ message.by }}:</div>
                 <div class="chat__content">{{ message.content }}</div>
@@ -17,8 +17,8 @@
 <script>
     export default {
         props: {
-            uuid: {
-                type: String,
+            params: {
+                type: Object,
                 default: ''
             },
             endpoint: {
@@ -32,6 +32,7 @@
                 open: true,
                 messages: [],
                 newMessage: '',
+                title: '',
                 lockForm: true
             }
         },
@@ -49,7 +50,7 @@
             goEnd() {
                 if (this.open) {
                     setTimeout( ()=> {
-                        const body = this.$refs['chatBody'+this.uuid]
+                        const body = this.$refs['chatBody'+this.params.uuid]
                         if (body) {
                             body.scrollTop=body.scrollHeight
                         }
@@ -58,7 +59,7 @@
             },
             getMessages() {
                 let formData = new FormData()
-                formData.append('uuid', this.uuid);
+                formData.append('uuid', this.params.uuid);
                 axios.post(this.endpoint, formData).then((response) => {
                     this.messages = response.data.messages
                     this.goEnd()
@@ -74,7 +75,7 @@
             sendMessage() {
                 this.lockForm = true
                 let formData = new FormData()
-                formData.append('uuid',    this.uuid)
+                formData.append('uuid',    this.params.uuid)
                 formData.append('message', this.newMessage)
                 if (this.newMessage.length > 0) {
                     axios.post(this.endpoint, formData).then((response) => {
@@ -93,6 +94,8 @@
 <style lang="scss" scoped>
     .chat {
         margin-left: 7.5px;
+        width: calc(25% - 7.5px);
+        max-width: 400px;
         &__message {
             max-width: 75%;
             background-color: #ccc;
@@ -143,6 +146,23 @@
             cursor: pointer;
             user-select: none;
             z-index: 99999999999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #444;
+            i {
+                height: 20px;
+                width: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid #444;
+                background: rgb(0 0 0 / 0);
+                transition: all .2s ease;
+                &:hover {
+                    background: rgb(0 0 0 / 25%);
+                }
+            }
         }
         .card-body {
             height: 340px;
@@ -171,6 +191,9 @@
                 font-weight: bold;
                 background: royalblue;
                 color: #fff;
+                i {
+                    border: 1px solid #FFF;
+                }
             }
         }
     }

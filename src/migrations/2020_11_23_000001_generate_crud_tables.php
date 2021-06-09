@@ -117,6 +117,28 @@ class GenerateCrudTables extends Migration
             if($input->type == 'money') {
                 $col[] = $table->double($input->columnname);
             }
+            if($input->type == 'checkbox') {
+                $pivot_name = $content->table->tablename.'_'.$input->tabledata.'_'.$input->columnname;
+                $cols = [
+                    $content->table->tablename.'_id',
+                    $input->tabledata.'_id'
+                ];
+                if (Schema::hasTable($pivot_name)) {
+                    Schema::table($pivot_name, function (Blueprint $table) use ($content, $input, $cols, $pivot_name) {
+                        foreach ($cols as $col) {
+                            if ( !Schema::hasColumn($pivot_name, $col) ) {
+                                $table->bigInteger($col);
+                            }
+                        }
+                    });
+                } else {
+                    Schema::create($pivot_name, function (Blueprint $table) use ($content, $input, $cols) {
+                        foreach ($cols as $col) {
+                            $table->bigInteger($col);
+                        }
+                    });
+                }
+            }
             if($input->type == 'date') {
                 $col[] = $table->date($input->columnname);
             }

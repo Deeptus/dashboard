@@ -8,6 +8,7 @@
         <CustomGallery :useFileManager="true" :label="input.label[lang()]" :model.sync="value" v-if="input.type == 'gallery'"></CustomGallery>
         <MapSelectLatLon :value="value" :input="input" v-if="input.type == 'map-select-lat-lng'"></MapSelectLatLon>
         <MultimediaFile :value="value" :input="input" v-if="input.type == 'multimedia_file'"></MultimediaFile>
+        <InputCheckbox :relations="relations" :value="value" :input="input" v-if="input.type == 'checkbox'"></InputCheckbox>
         <wysiwyg :value="value" :input="input" v-if="input.type == 'wysiwyg'"></wysiwyg>
         <div v-if="displayDebug == 1">{{ value }} <button @click="reloadDebug">reload</button></div>
         <div v-if="input.type == 'card-header'" class="card-header">
@@ -17,10 +18,11 @@
 </template>
 <script>
     import InputText   from './InputText'
-    import InputColor   from './InputColor'
+    import InputColor  from './InputColor'
     import InputDate   from './InputDate'
     import InputSelect from './InputSelect'
     import SubForm     from './SubForm'
+    import InputCheckbox   from './InputCheckbox.vue'
     import MapSelectLatLon from './MapSelectLatLon'
     import CustomGallery   from '../CustomGalleryComponent'
     import MultimediaFile  from './MultimediaFile'
@@ -50,6 +52,7 @@
             InputDate,
             InputSelect,
             SubForm,
+            InputCheckbox,
             MapSelectLatLon,
             MultimediaFile,
             CustomGallery,
@@ -74,7 +77,7 @@
                     "week": 'date',
                     "select": 'select',
                     "radio": 'select',
-                    "checkbox": 'select',
+                    // "checkbox": 'select',
                     "select2": 'select',
                     "select2multiple": 'select',
                     "subForm": 'subForm'

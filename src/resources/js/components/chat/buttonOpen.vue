@@ -24,7 +24,7 @@
             openChat() {
                 let formData = new FormData()
                 axios.post(this.href, formData).then((response) => {
-                    this.$root.openChat(response.data.uuid)
+                    this.$root.openChat({ uuid: response.data.uuid, title: response.data.title })
                 }).catch((error) => {
 
                 })
