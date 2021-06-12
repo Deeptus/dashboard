@@ -81,6 +81,11 @@ trait CrudBase {
                     }
                 );
                 $input = array_shift($input);
+                if ($input && $input->type == 'checkbox') {
+                    $pivot_name = $content->table->tablename.'_'.$input->tabledata.'_'.$input->columnname;
+                    $ids = DB::table($pivot_name)->where($content->table->tablename.'_id', $this->id)->pluck($input->tabledata.'_id')->toArray();
+                    return $ids;
+                }
                 if ($input && $input->type == 'subForm') {
                     $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
                     $className = ucwords($className);
@@ -114,11 +119,8 @@ trait CrudBase {
         }
 
         if (Str::endsWith($key, '_rel_val')) {
-            $column = str_replace('_rel_val', '', $key);
-            if (!$this->getAttribute($column)) {
-                return '';
-            }
             // get info json
+            $column = str_replace('_rel_val', '', $key);
             if (file_exists($filePath)) {
                 $content = json_decode(file_get_contents($filePath));
                 $table   = $content->table;
@@ -130,6 +132,17 @@ trait CrudBase {
                 );
                 
                 $input = array_shift($input);
+                if ($input && $input->type == 'checkbox') {
+                    // return $input;
+                    $pivot_name = $content->table->tablename.'_'.$input->tabledata.'_'.$input->columnname;
+                    $ids = DB::table($pivot_name)->where($content->table->tablename.'_id', $this->id)->pluck($input->tabledata.'_id')->toArray();
+                    $items = DB::table($input->tabledata)->whereIn($input->tablekeycolumn, $ids)->get();
+                    return $items;
+                }
+                if (!$this->getAttribute($column)) {
+                    return '';
+                }
+    
                 if ($input->type == 'select') {
                     if ($input->valueoriginselector == 'values') {
                         $option = array_filter(
