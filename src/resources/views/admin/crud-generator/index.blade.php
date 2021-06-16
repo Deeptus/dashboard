@@ -43,6 +43,10 @@
                             <i class="fas fa-sm text-white-50 fa-edit"></i>
                             Editar
                         </a>
+                        <a href="{{ route('admin.crud', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-sm text-white-50 fa-external-link-alt"></i>
+                            Ir
+                        </a>
                     </td>
                 </tr>
                 @endforeach

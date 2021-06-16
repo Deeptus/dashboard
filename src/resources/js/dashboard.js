@@ -15,7 +15,7 @@ window.dashboardInit = function () {
 	let __random   = document.getElementById('random')
 	let __display  = document.getElementById('display')
 	let __password = document.getElementById('password')
-	let __body = document.querySelector('body')
+	let __body     = document.querySelector('body')
 
 	if (__random) {
 		__random.addEventListener('click', function(event) {
