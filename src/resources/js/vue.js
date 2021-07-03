@@ -21,6 +21,15 @@ Vue.component('select2', require('./components/Select2Component.vue').default);
 Vue.component('file-manager', require('./components/file-manager').default);
 Vue.component('CustomGallery', require('./components/CustomGalleryComponent').default);
 
+Vue.component('homework-show', require('./components/homework/show.vue').default);
+Vue.component('homework-crud', require('./components/homework/crud.vue').default);
+Vue.component('homework', require('./components/homework').default);
+Vue.component('awesome-alert', require('./components/awesome-alert').default);
+
+window.aa = (prams) => {
+    window.vueApp.$root.$refs['awesome-alert'].open(prams)
+}
+
 window.toCurrency = (numero) => {
     let decimales = 2
 
@@ -196,6 +205,9 @@ Vue.filter('storagePath',        window.storagePath);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
+    aa(prams) {
+        window.aa(prams)
+    },
     fileManager() {
         return this.$root.$refs.FileManager
     },
@@ -204,6 +216,9 @@ Vue.mixin({
     },
     openChat(params) {
         return this.$root.$refs.chatArea.openChat(params)
+    },
+    homeworkShow(uuid) {
+        return this.$root.$refs.homeworkShow.open(uuid)
     },
     slugify(text, divider = '-') {
         return window.slugify(text, divider)
@@ -258,6 +273,9 @@ Vue.mixin({
     formEnabled(section) {
         return { pointerEvents: 'auto' }
     }
+  },
+  created() {
+    window.vueApp = this
   }
 })
 

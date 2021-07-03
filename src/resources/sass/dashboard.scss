@@ -202,3 +202,16 @@ a.paginate_button {
 .cursor-pointer {
     cursor: pointer;
 }
+
+
+.card-header, .card-footer {
+    position: relative;
+    min-height: 38px;
+}
+.card-header-btns {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+}

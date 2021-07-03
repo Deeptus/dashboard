@@ -402,11 +402,13 @@ class CrudController extends Controller
                 //
                 // By AleSosa 🤦‍♂️
                 $item->save();
-                $subModel::where(''.$input->tablekeycolumn.'', $item->id)->delete();
+                // dd([$input->tablekeycolumn, $item->id]);
+                // $subModel::where(''.$input->tablekeycolumn.'', $item->id)->delete();
+                $subModel::where($input->tablekeycolumn, $item->id)->delete();
                 if (array_key_exists($input->columnname, $data)) {
                     foreach ($data[$input->columnname] as $subFormKey =>  $subFormItem) {
                         if ( array_key_exists('id', $subFormItem) ) {
-                            $subItem = $subModel::withTrashed()->findByPK($subFormItem['id']);
+                            $subItem = $subModel::withTrashed()->find($subFormItem['id']);
                         } else {
                             $subItem = new $subModel;
                         }

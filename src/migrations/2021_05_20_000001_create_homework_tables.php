@@ -46,16 +46,28 @@ class CreateHomeworkTables extends Migration
             $table->bigInteger('chat_id');
             $table->bigInteger('group_id');
         });
+        
 
-
-
+        
 
         Schema::create('homework', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title')     ->nullable();
-            $table->longText('details') ->nullable();
+            $table->uuid('uuid')            ->nullable();
+            $table->string('title')         ->nullable();
+            $table->longText('details')     ->nullable();
+            $table->boolean('individual')   ->default(0); // pregunta si la tarea es individual o si la tarea es mancomunada
+            $table->timestamp('start_at')   ->nullable();
+            $table->timestamp('finish_at')  ->nullable();
+            $table->timestamp('finished_at')->nullable(); // Cuando realizo la tarea
+            $table->bigInteger('user_id')   ->nullable(); // usuario que creo la tarea
             $table->timestamps();
             $table->softDeletes();
+        });
+        Schema::create('homework_user', function (Blueprint $table) {
+            $table->bigInteger('homework_id');
+            $table->bigInteger('user_id');
+            $table->timestamp('read_at')->nullable(); // Cuando leyo la tarea
+            $table->timestamp('finished_at')->nullable(); // Cuando realizo la tarea
         });
     }
 
@@ -66,6 +78,7 @@ class CreateHomeworkTables extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('homework_user');
         Schema::dropIfExists('homework');
         Schema::dropIfExists('chat');
         Schema::dropIfExists('chat_message');

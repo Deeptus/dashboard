@@ -49,4 +49,7 @@ class User extends Authenticatable
             return $this->id;
         }
     }
+    public function homework() {
+        return $this->belongsToMany(Homework::class, 'homework_user', 'user_id', 'homework_id')->withPivot('read_at','finished_at');
+    }
 }

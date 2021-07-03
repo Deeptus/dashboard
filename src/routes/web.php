@@ -66,7 +66,17 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::post('file-manager', 'FileManagerController@upload');
 
         Route::get('/', 'HomeController@index')->name('.home');
-
+        
+        Route::get('/homework', 'HomeworkController@index')->name('.homework.index');
+        Route::group([
+            'prefix' => 'api/homework',
+            'as' => '.homework',
+        ], function() {
+            Route::get ('/',    'HomeworkController@myTasks');
+            Route::get ('data', 'HomeworkController@data')->name('.data');
+            Route::post('save', 'HomeworkController@save')->name('.save');
+            Route::post('find', 'HomeworkController@find')->name('.find');
+        });
         Route::group([
             'prefix' => 'crud-generator',
             'as' => '.crud-generator',

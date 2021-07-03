@@ -37,6 +37,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/fontawesome/css/all.min.css') }}">
     <link href="{{ asset(config('admin.theme.styles', 'css/theme-02.css')) }}?{{ $assets_version }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('fontello/css/hard.css') }}">
+    <script>
+        window.apis = {
+            homework: "{{ route('admin.homework') }}"
+        }
+    </script>
 </head>
 
 <body id="page-top" class="{{ $sidebarToggleHide ? 'sidebar-toggled' : '' }}">
@@ -92,14 +97,21 @@
                                     </form>
                                 </div>
                             </li>
-
                             <div class="topbar-divider d-none d-sm-block"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="homeworkDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-tasks img-profile"></i>
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <homework></homework>
+                            </li>
+                            <div class="topbar-divider d-none d-sm-block"></div>
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell img-profile"></i>
                                 </a>
                                 <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="notificationsDropdown">
                                     asds
                                 </div>
                             </li>
@@ -126,13 +138,13 @@
 
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-user-circle img-profile"></i>
                                     <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
                                     {{-- <img class="img-profile rounded-circle" src="{{ asset('img/blank-profile-picture.png') }}"> --}}
                                 </a>
                                 <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="profileDropdown">
                                     <a class="dropdown-item" href="{{ route('admin.profile') }}">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Perfil
@@ -182,6 +194,13 @@
         </div>
         <file-manager ref="FileManager" url-data="{{ route('admin.file-manager') }}"></file-manager>
         <chat-area ref="chatArea" endpoint="{{ route('admin.chat-area') }}"></chat-area>
+        <homework-show ref="homeworkShow"></homework-show>
+        <div>
+            <div>
+                <div><i class="fas fa-spinner fa-pulse"></i></div>
+                <div>Cargando</div>
+            </div>
+        </div>
     </div>
     <!-- End of Page Wrapper -->
 

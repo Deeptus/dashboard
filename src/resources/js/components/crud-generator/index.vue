@@ -186,6 +186,7 @@
                     <div class="card-header">
                         Input {{ input.columnname }}
                         <div class="card-header-btns">
+                            <div class="btn btn-primary"  @click="duplicateInput(inputKey)"><i class="fas fa-copy"></i></div>
                             <div class="btn btn-warning" @click="inputUp(inputKey)" v-if="inputKey > 0"><i class="fas fa-angle-up"></i></div>
                             <div class="btn btn-warning" @click="inputDown(inputKey)" v-if="inputKey < ( inputs.length - 1 ) && inputs.length > 1"><i class="fas fa-angle-down"></i></div>
                             <div class="btn btn-danger"  @click="rmInput(inputKey)"><i class="fas fa-trash"></i></div>
@@ -629,6 +630,22 @@
                     }
                 })
             },
+            duplicateInput(key) {
+                Swal.fire({
+                    title: 'Duplicar',
+                    icon: 'warning',
+                    // width: 600,
+                    html: '<div style="text-align: center;">'+'¿Esta seguro de duplicar?'+'</div>',
+                    showCancelButton: true,
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Rechazar',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        this.inputs.splice(key+1, 0, this.inputs[key])
+                    }
+                })
+            },
             inputUp(key) {
                 this.inputs.splice(key - 1,0,this.inputs.splice(key,1)[0]);
             },
@@ -693,14 +710,4 @@
     }
 </script>
 <style lang="scss" scoped>
-    .card-header {
-        position: relative;
-    }
-    .card-header-btns {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        display: flex;
-    }
 </style>

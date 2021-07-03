@@ -95,25 +95,43 @@ trait CrudBase {
                 }
                 if ($input && $input->type == 'multimedia_file') {
                     $file = Multimedia::find($this->{$input->columnname . '_id'});
+                    $image = [
+                        'url'  => null,
+                        'path' => null,
+                        'id'   => null,
+                        'type' => null
+                    ];
                     if ($file) {
-                        return [
-                            'url'  => asset(Storage::url($file->path)),
-                            'path' => $file->path,
-                            'id'   => $file->id,
-                            'type' => Storage::mimeType($file->path)
-                        ];
+                        if (Storage::exists($file->path)) {
+                            $image = [
+                                'url'  => asset(Storage::url($file->path)),
+                                'path' => $file->path,
+                                'id'   => $file->id,
+                                'type' => Storage::mimeType($file->path)
+                            ];
+                        }
                     }
+                    return $image;
                 }
                 if ($input && $input->type == 'gallery') {
                     $file = Multimedia::find($this->{$input->columnname . '_id'});
+                    $image = [
+                        'url'  => null,
+                        'path' => null,
+                        'id'   => null,
+                        'type' => null
+                    ];
                     if ($file) {
-                        return [
-                            'url'  => asset(Storage::url($file->path)),
-                            'path' => $file->path,
-                            'id'   => $file->id,
-                            'type' => Storage::mimeType($file->path)
-                        ];
+                        if (Storage::exists($file->path)) {
+                            $image = [
+                                'url'  => asset(Storage::url($file->path)),
+                                'path' => $file->path,
+                                'id'   => $file->id,
+                                'type' => Storage::mimeType($file->path)
+                            ];
+                        }
                     }
+                    return $image;
                 }
             }
         }
