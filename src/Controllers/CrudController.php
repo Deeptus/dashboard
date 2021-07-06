@@ -26,24 +26,25 @@ class CrudController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-
-        $this->tablename = request()->route()->parameters()['tablename'];
-
-        if($this->tablename) {
-            $dirPath  = app_path('Dashboard');
-            $filePath = $dirPath . '/' . $this->tablename . '.json';
-
-            if (file_exists($filePath)) {
-                $content          = json_decode(file_get_contents($filePath));
-                $this->table      = $content->table;
-                $this->inputs     = $content->inputs;
-                $this->conditions = $content->conditions;
+        if (!app()->runningInConsole()) {
+            $this->tablename = request()->route()->parameters()['tablename'];
+    
+            if($this->tablename) {
+                $dirPath  = app_path('Dashboard');
+                $filePath = $dirPath . '/' . $this->tablename . '.json';
+    
+                if (file_exists($filePath)) {
+                    $content          = json_decode(file_get_contents($filePath));
+                    $this->table      = $content->table;
+                    $this->inputs     = $content->inputs;
+                    $this->conditions = $content->conditions;
+                }
+    
+                $className = str_replace(['_', '-', '.'], ' ', $this->tablename);
+                $className = ucwords($className);
+                $className = str_replace(' ', '', $className);
+                $this->model = "\\App\\Models\\" . $className;
             }
-
-            $className = str_replace(['_', '-', '.'], ' ', $this->tablename);
-            $className = ucwords($className);
-            $className = str_replace(' ', '', $className);
-            $this->model = "\\App\\Models\\" . $className;
         }
 
     }

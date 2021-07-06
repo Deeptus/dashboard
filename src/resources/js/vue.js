@@ -24,10 +24,12 @@ Vue.component('CustomGallery', require('./components/CustomGalleryComponent').de
 Vue.component('homework-show', require('./components/homework/show.vue').default);
 Vue.component('homework-crud', require('./components/homework/crud.vue').default);
 Vue.component('homework', require('./components/homework').default);
+Vue.component('notifications', require('./components/notifications').default);
+Vue.component('notification-show', require('./components/notifications/show.vue').default);
 Vue.component('awesome-alert', require('./components/awesome-alert').default);
 
-window.aa = (prams) => {
-    window.vueApp.$root.$refs['awesome-alert'].open(prams)
+window.aa = () => {
+    return window.vueApp.$root.$refs['awesome-alert']
 }
 
 window.toCurrency = (numero) => {
@@ -205,8 +207,8 @@ Vue.filter('storagePath',        window.storagePath);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
-    aa(prams) {
-        window.aa(prams)
+    aa() {
+        window.aa()
     },
     fileManager() {
         return this.$root.$refs.FileManager

@@ -39,7 +39,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('fontello/css/hard.css') }}">
     <script>
         window.apis = {
-            homework: "{{ route('admin.homework') }}"
+            homework: "{{ route('admin.homework') }}",
+            notification: "{{ route('admin.notification') }}"
         }
     </script>
 </head>
@@ -84,7 +85,7 @@
                                     <i class="fas fa-search fa-fw"></i>
                                 </a>
                                 <!-- Dropdown - Messages -->
-                                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                                <div class="dropdown-menu dropdown-menu-end p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
                                     <form class="form-inline mr-auto w-100 navbar-search">
                                         <div class="input-group">
                                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
@@ -110,10 +111,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell img-profile"></i>
                                 </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="notificationsDropdown">
-                                    asds
-                                </div>
+                                <notifications></notifications>
                             </li>
                             <!-- Nav Item - User Information -->
                             @if(count(LaravelLocalization::getSupportedLocales()) > 1)
@@ -123,7 +121,7 @@
                                     <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ strtoupper(LaravelLocalization::getCurrentLocale()) }}</span>
                                 </a>
                                 <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
                                     @foreach (LaravelLocalization::getSupportedLocales() as $key => $lang)
                                         @if (LaravelLocalization::getCurrentLocale()!=$key)
                                             <a href="{{ LaravelLocalization::getLocalizedURL($key) }}" class="dropdown-item">
@@ -144,7 +142,7 @@
                                     {{-- <img class="img-profile rounded-circle" src="{{ asset('img/blank-profile-picture.png') }}"> --}}
                                 </a>
                                 <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="profileDropdown">
+                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="profileDropdown">
                                     <a class="dropdown-item" href="{{ route('admin.profile') }}">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Perfil
@@ -195,6 +193,7 @@
         <file-manager ref="FileManager" url-data="{{ route('admin.file-manager') }}"></file-manager>
         <chat-area ref="chatArea" endpoint="{{ route('admin.chat-area') }}"></chat-area>
         <homework-show ref="homeworkShow"></homework-show>
+        <notification-show ref="notificationShow"></notification-show>
         <div>
             <div>
                 <div><i class="fas fa-spinner fa-pulse"></i></div>

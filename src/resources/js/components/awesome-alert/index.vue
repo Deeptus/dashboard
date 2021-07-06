@@ -2,7 +2,7 @@
     <div class="awesome-alert" v-if="display">
         <div class="awesome-alert__container">
             <div class="awesome-alert__icon"><i :class="icon" :style="'color: ' + iconColor"></i></div>
-            <div class="awesome-alert__title">{{ title }}</div>
+            <div class="awesome-alert__title" v-html="title"></div>
         </div>
     </div>
 </template>
@@ -66,10 +66,13 @@ export default {
                 icon      = style.icon
                 iconColor = style.iconColor
             }
-            this.title     = title
+            this.title     = '<span>' + title + '</span>'
             this.icon      = icon
             this.iconColor = iconColor
             this.display = true
+        },
+        close() {
+            this.display = false
         }
     }
 }
@@ -88,8 +91,8 @@ export default {
         justify-content: center;
         align-items: center;
         &__container {
-            width: 300px;
-            height: 200px;
+            width: 400px;
+            height: 240px;
             background-color: #fff;
             box-shadow: 0 0 6px #000;
             display: flex;
@@ -99,7 +102,9 @@ export default {
             font-size: 44px;
         }
         &__title {
-            font-size: 32px;
+            font-size: 30px;
+            text-align: center;
+            line-height: 33px;
         }
     }
 </style>

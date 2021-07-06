@@ -1,24 +1,21 @@
 <template>
-    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
+    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="notificationsDropdown">
         <template v-if="state.display == 'list'">
-            <div  class="dropdown-item" v-for="(record, key) in state.records" :key="key" @click="open(record.uuid)">
+            <div  class="dropdown-item" v-for="(record, key) in state.records" :key="key" @click="open(record.id)">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ record.title }}</h5>
-                    <small>{{ record.created_at_ago }}</small>
+                    <h5 class="mb-1 overflow-hidden">{{ record.data.title }}</h5>
+                    <small class="ps-2">{{ record.created_at_ago }}</small>
                 </div>
-                <p class="mb-1" v-if="3==4">Some placeholder content in a paragraph.</p>
-                <small>{{ record.user_name }}</small>
+                <p class="mb-1 overflow-hidden" v-if="3==4">Some placeholder content in a paragraph.</p>
+                <small>{{ record.data.message }}</small>
             </div>
         </template>
     </div>
 </template>
 
 <script>
-import crudForm from './crud-form.vue'
 export default {
-    components: {
-        'crud-form': crudForm
-    },
+    components: {},
     data() {
         return {
             endpoint: '',
@@ -28,7 +25,7 @@ export default {
         }
     },
     created () {
-        this.endpoint = window.apis.homework;
+        this.endpoint = window.apis.notification;
         axios.get(this.endpoint).then((response) => {
             this.state.records = response.data
             this.state.display = 'list'
@@ -38,8 +35,8 @@ export default {
         add() {
             this.state.display = 'add'
         },
-        open(uuid) {
-            this.$root.homeworkShow(uuid)
+        open(id) {
+            this.$root.$refs.notificationShow.open(id)
         }
     }
 }

@@ -78,6 +78,13 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::post('find', 'HomeworkController@find')->name('.find');
         });
         Route::group([
+            'prefix' => 'api/notification',
+            'as' => '.notification',
+        ], function() {
+            Route::get ('/',    'NotificationController@all');
+            Route::post('find', 'NotificationController@find')->name('.find');
+        });
+        Route::group([
             'prefix' => 'crud-generator',
             'as' => '.crud-generator',
         ], function() {
