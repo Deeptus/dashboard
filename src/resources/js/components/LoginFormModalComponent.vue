@@ -25,6 +25,8 @@
 </template>
 <script>
     Vue.mixin({
+        created() {
+        },
         methods: {
             openLoginFormModal() {
                 this.$root.$refs.loginformmodal.openModal()
@@ -32,6 +34,11 @@
         }
     })
 
+    const node = document.createElement('login-form-modal');
+    node.setAttribute("ref", "loginformmodal");
+    window.loginNode = node
+    document.getElementById('app').appendChild(node)
+    
     export default {
         props: ['action'],
         components: {},
@@ -44,6 +51,7 @@
             }
         },
         created() {
+            // console.log('prueba haber si se registra')
         },
         mounted: function () {},
         methods:{

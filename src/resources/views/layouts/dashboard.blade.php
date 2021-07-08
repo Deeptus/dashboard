@@ -194,12 +194,7 @@
         <chat-area ref="chatArea" endpoint="{{ route('admin.chat-area') }}"></chat-area>
         <homework-show ref="homeworkShow"></homework-show>
         <notification-show ref="notificationShow"></notification-show>
-        <div>
-            <div>
-                <div><i class="fas fa-spinner fa-pulse"></i></div>
-                <div>Cargando</div>
-            </div>
-        </div>
+        <awesome-alert ref="awesome-alert"></awesome-alert>
     </div>
     <!-- End of Page Wrapper -->
 

@@ -215,3 +215,13 @@ a.paginate_button {
     bottom: 0;
     display: flex;
 }
+
+button.badge {
+    border: none;
+    &:active {
+        background-color: #e08f01 !important;
+    }
+}
+.text-right {
+    text-align: right !important;
+}

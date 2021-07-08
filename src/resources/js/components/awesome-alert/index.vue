@@ -14,7 +14,8 @@ export default {
             title: '',
             icon: '',
             iconColor: '',
-            display: false
+            display: false,
+            interval: false
         }
     },
     methods: {
@@ -28,7 +29,7 @@ export default {
                 closeModal: true
             }
         */
-        open({ style = '', icon = '', iconColor = '', title = '', buttons = [] }) {
+        open({ style = '', icon = '', iconColor = '', title = '', buttons = [], sleep = false }) {
             const styles = [
                 {
                     slug: 'loading',
@@ -66,13 +67,33 @@ export default {
                 icon      = style.icon
                 iconColor = style.iconColor
             }
-            this.title     = '<span>' + title + '</span>'
+            if (this.interval) {
+                clearInterval(this.interval)
+            }
+            if (title != '') {
+                this.title     = '<span>' + title + '</span>'
+            } else {
+                let counter = 1
+                this.title = '<span>' + '.'.repeat(counter) + ' Cargando ' + '.'.repeat(counter) + '</span>'
+                this.interval = setInterval(() => {
+                   this.title = '<span>' + '.'.repeat(counter) + ' Cargando ' + '.'.repeat(counter) + '</span>'
+                   counter = counter == 3 ? 1 : counter + 1
+                }, 1000)
+            }
             this.icon      = icon
             this.iconColor = iconColor
             this.display = true
+            if (sleep) {
+                setTimeout(() => {
+                    this.close()
+                }, sleep)
+            }
         },
         close() {
             this.display = false
+            if (this.interval) {
+                clearInterval(this.interval)
+            }
         }
     }
 }

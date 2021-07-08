@@ -28,6 +28,8 @@ Vue.component('notifications', require('./components/notifications').default);
 Vue.component('notification-show', require('./components/notifications/show.vue').default);
 Vue.component('awesome-alert', require('./components/awesome-alert').default);
 
+Vue.component('awesome-modal', require('./components/awesome-modal').default);
+
 window.aa = () => {
     return window.vueApp.$root.$refs['awesome-alert']
 }
