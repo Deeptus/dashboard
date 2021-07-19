@@ -54,7 +54,7 @@
         },
         created() {
             this.inputs = this.subForm[this.input.columnname].inputs
-            this.items = this.value.value ?? []
+            this.items = Array.isArray(this.value.value) ? this.value.value : []
             let newItem = {
                 content: {}
             }

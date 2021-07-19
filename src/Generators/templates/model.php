@@ -22,6 +22,9 @@ class <?php print $className ?> extends <?php print $this->table->is_authenticat
 <?php if($this->table->softDeletes): ?>
     use SoftDeletes;
 <?php endif ?>
+<?php if($this->table->translation_method == "spatie-laravel-translatable"): ?>
+    use \AporteWeb\Dashboard\Traits\HasTranslations;
+<?php endif ?>
     use CrudBase;
 
 	protected $table = '<?php print $this->table->tablename ?>';

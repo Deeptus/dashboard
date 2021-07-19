@@ -11,21 +11,30 @@ use Illuminate\Support\Facades\Storage;
 trait CrudBase {
 
     public $listEnableMethods = [];
+    public $translatable = [];
 
     public function __construct() {
-
         $dirPath  = app_path('Dashboard');
         $filePath = $dirPath . '/' . $this->table . '.json';
-
+        
         if (file_exists($filePath)) {
             $content = json_decode(file_get_contents($filePath));
             $table   = $content->table;
             foreach ($content->inputs as $key => $input) {
+                try {
+                    if ($table->translation_method == "spatie-laravel-translatable") {
+                        if($input->translatable == 1) {
+                            $this->translatable[] = $input->columnname;
+                        }
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
                 if ($input->type == 'gallery') {
                     $methodName = str_replace(['_', '-', '.'], ' ', $input->columnname . '_rel_val');
                     $methodName = ucwords($methodName);
                     $methodName = 'get' . str_replace(' ', '', $methodName) . 'Attribute';
-
+                    
                     $barFunc = function () use ($input) {
                         $gallery = Gallery::with(['items'])->find($this->{$input->columnname});
                         if ($gallery) {

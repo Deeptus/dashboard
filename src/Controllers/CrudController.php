@@ -146,7 +146,6 @@ class CrudController extends Controller
                     $galleries = $results['galleries'];
                     $subForm   = $results['subForm'];
                 }        
-
                 if ($id) {
                     $subItems = $subModel::where($input->tablekeycolumn, $item->id);
                     if (Schema::hasColumn($subFormLayout->table->tablename, 'order_index')) {
@@ -173,7 +172,16 @@ class CrudController extends Controller
             // $input->tablekeycolumn id para buscar
         }
         if (!$found && $item) {
-            $content[$input->columnname] = $item->{$input->columnname};
+            try {
+                if($input->translatable) {
+                    $content[$input->columnname] = $item->getTranslations($input->columnname);
+                } else {
+                    $content[$input->columnname] = $item->{$input->columnname};
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                $content[$input->columnname] = $item->{$input->columnname};
+            }
         }
         return [
             'input'     => $input,
@@ -436,8 +444,15 @@ class CrudController extends Controller
             $item->save();
             return true;
         }
-        $item->{$input->columnname} = $data[$input->columnname];
-        
+        try {
+            if($input->translatable) {
+                $item->setTranslations($input->columnname, json_decode($data[$input->columnname], true));
+            } else {
+                $item->{$input->columnname} = $data[$input->columnname];
+            }
+        } catch (\Throwable $th) {
+            $item->{$input->columnname} = $data[$input->columnname];
+        }        
     }
     public function store(Request $request, $tablename, $id = false)
     {

@@ -35,7 +35,7 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
-                        <InputLayout :relations="relations" :subForm="subForm" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"></InputLayout>
+                        <InputLayout :languages="languages" :relations="relations" :subForm="subForm" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"></InputLayout>
                     </div>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                             errors: []
                         }
                     });
-                    if(response.data.content) {
+                    if(response.data.content || Object.keys(response.data.galleries).length ) {
                         this.inputs.forEach(input => {
                             if (input.type == 'gallery') {
                                 this.content[input.columnname] = {
@@ -192,7 +192,11 @@
                         });
                     });
                 } else {
-                    formData.append(input.columnname, content.value);
+                    if (typeof content.value === 'object' || content.value instanceof Object) {
+                        formData.append(input.columnname, JSON.stringify(content.value));
+                    } else {
+                        formData.append(input.columnname, content.value);
+                    }
                 }
             },
             postForm() {
