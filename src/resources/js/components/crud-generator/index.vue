@@ -75,6 +75,15 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating">
+                                        <select class="form-select" id="id" v-model="table.translation_method">
+                                            <option value="none">None</option>
+                                            <option value="spatie-laravel-translatable">spatie/laravel-translatable</option>
+                                        </select>
+                                        <label for="id">Translation Method</label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating">
                                         <select class="form-select" id="order_index" v-model="table.order_index">
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
@@ -308,6 +317,15 @@
                                             <label>NULLABLE</label>
                                         </div>
                                     </div>
+                                    <div class="col-md" v-if="inputParams(input).includes('translatable')">
+                                        <div class="form-floating">
+                                            <select class="form-select" v-model="input.translatable">
+                                                <option value="0">No</option>
+                                                <option value="1">Yes</option>
+                                            </select>
+                                            <label>Translatable</label>
+                                        </div>
+                                    </div>
                                     <div class="col-md" v-if="inputParams(input).includes('settable')">
                                         <div class="form-floating">
                                             <select class="form-select" v-model="input.settable">
@@ -450,6 +468,7 @@
                 table: {
                     id: 1,
                     single_record: 0,
+                    translation_method: 'none',
                     uuid: 1,
                     order_index: 0,
                     tablename: '',
@@ -534,7 +553,7 @@
             inputParams(input) {
                 let params = []
                 if (input.type == 'text') {
-                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'translatable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'color') {
                     params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable')
@@ -573,7 +592,7 @@
                 }
 
                 if (input.type == 'multimedia_file') {
-                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'gridcols', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'gallery') {
                     params.push('listable', 'settable', 'validate', 'label', 'nullable')
@@ -642,7 +661,7 @@
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
-                        this.inputs.splice(key+1, 0, this.inputs[key])
+                        this.inputs.splice( key+1, 0, JSON.parse(JSON.stringify( this.inputs[key] )) )
                     }
                 })
             },
