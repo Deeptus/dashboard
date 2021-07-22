@@ -38,6 +38,7 @@
     <link href="{{ asset(config('admin.theme.styles', 'css/theme-02.css')) }}?{{ $assets_version }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('fontello/css/hard.css') }}">
     <script>
+        window.serverTime = "{{ now() }}"
         window.apis = {
             homework: "{{ route('admin.homework') }}",
             notification: "{{ route('admin.notification') }}"
@@ -69,101 +70,104 @@
                 <div id="content">
 
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    @if (isset($__admin_topbar))
+                        @include($__admin_topbar)
+                    @else
+                        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                        <!-- Sidebar Toggle (Topbar) -->
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
+                            <!-- Sidebar Toggle (Topbar) -->
+                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                                <i class="fa fa-bars"></i>
+                            </button>
 
-                        <!-- Topbar Navbar -->
-                        <ul class="navbar-nav ms-auto">
+                            <!-- Topbar Navbar -->
+                            <ul class="navbar-nav ms-auto">
 
-                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                                <!-- Dropdown - Messages -->
-                                <div class="dropdown-menu dropdown-menu-end p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                                    <form class="form-inline mr-auto w-100 navbar-search">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="fas fa-search fa-sm"></i>
-                                                </button>
+                                <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                                <li class="nav-item dropdown no-arrow d-sm-none">
+                                    <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-search fa-fw"></i>
+                                    </a>
+                                    <!-- Dropdown - Messages -->
+                                    <div class="dropdown-menu dropdown-menu-end p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                                        <form class="form-inline mr-auto w-100 navbar-search">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button">
+                                                        <i class="fas fa-search fa-sm"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-                            <div class="topbar-divider d-none d-sm-block"></div>
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="homeworkDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-tasks img-profile"></i>
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <homework></homework>
-                            </li>
-                            <div class="topbar-divider d-none d-sm-block"></div>
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell img-profile"></i>
-                                </a>
-                                <notifications></notifications>
-                            </li>
-                            <!-- Nav Item - User Information -->
-                            @if(count(LaravelLocalization::getSupportedLocales()) > 1)
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-globe img-profile"></i>
-                                    <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ strtoupper(LaravelLocalization::getCurrentLocale()) }}</span>
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    @foreach (LaravelLocalization::getSupportedLocales() as $key => $lang)
-                                        @if (LaravelLocalization::getCurrentLocale()!=$key)
-                                            <a href="{{ LaravelLocalization::getLocalizedURL($key) }}" class="dropdown-item">
-                                                {{ strtoupper($key) }}
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </li>
-                            @endif
-                            <div class="topbar-divider d-none d-sm-block"></div>
-
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-user-circle img-profile"></i>
-                                    <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
-                                    {{-- <img class="img-profile rounded-circle" src="{{ asset('img/blank-profile-picture.png') }}"> --}}
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="profileDropdown">
-                                    <a class="dropdown-item" href="{{ route('admin.profile') }}">
-                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Perfil
+                                        </form>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle" href="#" id="homeworkDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-tasks img-profile"></i>
                                     </a>
-                                    {{--
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Mi Acitividad
+                                    <!-- Dropdown - User Information -->
+                                    <homework></homework>
+                                </li>
+                                <div class="topbar-divider d-none d-sm-block"></div>
+                                <li class="nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-bell img-profile"></i>
                                     </a>
-                                    <div class="dropdown-divider"></div>
-                                    --}}
-                                    <a class="dropdown-item" href="{{ route('logout') }}" {{--data-toggle="modal" data-target="#logoutModal"--}}>
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Salir
+                                    <notifications></notifications>
+                                </li>
+                                <!-- Nav Item - User Information -->
+                                @if(count(LaravelLocalization::getSupportedLocales()) > 1)
+                                <li class="nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-globe img-profile"></i>
+                                        <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ strtoupper(LaravelLocalization::getCurrentLocale()) }}</span>
                                     </a>
-                                </div>
-                            </li>
+                                    <!-- Dropdown - User Information -->
+                                    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
+                                        @foreach (LaravelLocalization::getSupportedLocales() as $key => $lang)
+                                            @if (LaravelLocalization::getCurrentLocale()!=$key)
+                                                <a href="{{ LaravelLocalization::getLocalizedURL($key) }}" class="dropdown-item">
+                                                    {{ strtoupper($key) }}
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </li>
+                                @endif
+                                <div class="topbar-divider d-none d-sm-block"></div>
 
-                        </ul>
+                                <!-- Nav Item - User Information -->
+                                <li class="nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-user-circle img-profile"></i>
+                                        <span class="me-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
+                                        {{-- <img class="img-profile rounded-circle" src="{{ asset('img/blank-profile-picture.png') }}"> --}}
+                                    </a>
+                                    <!-- Dropdown - User Information -->
+                                    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="profileDropdown">
+                                        <a class="dropdown-item" href="{{ route('admin.profile') }}">
+                                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Perfil
+                                        </a>
+                                        {{--
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Mi Acitividad
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        --}}
+                                        <a class="dropdown-item" href="{{ route('logout') }}" {{--data-toggle="modal" data-target="#logoutModal"--}}>
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Salir
+                                        </a>
+                                    </div>
+                                </li>
 
-                    </nav>
+                            </ul>
+
+                        </nav>
+                    @endif
                     <!-- End of Topbar -->
 
                     <!-- Begin Page Content -->
