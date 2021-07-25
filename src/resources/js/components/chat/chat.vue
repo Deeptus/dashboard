@@ -5,7 +5,7 @@
             <div v-for="message in messages" :key="message.id" :class="{ 'chat__message': true, 'chat__message--me': message.me }">
                 <div class="chat__username">{{ message.by }}:</div>
                 <div class="chat__content">{{ message.content }}</div>
-                <div class="chat__date">{{ message.created_at_ago }}</div>
+                <div class="chat__date">{{ message.created_at_format }} / {{ message.created_at_ago }}</div>
             </div>
         </div>
         <form class="card-footer" v-if="open" @submit.prevent="sendMessage">

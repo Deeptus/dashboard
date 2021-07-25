@@ -84,20 +84,36 @@
             max-height: calc(100vh - 100px );
             margin: 0 auto !important;
             overflow-y: auto;
+            padding: 0;
         }
         &__body {
             border-bottom: 1px solid #cbc8d0;
             border-top: 1px solid #cbc8d0;
-            margin-top: 9px;
             margin-bottom: 16px;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
         &__footer {
-            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
         &__header {
-            margin-top: 1rem;
             font-size: 20px;
             font-weight: 600;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            &--nav-tabs {
+                background-color: #ddd;
+                padding-top: 15px;
+            }
+            .nav-link {
+                font-size: 14px;
+                line-height: 15px;
+                &:hover, :focus {
+                    border-color: transparent;
+                    background-color: rgba(255, 255, 255, .3);
+                }
+            }
         }
     }
 </style>

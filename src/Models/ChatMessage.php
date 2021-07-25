@@ -19,6 +19,7 @@ class ChatMessage extends Model
     ];
     protected $appends  = [
         'created_at_ago',
+        'created_at_format',
         'by',
         'me',
     ];
@@ -33,6 +34,9 @@ class ChatMessage extends Model
     }
     public function getCreatedAtAgoAttribute() {
         return $this->created_at->ago();
+    }
+    public function getCreatedAtFormatAttribute() {
+        return $this->created_at->format('d\/m\/Y h:ia');
     }
     public static function boot() {
         parent::boot();

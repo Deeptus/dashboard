@@ -9,18 +9,18 @@
     "minimum-stability": "stable",
     "require": {
         "barryvdh/laravel-dompdf": "^0.9.0",
-        "doctrine/dbal": "^3.0",
-        "diglactic/laravel-breadcrumbs": "6.x",
+        "doctrine/dbal": "^3.1",
+        "diglactic/laravel-breadcrumbs": "7.x",
         "mcamara/laravel-localization": "^1.6",
-        "phpoffice/phpspreadsheet": "^1.16",
-        "mateusjunges/laravel-acl": "^2.6",
+        "phpoffice/phpspreadsheet": "^1.18",
+        "mateusjunges/laravel-acl": "^3.0",
         "spatie/laravel-translatable": "^4.6",
-        "barryvdh/laravel-debugbar": "^3.5",
-        "arcanedev/log-viewer": "^8.0",
+        "barryvdh/laravel-debugbar": "^3.6",
+        "arcanedev/log-viewer": "^8.1",
         "webpatser/laravel-uuid": "^4.0",
         "jenssegers/date": "^4.0",
         "fabpot/goutte": "^4.0",
-        "guzzlehttp/guzzle": "^7.0.1"
+        "guzzlehttp/guzzle": "^7.3"
     },
     "autoload": {
         "files": [
