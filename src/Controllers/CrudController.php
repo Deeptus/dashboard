@@ -314,10 +314,11 @@ class CrudController extends Controller
             $item->save();
             $pivot_name = $this->tablename.'_'.$input->tabledata.'_'.$input->columnname;
             DB::table($pivot_name)->where($this->tablename.'_id', $item->id)->delete();
-            foreach (explode(',', $data[$input->columnname]) as $key => $value) {
+            //foreach (explode(',', $data[$input->columnname]) as $key => $value) {
+            foreach (json_decode($data[$input->columnname]) as $key => $value) {
                 DB::table($pivot_name)->insert([
-                    $this->tablename.'_id'  => $item->id,
-                    $input->tabledata.'_id' => $value
+                    $this->tablename.'_id'  => intval($item->id),
+                    $input->tabledata.'_id' => intval($value)
                 ]);
             }
             return true;
