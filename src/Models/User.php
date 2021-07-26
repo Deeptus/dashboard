@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Junges\ACL\Traits\UsersTrait;
+use Junges\ACL\Concerns\UsersTrait;
 
 class User extends Authenticatable
 {
