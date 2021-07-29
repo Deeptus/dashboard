@@ -24,7 +24,7 @@
     import SubForm     from './SubForm'
     import InputCheckbox   from './InputCheckbox.vue'
     import MapSelectLatLon from './MapSelectLatLon'
-    import CustomGallery   from '../CustomGalleryComponent'
+    import CustomGallery   from '../CustomGalleryComponent.vue'
     import MultimediaFile  from './MultimediaFile'
     import Wysiwyg  from './Wysiwyg'
 

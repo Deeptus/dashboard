@@ -12,7 +12,7 @@ use AporteWeb\Dashboard\Models\CrudBase;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use Junges\ACL\Traits\UsersTrait;
+use Junges\ACL\Concerns\UsersTrait;
 <?php endif ?>
 
 class <?php print $className ?> extends <?php print $this->table->is_authenticatable ? 'Authenticatable' : 'Model' ?> {

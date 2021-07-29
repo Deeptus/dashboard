@@ -206,3 +206,26 @@ if (!function_exists('__primary_key_usage')) {
         return $keyName;
     }
 }
+
+use Illuminate\Support\Str;
+if (!function_exists('__dashboardTask')) {
+    function __dashboardTask(Closure $next) {
+        // Doc
+        // * * * * * cd /path-to-your-project && php artisan queue:work >> /dev/null 2>&1
+        // php artisan queue:work
+        // $migtrate = MigrateData::dispatch();
+
+        $uuid = (string) Str::uuid();
+        Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'waiting'], JSON_PRETTY_PRINT));
+        dispatch(function () use ($uuid, $next) {
+            Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'running'], JSON_PRETTY_PRINT));
+            try {
+                $callback = $next();
+                Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'finish'] + $callback, JSON_PRETTY_PRINT));
+            } catch (\Throwable $th) {
+                Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'failed', 'message' => $th->getMessage()], JSON_PRETTY_PRINT));
+            }
+        });
+        return $uuid;
+    }
+}

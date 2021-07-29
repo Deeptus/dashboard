@@ -7,8 +7,8 @@ use AporteWeb\Dashboard\Requests\GroupCreateRequest;
 use AporteWeb\Dashboard\Requests\GroupEditRequest;
 use App\Http\Controllers\Controller;
 use AporteWeb\Dashboard\Models\User;
-use Junges\ACL\Http\Models\Group;
-use Junges\ACL\Http\Models\Permission;
+use Junges\ACL\Models\Group;
+use Junges\ACL\Models\Permission;
 use Illuminate\Support\Str;
 
 class GrupoController extends Controller

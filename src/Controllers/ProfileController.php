@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use AporteWeb\Dashboard\Models\User;
 use App\Models\Sucursal;
-use Junges\ACL\Http\Models\Group;
-use Junges\ACL\Http\Models\Permission;
+use Junges\ACL\Models\Group;
+use Junges\ACL\Models\Permission;
 use Illuminate\Support\Str;
 
 class ProfileController extends Controller

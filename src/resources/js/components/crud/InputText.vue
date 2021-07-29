@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="input.translatable">
+        <template v-if="input.translatable == 1">
             <div class="row">
                 <div class="col" v-for="l in Object.keys(languages)" :key="l">
                     <div class="form-floating mb-3">
@@ -42,7 +42,7 @@
         },
         created() {
             // if (typeof content.value === 'object' || content.value instanceof Object) {
-            if (this.input.translatable) {
+            if ( this.input.translatable == 1 ) {
                 if (Object.prototype.toString.call( this.value.value ) !== '[object Object]') {
                     this.value.value = {}
                 }

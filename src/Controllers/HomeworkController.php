@@ -16,7 +16,7 @@ use AporteWeb\Dashboard\Models\Gallery;
 use AporteWeb\Dashboard\Models\Multimedia;
 use AporteWeb\Dashboard\Models\Homework;
 use AporteWeb\Dashboard\Models\User;
-use Junges\ACL\Http\Models\Group;
+use Junges\ACL\Models\Group;
 
 class HomeworkController extends Controller {
     public function __construct() {

@@ -191,8 +191,7 @@ class CrudController extends Controller
             'subForm'   => $subForm,
         ];
     }
-    public function data($tablename, $id = false)
-    {
+    public function data($tablename, $id = false) {
         $languages = [];
         $content   = null;
         $relations = [];
@@ -235,8 +234,7 @@ class CrudController extends Controller
         ]);
     }
 
-    public function index()
-    {
+    public function index() {
         $appends = [];
         $data = new $this->model;
         if (intval($this->table->single_record)) {
@@ -291,8 +289,7 @@ class CrudController extends Controller
         ]);
     }
 
-    public function create()
-    {
+    public function create() {
         return view('Dashboard::admin.crud.create', [
             'tablename'      => $this->tablename,
             'table'          => $this->table,
@@ -300,8 +297,7 @@ class CrudController extends Controller
             '__admin_active' => 'admin.crud-' . $this->tablename
         ]);
     }
-    public function attachInput($item, $input, $data)
-    {
+    public function attachInput($item, $input, $data) {
         try {
             if ($input->type == 'card-header') {
                 return true;
@@ -446,7 +442,7 @@ class CrudController extends Controller
             return true;
         }
         try {
-            if($input->translatable) {
+            if(intval($input->translatable)) {
                 $item->setTranslations($input->columnname, json_decode($data[$input->columnname], true));
             } else {
                 $item->{$input->columnname} = $data[$input->columnname];
