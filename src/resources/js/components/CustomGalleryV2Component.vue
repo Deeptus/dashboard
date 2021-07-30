@@ -2,46 +2,40 @@
     <fieldset @dragover="onDropGalleryOver" @drop="onDropGallery">
         <legend>{{ label }}</legend>
             <draggable v-model="gallery" class="row" draggable=".item">
-                <div class="col-md-3 item" v-for="(item, index) in gallery" :key="index">
+                <div class="col-12 col-md-12 col-lg-6 item" v-for="(item, index) in gallery" :key="index">
                     <div class="gallery-item draggable-item" :for="id">
                         <div class="gallery-item-overlay"></div>
-                        <div class="gallery-item-container">
-                            <img :src="createImageURL(item)" alt="">
-                        </div>
                         <div class="gallery-item-controls">
+                            <div class="gallery-item-preview">
+                                <img :src="createImageURL(item)" alt="">
+                            </div>
+                            <div class="gallery-item-path">
+                                {{ createImageName(item) }}
+                                <span :href="itemURL(item)" target="_blank" :class="{ 'text-success': fileInfo(item).valid, 'text-danger': !fileInfo(item).valid }" v-if="fileInfo(item).location == 'fileToUpload'">{{ fileInfo(item).sizeH }}</span>
+                            </div>
                             <a :href="itemURL(item)" target="_blank" class="btn btn-primary btn-download"><i class="fas fa-download"></i> Descargar</a>
-                            <div :href="itemURL(item)" target="_blank" class="btn btn-download" :class="{ 'btn-success': fileInfo(item).valid, 'btn-danger': !fileInfo(item).valid }" v-if="fileInfo(item).location == 'fileToUpload'">{{ fileInfo(item).sizeH }}</div>
                             <button type="button" class="btn btn-danger" @click="deleteFileGallery(index)"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                        <div class="gallery-item-path">
-                            {{ createImageName(item) }}
                         </div>
                     </div>
                 </div>
-                <div slot="footer" class="col-md-3">
+                <div slot="footer" class="col-12 col-md-12 col-lg-6">
                     <label class="gallery-item" :for="id" v-if="useFileManager == false">
                         <input type="file" :id="id" class="d-none" @change="onFileGallery($event)" multiple>
                         <div class="gallery-item-overlay"></div>
                         <div class="gallery-item-container">
-                            <div class="gallery-item-container">
-                                <span class="text-center">
-                                    <i class="fas fa-upload fa-5x"></i>
-                                    <br>
-                                    Selccionar
-                                </span>
-                            </div>
+                            <span class="gallery-item-add">
+                                <i class="fas fa-upload me-3"></i>
+                                Selccionar
+                            </span>
                         </div>
                     </label>
                     <div class="gallery-item" v-else @click="selectFile()">
                         <div class="gallery-item-overlay"></div>
                         <div class="gallery-item-container">
-                            <div class="gallery-item-container">
-                                <span class="text-center">
-                                    <i class="fas fa-upload fa-5x"></i>
-                                    <br>
-                                    Selccionar
-                                </span>
-                            </div>
+                            <span class="gallery-item-add">
+                                <i class="fas fa-upload me-3"></i>
+                                Selccionar
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -300,8 +294,9 @@
         margin-bottom: 5px;
         cursor: pointer;
         user-select: none;
+        background-color: #e4e4e4;
         &:hover {
-            background: #CCC;
+            background: #c6e7ff;
         }
     }
     .gallery-item-controls {
@@ -311,6 +306,12 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        height: 100%;
+        .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
     .gallery-item-container{
         position: absolute;
@@ -328,19 +329,29 @@
             max-height: 100%;
         }
     }
+    .gallery-item-preview {
+        height: 55px;
+        width: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+    .gallery-item-add {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+    }
     .gallery-item-overlay {
-        padding-bottom: 100%;
+        padding-bottom: 55px;
     }
     .gallery-item-path {
-        position: absolute;
-        width: 100%;
-        font-size: 12px;
-        line-height: 14px;
-        border-top: 1px solid #000;
-        padding: 2px 5px 4px 5px;
-        background-color: #00000085;
-        color: aliceblue;
-        transition: .2s bottom;
+        flex: 1;
+        padding: 5px;
     }
     .draggable-item {
         cursor: move;

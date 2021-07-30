@@ -31,6 +31,8 @@ Vue.component('awesome-alert', require('./components/awesome-alert').default);
 
 Vue.component('awesome-modal', require('./components/awesome-modal').default);
 
+Vue.component('input-switch', require('./components/crud/InputSwitch.vue').default);
+
 window.aa = () => {
     return window.vueApp.$root.$refs['awesome-alert']
 }
