@@ -20,7 +20,7 @@ Vue.component('select2', require('./components/Select2Component.vue').default);
 
 Vue.component('file-manager', require('./components/file-manager').default);
 Vue.component('CustomGallery', require('./components/CustomGalleryComponent.vue').default);
-Vue.component('custom-gallery-v2', require('./components/CustomGalleryV2Component.vue').default);
+Vue.component('awesome-gallery', require('./components/awesome-gallery').default);
 
 Vue.component('homework-show', require('./components/homework/show.vue').default);
 Vue.component('homework-crud', require('./components/homework/crud.vue').default);

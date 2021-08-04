@@ -1,9 +1,9 @@
 <template>
     <fieldset @dragover="onDropGalleryOver" @drop="onDropGallery">
-        <legend>{{ label }}</legend>
+        <legend v-if="label">{{ label }}</legend>
             <draggable v-model="gallery" class="row" draggable=".item">
-                <div class="col-12 col-md-12 col-lg-6 item" v-for="(item, index) in gallery" :key="index">
-                    <div class="gallery-item draggable-item" :for="id">
+                <div class="col-12 col-md-12 col-lg-6" :class="{ 'item': !readonly }" v-for="(item, index) in gallery" :key="index">
+                    <div class="gallery-item draggable-item" :class="{ 'cursor-move': !readonly }" :for="id">
                         <div class="gallery-item-overlay"></div>
                         <div class="gallery-item-controls">
                             <div class="gallery-item-preview">
@@ -13,13 +13,14 @@
                                 {{ createImageName(item) }}
                                 <span :href="itemURL(item)" target="_blank" :class="{ 'text-success': fileInfo(item).valid, 'text-danger': !fileInfo(item).valid }" v-if="fileInfo(item).location == 'fileToUpload'">{{ fileInfo(item).sizeH }}</span>
                             </div>
-                            <a :href="itemURL(item)" target="_blank" class="btn btn-primary btn-download"><i class="fas fa-download"></i> Descargar</a>
-                            <button type="button" class="btn btn-danger" @click="deleteFileGallery(index)"><i class="fas fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-primary" @click="btnEdit(item)" v-if="!readonly"><i class="fas fa-edit"></i></button>
+                            <a :href="itemURL(item)" target="_blank" class="btn btn-primary btn-download"><i class="fas fa-download"></i></a>
+                            <button type="button" class="btn btn-danger" @click="deleteFileGallery(index)" v-if="!readonly"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
                 </div>
-                <div slot="footer" class="col-12 col-md-12 col-lg-6">
-                    <label class="gallery-item" :for="id" v-if="useFileManager == false">
+                <div slot="footer" class="col-12 col-md-12 col-lg-6" v-if="!readonly">
+                    <label class="gallery-item cursor-pointer" :for="id" v-if="useFileManager == false">
                         <input type="file" :id="id" class="d-none" @change="onFileGallery($event)" multiple>
                         <div class="gallery-item-overlay"></div>
                         <div class="gallery-item-container">
@@ -29,7 +30,7 @@
                             </span>
                         </div>
                     </label>
-                    <div class="gallery-item" v-else @click="selectFile()">
+                    <div class="gallery-item cursor-pointer" v-else @click="selectFile()">
                         <div class="gallery-item-overlay"></div>
                         <div class="gallery-item-container">
                             <span class="gallery-item-add">
@@ -44,6 +45,7 @@
 </template>
 <script>
     import draggable from 'vuedraggable'
+    import edit from './edit.vue'
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
         props: {
@@ -52,17 +54,16 @@
             },
             label: {
                 type: String,
-                default: 'Fotos del Producto'
+                default: null,
             },
             useFileManager: {
                 type: Boolean,
                 default: false
+            },
+            readonly: {
+                type: Boolean,
+                default: false
             }
-            /*id: {
-                type: String,
-                default: ''
-                // default: Math.random().toString(36).substring(2)
-            },*/
         },
         components: {
             draggable,
@@ -119,6 +120,20 @@
             }
         },
         methods: {
+            btnEdit(item) {
+                am().openModal(edit, { item }).then( response => {
+                    item.medicion_fecha.push(response)
+                    if (item.step < 1.3) {
+                        item.step = 1.3
+                    }
+                    setTimeout(() => {
+                        this.state = 'display'
+                    }, 500)
+                }).catch((error) => {
+                    this.state = 'display'
+                })
+
+            },
             async selectFile() {
                 var ids = this.gallery.map((a) => a.id)
                 await this.fileManager().open({ excludeIds: ids }).then((callback) => {
@@ -142,12 +157,12 @@
             },
             fileInfo(item) {
                 let info = {}
-                if (item instanceof File) {
+                if (item.file instanceof File) {
                     info = {
                         location: 'fileToUpload',
-                        size: this.getFileSize(item),
-                        valid: this.checkValidFileSize(item),
-                        sizeH: this.getFileSize(item, 'h')
+                        size: this.getFileSize(item.file),
+                        valid: this.checkValidFileSize(item.file),
+                        sizeH: this.getFileSize(item.file, 'h')
                     }
                     return info
                 }
@@ -183,7 +198,14 @@
             },
             onFileGallery(e){
                 for (let index = 0; index < e.target.files.length; index++) {
-                    this.gallery.push(e.target.files[index])
+                    this.gallery.push({
+                        info: {
+                            alt : '',
+                            caption : '',
+                            original_name: e.target.files[index].name
+                        },
+                        file: e.target.files[index]
+                    })
                 }
                 return true
             },
@@ -235,6 +257,9 @@
                 return icon
             },
             createImageURL(file){
+                if (file.file) {
+                    file = file.file
+                }
                 if (!file.type) {
                     return ''
                 }
@@ -259,6 +284,11 @@
                 }
             },
             createImageName(file) {
+                if (file.file) {
+                    file = file.file
+                } else {
+                    file = file.original_name
+                }
                 if (file && file instanceof File) {
                     return file.name
                 }
@@ -292,7 +322,6 @@
         position: relative;
         width: 100%;
         margin-bottom: 5px;
-        cursor: pointer;
         user-select: none;
         background-color: #e4e4e4;
         &:hover {
@@ -307,6 +336,7 @@
         display: flex;
         justify-content: space-between;
         height: 100%;
+        border: 2px solid #b0bdc7;
         .btn {
             display: flex;
             justify-content: center;
@@ -323,7 +353,7 @@
         justify-content: center;
         align-items: center;
         padding: 2px;
-        border: solid 1px #CCC;
+        border: 2px solid #b0bdc7;
         img {
             max-width: 100%;
             max-height: 100%;
@@ -335,6 +365,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 2px;
         img {
             max-width: 100%;
             max-height: 100%;
@@ -351,10 +382,15 @@
     }
     .gallery-item-path {
         flex: 1;
-        padding: 5px;
+        padding: 5px 0;
+    }
+    .cursor-move {
+        cursor: move;
+    }
+    .cursor-pointer {
+        cursor: pointer;
     }
     .draggable-item {
-        cursor: move;
         overflow: hidden;
         &:hover .gallery-item-path {
             bottom: 0;

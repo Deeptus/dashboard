@@ -1,22 +1,10 @@
 <template>
-    <div class="awesome-modal" v-if="display">
-        <div class="awesome-modal__container container mt-5">
-            <component :is="component" :componentCallback="componentCallback" v-bind="props"></component>
-        </div>
+    <div>
+        <modal v-for="(modal, key) in modals" :modal="modal" :key="key"></modal>
     </div>
 </template>
 <script>
-    /*
-    Vue.mixin({
-        created() {
-        },
-        methods: {
-            openLoginFormModal() {
-                this.$root.$refs.loginformmodal.openModal()
-            }
-        }
-    })
-    */
+    import modal from './modal.vue'
     const node = document.createElement('awesome-modal');
     node.setAttribute("ref", "awesome-modal");
     window.loginNode = node
@@ -26,94 +14,40 @@
     }
     export default {
         props: ['action'],
-        components: {},
+        components: {
+            modal
+        },
         data(){
             return{
-                display: false,
-                props: {},
-                component: Object,
-                componentCallback: {}
+                modals: []
             }
         },
-        created() {
-            // console.log('se registra modal')
+        watch: {
+            modals: {
+                deep: true,
+                handler() {
+                    if (this.modals.length == 0) {
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+            }
         },
         mounted: function () {},
         methods:{
             openModal(component, props) {
-                this.component = component
-                this.props = props
-                document.body.style.overflow = 'hidden';
-                this.componentCallback.promise = new Promise((resolve, reject) => {
-                    Object.assign(this.componentCallback, { resolve, reject })
+                const e = { component, props, componentCallback: {} }
+                e.componentCallback.promise = new Promise((resolve, reject) => {
+                    Object.assign(e.componentCallback, { resolve, reject })
                 })
-                this.componentCallback.promise.then(response => {
-                    // console.log(['desde el then del modal', response])
-                    this.closeModal()
+                const key = this.modals.push(e)
+                e.componentCallback.promise.then(response => {
+                    this.modals.splice(key - 1, 1)
                 })
-                this.componentCallback.promise.catch(error => {
-                    // console.log(['desde el then del catch', error])
-                    this.closeModal()
+                e.componentCallback.promise.catch(error => {
+                    this.modals.splice(key - 1, 1)
                 })
-                this.display = true
-                return this.componentCallback.promise
-            },
-            closeModal() {
-                this.display = false
-                document.body.style.overflow = 'auto';
+                return e.componentCallback.promise
             }
-        },
-        watch: {},
-        destroyed: function () {}
+        }
     }
 </script>
-<style lang="scss">
-    .awesome-modal {
-        background-color: rgba($color: #000000, $alpha: .4);
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999;
-        display: flex;
-        overflow: hidden;
-        align-items: center;
-        &__container {
-            background-color: #ffffff;
-            max-height: calc(100vh - 100px );
-            margin: 0 auto !important;
-            overflow-y: auto;
-            padding: 0;
-        }
-        &__body {
-            border-bottom: 1px solid #cbc8d0;
-            border-top: 1px solid #cbc8d0;
-            margin-bottom: 16px;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
-        &__footer {
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
-        &__header {
-            font-size: 20px;
-            font-weight: 600;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            &--nav-tabs {
-                background-color: #ddd;
-                padding-top: 15px;
-            }
-            .nav-link {
-                font-size: 14px;
-                line-height: 15px;
-                &:hover, :focus {
-                    border-color: transparent;
-                    background-color: rgba(255, 255, 255, .3);
-                }
-            }
-        }
-    }
-</style>
