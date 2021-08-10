@@ -50,7 +50,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 9999;
+        z-index: 1059;
         display: flex;
         overflow: hidden;
         align-items: center;
@@ -88,6 +88,17 @@
                     border-color: transparent;
                     background-color: rgba(255, 255, 255, .3);
                 }
+            }
+        }
+        &__fixed-btns {
+            position: sticky;
+            width: 100%;
+            height: 0;
+            text-align: end;
+            top: 0;
+            opacity: .4;
+            &:hover {
+                opacity: 1;
             }
         }
     }

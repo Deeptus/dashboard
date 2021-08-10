@@ -19,7 +19,7 @@
                         </div>
                     </div>
                 </div>
-                <div slot="footer" class="col-12 col-md-12 col-lg-6" v-if="!readonly">
+                <div slot="footer" class="col-12 col-md-12 col-lg-6" v-if="!readonly && enabled()">
                     <label class="gallery-item cursor-pointer" :for="id" v-if="useFileManager == false">
                         <input type="file" :id="id" class="d-none" @change="onFileGallery($event)" multiple>
                         <div class="gallery-item-overlay"></div>
@@ -54,6 +54,10 @@
             },
             label: {
                 type: String,
+                default: null,
+            },
+            max: {
+                type: Number,
                 default: null,
             },
             useFileManager: {
@@ -120,6 +124,12 @@
             }
         },
         methods: {
+            enabled() {
+                if (this.max && this.gallery.length >= this.max) {
+                    return false
+                }
+                return true
+            },
             btnEdit(item) {
                 am().openModal(edit, { item }).then( response => {
                     item.medicion_fecha.push(response)
@@ -198,14 +208,26 @@
             },
             onFileGallery(e){
                 for (let index = 0; index < e.target.files.length; index++) {
-                    this.gallery.push({
-                        info: {
-                            alt : '',
-                            caption : '',
-                            original_name: e.target.files[index].name
-                        },
-                        file: e.target.files[index]
-                    })
+                    if (this.gallery.length < this.max) {
+                        this.gallery.push({
+                            info: {
+                                alt : '',
+                                caption : '',
+                                original_name: e.target.files[index].name
+                            },
+                            file: e.target.files[index]
+                        })
+                    }
+                    if (this.max == null) {
+                        this.gallery.push({
+                            info: {
+                                alt : '',
+                                caption : '',
+                                original_name: e.target.files[index].name
+                            },
+                            file: e.target.files[index]
+                        })
+                    }
                 }
                 return true
             },
