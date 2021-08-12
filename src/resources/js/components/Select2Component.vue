@@ -18,7 +18,7 @@
         },
         mounted: function () {
             var vm = this
-            console.log(this.$el)
+            // console.log(this.$el)
             $(this.$el)
             .select2({ data: this.options })
             .val(this.value)

@@ -26,7 +26,7 @@
                         <div class="gallery-item-container">
                             <span class="gallery-item-add">
                                 <i class="fas fa-upload me-3"></i>
-                                Selccionar
+                                Seleccionar
                             </span>
                         </div>
                     </label>
@@ -35,7 +35,7 @@
                         <div class="gallery-item-container">
                             <span class="gallery-item-add">
                                 <i class="fas fa-upload me-3"></i>
-                                Selccionar
+                                Seleccionar
                             </span>
                         </div>
                     </div>
@@ -81,7 +81,11 @@
         created() {
             let model = []
             if (Object.prototype.toString.call( this.model ) == '[object Object]') {
-                model = this.model.value
+                if (this.model.value) {
+                    model = this.model.value
+                } else {
+                    model = Object.values(this.model)
+                }
             }
             if (Object.prototype.toString.call( this.model ) == '[object Array]') {
                 model = this.model

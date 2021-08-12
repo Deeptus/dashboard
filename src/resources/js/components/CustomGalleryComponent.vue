@@ -27,7 +27,7 @@
                                 <span class="text-center">
                                     <i class="fas fa-upload fa-5x"></i>
                                     <br>
-                                    Selccionar
+                                    Seleccionar
                                 </span>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                                 <span class="text-center">
                                     <i class="fas fa-upload fa-5x"></i>
                                     <br>
-                                    Selccionar
+                                    Seleccionar
                                 </span>
                             </div>
                         </div>
