@@ -490,9 +490,9 @@
                 axios.get(this.urlData).then((response) => {
                     this.languages = response.data.languages
                     if(response.data.content) {
-                        this.table  = response.data.content.table
+                        Object.assign(this.table, response.data.content.table)
                         // required
-                        this.table.uuid  = 1
+                        this.table.uuid        = 1
                         this.table.id          = 1
                         this.table.timestamps  = 1
                         this.table.softDeletes = 1
@@ -504,6 +504,18 @@
                             this.conditions = []
                         }
                     }
+                    console.log()
+                    this.inputs.forEach(input => {
+                        if (input.type == 'text' && input.translatable === undefined) {
+                            input.translatable = 0
+                        }
+                        if (input.settable === undefined) {
+                            input.settable = 0
+                        }
+                        if (input.listable === undefined) {
+                            input.listable = 1
+                        }
+                    });
                     this.loaded = 1
                 });
             });
