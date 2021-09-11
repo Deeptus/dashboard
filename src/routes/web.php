@@ -99,6 +99,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/{id}/restore', 'CrudGeneratorController@restore')->name('.restore');
             //
             Route::get ('api/data/{id?}', 'CrudGeneratorController@data')->name('.data');
+            // 
+            Route::get ('api/list-tables', 'CrudGeneratorController@listTables')->name('.list-tables');
+            Route::post('api/table-info', 'CrudGeneratorController@tableInfo')->name('.table-info');
         });
 
         Route::group([

@@ -30,6 +30,7 @@
         <div class="col-md-12" v-if="loaded == 1">
             <div class="card">
                 <div class="card-header">
+                    <button type="button" class="btn btn-sm btn-primary" @click="importFromDatabse()"><i class="fas fa-database"></i> Import from Table</button>
                     Crud: {{ table.tablename }}
                 </div>
                 <div class="card-body pb-0">
@@ -438,6 +439,7 @@
     </div>
 </template>
 <script>
+    import ImportFromDatabse from './ImportFromDatabse.vue'
     import draggable from 'vuedraggable'
     import Swal from 'sweetalert2'
     
@@ -523,6 +525,85 @@
         mounted () {},
         watch: {},
         methods: {
+            importFromDatabse() {
+                am().openModal(ImportFromDatabse, { endpoint: this.urlAction }).then( response => {
+                    // Table
+                    this.table.id = 1
+                    this.table.single_record = 0
+                    this.table.translation_method = 'none'
+                    this.table.uuid = 1
+                    this.table.order_index = 0
+                    this.table.tablename = response.table
+                    this.table.name = {
+                        'es': response.table
+                    }
+                    this.table.timestamps = 1
+                    this.table.softDeletes = 1
+                    this.table.slug = 0
+                    this.table.slug_col = ''
+                    this.table.slug_global = 0
+                    this.table.is_authenticatable = 0
+                    // Columns
+                    const ignore = [
+                        'id',
+                        'uuid',
+                        'created_at',
+                        'updated_at',
+                        'deleted_at',
+                        'email_verified_at',
+                        'remember_token'
+                    ]
+                    response.columns.forEach((column) => {
+                        let type = 'text'
+                        let valueoriginselector = null
+                        let tabledata = ''
+                        let tablekeycolumn = ''
+                        let tabletextcolumn = ''
+
+                        if (column.type == 'boolean') {
+                            type = 'true_or_false'
+                        }
+                        if (column.type == 'bigint') {
+                            type = 'bigInteger'
+                        }
+                        if (column.type == 'bigint') {
+                            type = 'bigInteger'
+                        }
+                        if (column.name.endsWith('_id') && column.type == 'bigint') {
+                            type = 'select'
+                            valueoriginselector = 'table'
+                            tabledata       = column.name.replace('_id', '').plural()
+                            tablekeycolumn  = 'id'
+                            tabletextcolumn = 'name'
+                        }
+                        if (!ignore.includes(column.name)) {
+                            this.inputs.push({
+                                columnname: column.name, // "uuid"
+                                type: type,
+                                label: {
+                                    'es': column.name
+                                },
+                                unique: 0,
+                                default: column.default, // null
+                                nullable: column.notnull ? 1 : 0, // false
+                                validate: 0,
+                                max: '',
+                                min: '',
+                                valueoriginselector: valueoriginselector,
+                                tabledata: tabledata,
+                                tablekeycolumn: tablekeycolumn,
+                                tabletextcolumn: tabletextcolumn,
+                                settable: 0,
+                                listable: 0,
+                                translatable: 0
+                            })
+                            // column.length  // 36
+                        }
+                    })
+                }).catch((error) => {
+                    console.log(error)
+                })
+            },
             addCondition() {
                 this.conditions.push({
                     type: '',
@@ -552,14 +633,16 @@
                     label: {},
                     unique: 0,
                     default: '',
-                    nullable: 0,
-                    validate: 1,
+                    nullable: 1,
+                    validate: 0,
                     max: '',
                     min: '',
                     tabledata: '',
                     tablekeycolumn: '',
                     tabletextcolumn: '',
-                    settable: 0
+                    settable: 0,
+                    listable: 0,
+                    translatable: 0
                 })
             },
             inputParams(input) {

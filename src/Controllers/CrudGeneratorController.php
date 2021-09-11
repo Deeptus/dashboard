@@ -12,6 +12,7 @@ use Junges\ACL\Models\Permission;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\App;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use AporteWeb\Dashboard\Generators\Generator;
@@ -116,11 +117,31 @@ class CrudGeneratorController extends Controller
             '__admin_active' => 'admin.crud-generator'
         ]);
     }
-    public function restore($id)
-    {
+    public function restore($id) {
         $item = Group::withTrashed()->find($id);
         $item->deleted_at = null;
         $item->save();
         return redirect()->route('admin.crud-generator.trash')->with('success', 'Se ha restaurado un <strong>Groupo</strong> con éxito.');
+    }
+    public function listTables() {
+        return DB::connection()->getDoctrineSchemaManager()->listTableNames();
+    }
+    public function tableInfo() {
+        $columns = Schema::getColumnListing(request()->table);
+        $table = [];
+        foreach ($columns as $columnName) {
+            $column = Schema::getConnection()->getDoctrineColumn(request()->table, $columnName);
+            $table[] = [
+                'name' => $column->getName(),
+                'notnull' => $column->getNotnull(),
+                'default' => $column->getDefault(), 
+                'type' => $column->getType()->getName(), 
+                'length' => $column->getLength()
+            ];
+        }
+        return $table;
+
+        return DB::select('describe ' . request()->table);
+        return DB::connection()->getDoctrineColumn(request()->table, 'name')->getType()->getName();
     }
 }

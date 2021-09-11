@@ -25,23 +25,16 @@ class CreateUsersDashboardTable extends Migration
 			if (Schema::hasTable('users')) {
 				$users = DB::table("users")->get();
 				Schema::dropIfExists('users');
-			}			
-			Schema::create('users', function (Blueprint $table) {
-				$table->bigIncrements('id');
-				$table->uuid('uuid')->nullable();
-				//
-				$table->boolean('root')->default(0);
-				$table->string('username')->unique();
-				//
-				$table->string('name');
-				$table->string('email')->unique();
-				$table->timestamp('email_verified_at')->nullable();
-				$table->string('password');
-				//
-				$table->rememberToken();
-				$table->timestamps();
-				$table->softDeletes();
-			});
+			}
+            if (Schema::hasTable('users')) {
+                Schema::table('users', function (Blueprint $table) {
+                    $this->table($table);
+                });
+            } else {
+                Schema::create('users', function (Blueprint $table) {
+                    $this->table($table);
+                });
+            }
 			// dump($users);
 			if (isset($users)) {
 				foreach($users as $user) {
@@ -60,7 +53,44 @@ class CreateUsersDashboardTable extends Migration
 			// DB::rollback();
 		}*/
 	}
-
+	public function table($table) {
+		if (!Schema::hasColumn('users', 'id')) {
+			$table->bigIncrements('id');
+		}
+		if (!Schema::hasColumn('users', 'uuid')) {
+			$table->uuid('uuid')->nullable();
+		}
+		//
+		if (!Schema::hasColumn('users', 'root')) {
+			$table->boolean('root')->default(0);
+		}
+		if (!Schema::hasColumn('users', 'username')) {
+			$table->string('username')->unique();
+		}
+		//
+		if (!Schema::hasColumn('users', 'name')) {
+			$table->string('name');
+		}
+		if (!Schema::hasColumn('users', 'email')) {
+			$table->string('email')->unique();
+		}
+		if (!Schema::hasColumn('users', 'email_verified_at')) {
+			$table->timestamp('email_verified_at')->nullable();
+		}
+		if (!Schema::hasColumn('users', 'password')) {
+			$table->string('password');
+		}
+		//
+		if (!Schema::hasColumn('users', 'remember_token')) {
+			$table->rememberToken();
+		}
+		if (!Schema::hasColumn('users', 'created_at')) {
+			$table->timestamps();
+		}
+		if (!Schema::hasColumn('users', 'deleted_at')) {
+			$table->softDeletes();
+		}
+	}
 	/**
 	 * Reverse the migrations.
 	 *
