@@ -244,6 +244,7 @@
                                         <optgroup label="Select's">
                                             <option value="true_or_false">BOOLEAN (True or False)</option>
                                             <option value="select">select</option>
+                                            <option value="select_string">select String</option>
                                             <option value="radio">radio</option>
                                             <option value="checkbox">checkbox</option>
                                             <option value="select2">select2</option>
