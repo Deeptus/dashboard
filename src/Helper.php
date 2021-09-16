@@ -98,14 +98,21 @@ if (!function_exists('__config_var')) {
      * @return string a string in human readable format
      *
      * */
-    function __config_var($key)
+    function __config_var($key, $model = false)
     {
-        $var = Cache::remember('config_var', env('CACHE_DURATION', 0), function () {
-            return AporteWeb\Dashboard\Models\ConfigVar::get()->pluck('config_value', 'config_key');
-        })->toArray();
-
-        if (is_array($var) && array_key_exists($key, $var)) {
-            return $var[$key];
+        if ($model == false) {
+            $var = Cache::remember('config_var', env('CACHE_DURATION', 0), function () {
+                return AporteWeb\Dashboard\Models\ConfigVar::get()->pluck('config_value', 'config_key');
+            })->toArray();
+    
+            if (is_array($var) && array_key_exists($key, $var)) {
+                return $var[$key];
+            }
+        } else {
+            $var = Cache::remember($model, env('CACHE_DURATION', 0), function () use ($model) {
+                return $model::first();
+            });
+            return $var->{$key};
         }
 
         return null;
