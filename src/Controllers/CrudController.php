@@ -23,8 +23,7 @@ class CrudController extends Controller
     private $inputs;
     private $conditions;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
         if (!app()->runningInConsole()) {
             $this->tablename = request()->route()->parameters()['tablename'];
@@ -451,8 +450,7 @@ class CrudController extends Controller
             $item->{$input->columnname} = $data[$input->columnname];
         }        
     }
-    public function store(Request $request, $tablename, $id = false)
-    {
+    public function store(Request $request, $tablename, $id = false) {
         if($id){
             $item       = $this->model::findByPKOrFail($id);
             $action     = 'edito';
@@ -497,8 +495,7 @@ class CrudController extends Controller
         return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);
     }
 
-    public function edit($tablename, $id)
-    {
+    public function edit($tablename, $id) {
         $item = $this->model::findByPKOrFail($id);
         return view('Dashboard::admin.crud.edit', [
             'item'           => $item,
@@ -509,14 +506,12 @@ class CrudController extends Controller
         ]);
     }
 
-    public function destroy($tablename, $id)
-    {
+    public function destroy($tablename, $id) {
         $item = $this->model::findByPK($id);
         $item->delete();
         return redirect()->route('admin.crud', ['tablename' => $tablename])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
     }
-    public function trash($tablename)
-    {
+    public function trash($tablename) {
         $data = $this->model::onlyTrashed()->paginate(20);
         return view('Dashboard::admin.crud.index', [
             'trash'          => true,
@@ -527,15 +522,13 @@ class CrudController extends Controller
             '__admin_active' => 'admin.crud-' . $this->tablename
         ]);
     }
-    public function restore($tablename, $id)
-    {
+    public function restore($tablename, $id) {
         $item = $this->model::withTrashed()->findByPK($id)->first();
         $item->deleted_at = null;
         $item->save();
         return redirect()->route('admin.crud.trash', ['tablename' => $tablename])->with('success', 'Se ha restaurado un <strong>item</strong> con éxito.');
     }
-    public function copy($tablename, $id)
-    {
+    public function copy($tablename, $id) {
         $new = $this->model::findByPK($id)->replicate();
         foreach ($this->inputs as $inputKey => $input) {
 

@@ -236,3 +236,75 @@ if (!function_exists('__dashboardTask')) {
         return $uuid;
     }
 }
+
+
+use AporteWeb\Dashboard\Models\Gallery;
+use AporteWeb\Dashboard\Models\Multimedia;
+if (!function_exists('__storeGallery')) {
+    function __storeGallery($id = false, array $data = [], String $ref = '') {
+        $ids  = [];
+        // 
+        // Gallery
+        if ($id) {
+            $gallery = Gallery::where('id', $id)->firstOrNew();
+        } else {
+            $gallery = new Gallery;
+        }
+        $gallery->description = $ref;
+        $gallery->save();
+        if ($data && is_array($data)) {
+            foreach ($data as $key => $value) {
+                if(is_string($value)) {
+                    $ids[$value] = [ 'order' => $key ];
+                } else {
+                    $path = $value->store('public/content/' . $this->tablename . '/');
+                    $multimedia = new Multimedia;
+                    $multimedia->path          = $path;
+                    $multimedia->order         = null;
+                    $multimedia->filename      = null;
+                    $multimedia->alt           = null;
+                    $multimedia->caption       = null;
+                    $multimedia->original_name = null;
+                    $multimedia->disk          = null;
+                    $multimedia->meta_value    = null;
+                    $multimedia->save();
+                    $ids[$multimedia->id] = [ 'order' => $key ];
+                }
+            }
+            $gallery->items()->sync($ids);
+        }
+        return $gallery->id;
+    }
+}
+if (!function_exists('__getGallery')) {
+    function __getGallery($id = false) {
+        $items = [
+            'value' => []
+        ];
+        if ($id) {
+            $gallery = Gallery::find($id);
+            if ($gallery) {
+                foreach ($gallery->items as $key => $item) {
+                    $items['value'][] = [
+                        'url'  => asset(Storage::url($item->path)),
+                        'path' => $item->path,
+                        'id'   => $item->id,
+                        'type' => Storage::mimeType($item->path)
+                    ];
+                }
+            }
+        }
+        return $items;
+    }
+}
+if (!function_exists('__getFirstGallery')) {
+    function __getFirstGallery($id = false) {
+        if ($id) {
+            $gallery = Gallery::find($id);
+            if ($gallery && $gallery->items()->count()) {
+                return $gallery->items()->first()->path;
+            }
+        }
+        return null;
+    }
+}
