@@ -272,6 +272,8 @@ if (!function_exists('__storeGallery')) {
                 }
             }
             $gallery->items()->sync($ids);
+        } else {
+            $gallery->items()->sync([]);
         }
         return $gallery->id;
     }
@@ -306,5 +308,13 @@ if (!function_exists('__getFirstGallery')) {
             }
         }
         return null;
+    }
+}
+if (!function_exists('__toSql')) {
+    function __toSql($query) {
+        return vsprintf(str_replace('?', '%s', $query->toSql()), collect($query->getBindings())->map(function ($binding) {
+            $binding = addslashes($binding);
+            return is_numeric($binding) ? $binding : "'{$binding}'";
+        })->toArray());
     }
 }
