@@ -62,7 +62,16 @@ trait CrudBase {
             ->getSchemaBuilder()
             ->hasColumn($this->getTable(), 'uuid');
             if ($condition) {
-                return $this->firstWhere('uuid', $args[0]) ?? abort(404);
+                $result = $this->firstWhere('uuid', $args[0]);
+                if ($result) {
+                    return $result;
+                } else {
+                    $result = $this->firstWhere('id', $args[0]);
+                    if ($result) {
+                        return $result;
+                    }
+                }
+                abort(404);
             }
         }
 
@@ -122,6 +131,7 @@ trait CrudBase {
                     }
                     return $image;
                 }
+                /*
                 if ($input && $input->type == 'gallery') {
                     $file = Multimedia::find($this->{$input->columnname . '_id'});
                     $image = [
@@ -142,6 +152,7 @@ trait CrudBase {
                     }
                     return $image;
                 }
+                */
             }
         }
 
@@ -170,7 +181,7 @@ trait CrudBase {
                     return '';
                 }
     
-                if ($input->type == 'select') {
+                if ($input->type == 'select' || $input->type == 'select_string') {
                     if ($input->valueoriginselector == 'values') {
                         $option = array_filter(
                             $input->options,

@@ -81,14 +81,22 @@
                     ?>
                     @if ($input->type == 'select')
                         <td>{{ $item->{$input->columnname . '_rel_val'} }}</td>
+                    @elseif($input->type == 'select_string')
+                        <td>{{ $item->{$input->columnname . '_rel_val'} }}</td>
                     @elseif($input->type == 'color')
                         <td style="background-color: {{ $item->{$input->columnname} }}"></td>
                     @elseif($input->type == 'multimedia_file')
-                    @if ($item->{$input->columnname})
-                        <td><div style="background-image: url('{{ $item->{$input->columnname}['url'] }}');width: 50px;height: 50px;background-position: center;background-size: cover;background-repeat: no-repeat;margin: auto;"></div></td>
-                    @else
-                        <td></td>
-                    @endif
+                        @if ($item->{$input->columnname})
+                            <td><div style="background-image: url('{{ $item->{$input->columnname}['url'] }}');width: 50px;height: 50px;background-position: center;background-size: cover;background-repeat: no-repeat;margin: auto;"></div></td>
+                        @else
+                            <td></td>
+                        @endif
+                    @elseif($input->type == 'gallery')
+                        @if ($item->{$input->columnname})
+                            <td><div style="background-image: url('{{ asset(Storage::url(__getFirstGallery($item->{$input->columnname}))) }}');width: 50px;height: 50px;background-position: center;background-size: cover;background-repeat: no-repeat;margin: auto;"></div></td>
+                        @else
+                            <td></td>
+                        @endif
                     @elseif($input->type == 'subForm')
                         <td>{{ $item->{$input->columnname}->count() }}</td>
                     @else

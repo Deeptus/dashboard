@@ -92,6 +92,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/create', 'CrudGeneratorController@create')->name('.create');
             Route::post('/', 'CrudGeneratorController@store')->name('.store');
             Route::get ('/{id}/edit', 'CrudGeneratorController@edit')->name('.edit');
+            Route::get ('/{id}/fix',  'CrudGeneratorController@fix') ->name('.fix');
             Route::post('/{id}', 'CrudGeneratorController@update')->name('.update');
             //
             Route::get ('/{id}/delete', 'CrudGeneratorController@destroy')->name('.destroy');

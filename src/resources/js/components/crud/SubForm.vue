@@ -7,7 +7,7 @@
                     <button class="btn btn-danger" @click="removeItem(key)"><i class="fas fa-trash"></i></button>
                 </div>
                 <div class="row subform__row">
-                    <InputLayout :relations="relations" :subForm="{}" :value="item.content[input.columnname]" :input="input" v-for="(input, inputk) in subForm[input.columnname].inputs" :key="inputk"></InputLayout>
+                    <InputLayout :languages="languages" :relations="relations" :subForm="{}" :value="item.content[input.columnname]" :input="input" v-for="(input, inputk) in subForm[input.columnname].inputs" :key="inputk"></InputLayout>
                 </div>
                 <div class="subform__buttons-right">
                     <button @click="moveUp(key)" class="btn btn-warning" v-if="key > 0"><i class="fas fa-angle-up"></i></button>
@@ -43,6 +43,9 @@
             value: {
                 default: {}
             },
+            languages: {
+                default: {}
+            }
         },
         components: {
         },

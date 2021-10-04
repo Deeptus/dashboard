@@ -51,7 +51,7 @@ class CrudController extends Controller
 
         $found = false;
 
-        if ($input->type == 'select' && $input->valueoriginselector == 'table') {
+        if ( ( $input->type == 'select' || $input->type == 'select_string' ) && $input->valueoriginselector == 'table') {
             $found = true;
             $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
             if ($item) {
@@ -532,7 +532,7 @@ class CrudController extends Controller
         $new = $this->model::findByPK($id)->replicate();
         foreach ($this->inputs as $inputKey => $input) {
 
-            if ($input->type == 'select' && $input->valueoriginselector == 'table') {}
+            if ( ( $input->type == 'select' || $input->type == 'select_string' ) && $input->valueoriginselector == 'table') {}
 
             if ($input->type == 'gallery') {
                 $new->{$input->columnname} = NULL;

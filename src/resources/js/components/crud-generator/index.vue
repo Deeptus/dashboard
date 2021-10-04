@@ -227,6 +227,7 @@
                                         </optgroup>
                                         <optgroup label="Numeric">
                                             <option value="number">number</option>
+                                            <option value="decimal">decimal</option>
                                             <option value="bigInteger">bigInteger</option>
                                             <option value="money">money</option>
                                             <option value="password">password</option>
@@ -337,6 +338,18 @@
                                                 <option value="3">Never</option>
                                             </select>
                                             <label>SETTABLE IN</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md" v-if="inputParams(input).includes('precision')">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" v-model="input.precision">
+                                            <label for="floatingInput">PRECISION</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md" v-if="inputParams(input).includes('scale')">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" v-model="input.scale">
+                                            <label for="floatingInput">SCALE</label>
                                         </div>
                                     </div>
                                     <div class="col-md" v-if="inputParams(input).includes('max')">
@@ -560,6 +573,8 @@
                         let tabledata = ''
                         let tablekeycolumn = ''
                         let tabletextcolumn = ''
+                        let precision = 0
+                        let scale = 0
 
                         if (column.type == 'boolean') {
                             type = 'true_or_false'
@@ -569,6 +584,11 @@
                         }
                         if (column.type == 'bigint') {
                             type = 'bigInteger'
+                        }
+                        if (column.type == 'decimal') {
+                            type      = 'decimal'
+                            precision = column.precision
+                            scale     = column.scale
                         }
                         if (column.name.endsWith('_id') && column.type == 'bigint') {
                             type = 'select'
@@ -585,6 +605,8 @@
                                     'es': column.name
                                 },
                                 unique: 0,
+                                precision: precision,
+                                scale: scale,
                                 default: column.default, // null
                                 nullable: column.notnull ? 1 : 0, // false
                                 validate: 0,
@@ -633,6 +655,8 @@
                     type: 'text',
                     label: {},
                     unique: 0,
+                    precision: 0,
+                    scale: 0,
                     default: '',
                     nullable: 1,
                     validate: 0,
@@ -674,6 +698,9 @@
                 if (input.type == 'number') {
                     params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
+                if (input.type == 'decimal') {
+                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min', 'precision', 'scale')
+                }
                 if (input.type == 'bigInteger') {
                     params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
@@ -710,6 +737,9 @@
                     params.push('listable', 'settable', 'validate', 'label', 'nullable')
                 }
                 if (input.type == 'select') {
+                    params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
+                }
+                if (input.type == 'select_string') {
                     params.push('listable', 'settable', 'validate', 'label', 'default', 'gridcols', 'nullable', 'valueoriginselector')
                 }
                 if (input.type == 'radio') {

@@ -26,6 +26,13 @@ class GenerateCrudTables extends Migration
             $content = json_decode(file_get_contents($file->getPathname()));
             if (Schema::hasTable($content->table->tablename)) {
                 Schema::table($content->table->tablename, function (Blueprint $table) use ($content) {
+                    $data = DB::select('SHOW INDEX FROM '.$content->table->tablename);
+                    foreach ($data as $key) {
+                        if ($key->Key_name == 'PRIMARY' && $key->Column_name != 'id') {
+                            DB::statement("ALTER TABLE ".$content->table->tablename." DROP PRIMARY KEY");
+                            /*$table->unique($key->Column_name);*/
+                        }
+                    }        
                     $this->table($table, $content);
                 });
             } else {
@@ -46,6 +53,7 @@ class GenerateCrudTables extends Migration
 
     public function table($table, $content) {
         // added support double to change
+
         if (!Type::hasType('double')) {
             Type::addType('double', FloatType::class);
         }
@@ -114,6 +122,9 @@ class GenerateCrudTables extends Migration
             if($input->type == 'number') {
                 $col[] = $table->double($input->columnname);
             }
+            if($input->type == 'decimal') {
+                $col[] = $table->decimal($input->columnname, $input->precision, $input->scale);
+            }
             if($input->type == 'money') {
                 $col[] = $table->double($input->columnname);
             }
@@ -153,6 +164,9 @@ class GenerateCrudTables extends Migration
             }
             if($input->type == 'select') {
                 $col[] = $table->unsignedBigInteger($input->columnname);
+            }
+            if($input->type == 'select_string') {
+                $col[] = $table->string($input->columnname);
             }
             if($input->type == 'multimedia_file') {
                 if (Schema::hasColumn($content->table->tablename, $input->columnname)) {

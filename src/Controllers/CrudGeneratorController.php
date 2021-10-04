@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\App;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use AporteWeb\Dashboard\Generators\Generator;
@@ -20,8 +21,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class CrudGeneratorController extends Controller
 {
-    public function index()
-    {
+    public function index() {
         $dirPath = __crudFolder();
         $data = File::allFiles($dirPath);
         
@@ -30,9 +30,33 @@ class CrudGeneratorController extends Controller
             '__admin_active' => 'admin.crud-generator'
         ]);
     }
+    public function fix($tablename = false) {
+        $dirPath  = app_path('Dashboard');
+        $filePath = $dirPath . '/' . $tablename . '.json';
 
-    public function data($table = false)
-    {
+        if (file_exists($filePath)) {
+            $content    = json_decode(file_get_contents($filePath));
+            $table      = $content->table;
+            $inputs     = $content->inputs;
+            $conditions = $content->conditions;
+        }
+
+        $className = str_replace(['_', '-', '.'], ' ', $tablename);
+        $className = ucwords($className);
+        $className = str_replace(' ', '', $className);
+        $model = "\\App\\Models\\" . $className;
+        foreach ($model::get() as $key => $item) {
+            if ($item->uuid == null || $item->uuid == '') {
+                $item->uuid = __uuid();
+            }
+            if ($table->slug == 1 && ( $item->slug == null || $item->slug == '' ) ) {
+                $slug = Str::slug($item->{$table->slug_col} . ' ' . Str::random(6));
+                $item->slug = $slug;
+            }
+            $item->save();
+        }
+    }
+    public function data($table = false) {
         $languages = [];
         $content = null;
         if($table) {
@@ -51,15 +75,13 @@ class CrudGeneratorController extends Controller
         ]);
     }
 
-    public function create()
-    {
+    public function create() {
         return view('Dashboard::admin.crud-generator.create', [
             '__admin_active' => 'admin.crud-generator'
         ]);
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $dirPath = __crudFolder();
 
         $data     = json_decode($request->data);
@@ -95,21 +117,18 @@ class CrudGeneratorController extends Controller
         return redirect()->route('admin.crud-generator')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
     }
 
-    public function edit($table)
-    {
+    public function edit($table) {
         return view('Dashboard::admin.crud-generator.edit', [
             'table'          => $table,
             '__admin_active' => 'admin.crud-generator'
         ]);
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
         Group::find($id)->delete();
         return redirect()->route('admin.crud-generator')->with('success', 'Se ha eliminado un <strong>Groupo</strong> con éxito.');
     }
-    public function trash()
-    {
+    public function trash() {
         $data = Group::onlyTrashed()->get();
         return view('Dashboard::admin.crud-generator.index', [
             'data'           => $data,
@@ -132,11 +151,13 @@ class CrudGeneratorController extends Controller
         foreach ($columns as $columnName) {
             $column = Schema::getConnection()->getDoctrineColumn(request()->table, $columnName);
             $table[] = [
-                'name' => $column->getName(),
-                'notnull' => $column->getNotnull(),
-                'default' => $column->getDefault(), 
-                'type' => $column->getType()->getName(), 
-                'length' => $column->getLength()
+                'name'      => $column->getName(),
+                'notnull'   => $column->getNotnull(),
+                'default'   => $column->getDefault(), 
+                'type'      => $column->getType()->getName(), 
+                'scale'     => $column->getScale(), 
+                'precision' => $column->getPrecision(), 
+                'length'    => $column->getLength()
             ];
         }
         return $table;
