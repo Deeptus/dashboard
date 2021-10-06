@@ -29,14 +29,18 @@ if (!function_exists('__file_url')) {
 }
 
 if (!function_exists('__t')) {
-    function __t($key)
-    {
-        $item = \AporteWeb\Dashboard\Models\Translation::where('key', $key)->first();
-        if ($item) {
-            return $item->translation;
-        } else {
-            return $key;
+    function __t($key) {
+
+        $data = Cache::remember('seo', env('CACHE_DURATION', 0), function () {
+            return \AporteWeb\Dashboard\Models\Translation::get();
+        });
+        if ($data) {
+            $data = $data->where('key', $key)->first();
+            if ($data && $data->translation != '') {
+                return $data->translation;
+            }
         }
+        return $key;
     }
 }
 if (!function_exists('__active')) {
