@@ -235,6 +235,7 @@ class CrudController extends Controller
 
     public function index() {
         $appends = [];
+        $enable_create = true;
         $data = new $this->model;
         if (intval($this->table->single_record)) {
             $item = $data->first();
@@ -256,7 +257,14 @@ class CrudController extends Controller
             }
         }
         foreach ($this->conditions as $key => $condition) {
-            $data = $data->whereRaw($condition->condition);
+            if ($condition->type == 'crud_listing') {
+                $data = $data->whereRaw($condition->condition);
+            }
+            if ($condition->type == 'disable_create') {
+                if ($condition->condition == 'always') {
+                    $enable_create = false;
+                }
+            }
         }
         if (request()->has('s')) {
             $appends['s'] = request()->s;
@@ -284,6 +292,7 @@ class CrudController extends Controller
             'tablename'      => $this->tablename,
             'table'          => $this->table,
             'inputs'         => $this->inputs,
+            'enable_create'  => $enable_create,
             '__admin_active' => 'admin.crud-' . $this->tablename
         ]);
     }

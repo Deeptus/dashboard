@@ -164,20 +164,23 @@
                 <div class="card-body pb-0">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="row mb-3" v-for="( condition, conditionKey ) in conditions" :key="conditionKey">
+                            <div class="row mb-1" v-for="( condition, conditionKey ) in conditions" :key="conditionKey">
                                 <div class="col-md-3">
                                     <div class="form-floating">
                                         <select class="form-select" v-model="condition.type">
                                             <option value="crud_listing">CRUD Listing</option>
+                                            <option value="disable_create">Disable Create</option>
+                                            <option value="disable_edit">Disable Edit</option>
                                         </select>
                                         <label>Type</label>
                                     </div>
                                 </div>
-                                <div class="col-md-9">
-                                    <div class="form-floating">
+                                <div class="col-md-9 d-flex">
+                                    <div class="form-floating flex-grow-1">
                                         <input type="text" class="form-control" v-model="condition.condition">
                                         <label for="floatingInput">Condition</label>
                                     </div>
+                                    <button type="button" class="btn btn-secondary" @click="conditions.splice(conditionKey,1)"><i class="fas fa-trash fa-sm text-white-50"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -187,6 +190,14 @@
                             <i class="fas fa-plus fa-sm text-white-50"></i>
                             Add Condition
                         </button>
+                    </div>
+                    <div class="text-muted">
+                        Examples:
+                        <ul class="mb-1">
+                            <li><strong>CRUD Listing(crud_listing):</strong> `set` = -1</li>
+                            <li><strong>Disable Create(disable_create):</strong> always</li>
+                            <li><strong>Disable Edit(disable_edit):</strong> always</li>
+                        </ul>
                     </div>
                 </div>
             </div>
