@@ -109,7 +109,7 @@ trait CrudBase {
                     $className = ucwords($className);
                     $className = str_replace(' ', '', $className);
                     $subModel = "\\App\\Models\\" . $className;
-                    return $subModel::where($input->tablekeycolumn, $this->id)->get();
+                    return $subModel::where($input->tablekeycolumn, $this->id)->orderBy('order_index')->get();
                 }
                 if ($input && $input->type == 'multimedia_file') {
                     $file = Multimedia::find($this->{$input->columnname . '_id'});

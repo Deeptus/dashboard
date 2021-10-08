@@ -21,11 +21,22 @@
                 </label>
                 <p>Tamaño máximo de archivo: 2 MB.</p>
             </div>
-            <div class="file-manager__files" v-if="state == 'library'">
-                <template v-for="(file, key) in files">
-                    <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key" :style="'background-image: url(' + file.url + ')'"></div>
-                </template>
-            </div>
+            <template v-if="state == 'library'">
+                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 12px;">
+                    <div class="form-floating" style="max-width: 400px; width: 100%;">
+                        <select class="form-select" id="displayOnly" v-model="displayOnly" aria-label="Seleccione tipo de archivo">
+                            <option value="all" :key="'all'">Todos</option>
+                            <option :value="t" v-for="t in types" :key="t">{{ t }}</option>
+                        </select>
+                        <label for="displayOnly">Seleccione tipo de archivo</label>
+                    </div>
+                </div>
+                <div class="file-manager__files">
+                    <template v-for="(file, key) in files">
+                        <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id) && (displayOnly=='all' || displayOnly==file.type)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key" :style="'background-image: url(' + getPreviewImage(file) + ')'"></div>
+                    </template>
+                </div>
+            </template>
             <div class="file-manager__controls">
                 <div class="btn btn-primary" @click="selected()"><i class="fas fa-check"></i> Seleccionar</div>
             </div>
@@ -44,6 +55,8 @@
             return{
                 display: false,
                 state: 'library',
+                displayOnly: 'all',
+                types: [],
                 files: [],
                 selected_id: 0,
                 uploadingFiles: false,
@@ -55,6 +68,7 @@
             this.$nextTick(() => {
                 axios.get(this.urlData).then((response) => {
                     this.files = response.data
+                    this.types = [...new Set(this.files.map(item => item.type))]
                     this.loaded = 1
                 });
             });
@@ -87,6 +101,66 @@
                 this.display = false
                 this.selected_id = 0
                 this.returnSelected = null
+            },
+            getFileIcon(file) {
+                // Este metodo deberia encargarse se sacar las preview de imagenes y pdf
+                // Este metodo deberia ser global o una libreria independiente
+                let icon = false
+                let fileIcon = [
+                    {
+                        ext: [
+                            'application/zip',
+                            'application/x-zip-compressed'
+                        ],
+                        icon: publicPATH + '/images/icons/zip.svg'
+                    },
+                    {
+                        ext: [
+                            'application/pdf'
+                        ],
+                        icon: publicPATH + '/images/icons/pdf.svg'
+                    },
+                    {
+                        ext: [
+                            'text/csv',
+                            'text/xml',
+                            'text/plain'
+                        ],
+                        icon: publicPATH + '/images/icons/txt.svg'
+                    },
+                    {
+                        ext: [
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-excel'
+                        ],
+                        icon: publicPATH + '/images/icons/xls.svg'
+                    },
+                    {
+                        ext: [
+                            'application/msword'
+                        ],
+                        icon: publicPATH + '/images/icons/doc.svg'
+                    },
+                ]
+                fileIcon.forEach(item => {
+                    if (item.ext.includes(file.type)) {
+                        icon = item.icon
+                    }
+                });
+                return icon
+            },
+            getPreviewImage(file) {
+                // file.url
+                let imgExt = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/svg']
+                if (imgExt.includes(file.type)) {
+                    return file.url
+                }
+                return this.getFileIcon(file)
+                
+                return publicPATH + '/images/icons/raw.svg'
+                if (typeof file === 'string' || file instanceof String) {
+                    return this.storage_path(file)
+                }
             },
             selected() {
                 if (this.selected_id != 0) {

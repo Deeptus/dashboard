@@ -1,5 +1,5 @@
 <template>
-    <fieldset class="mb-3">
+    <fieldset class="mb-3" v-if="display">
         <legend>{{ input.label[this.lang()] }}:</legend>
         <div v-for="(item, key) in items" :key="key">
             <div class="subform">
@@ -51,6 +51,7 @@
         },
         data(){
             return{
+                display: true,
                 items: [],
                 inputs: []
             }
@@ -112,22 +113,37 @@
                 }
                 this.inputs.forEach(input => {
                     newItem.content[input.columnname] = {}
-                    this.$set(newItem.content[input.columnname], 'value', input.default)
+                    if (input.type == 'multimedia_file') {
+                        this.$set(newItem.content[input.columnname], 'value', {
+                            // id: 0,
+                            path: '',
+                            type: '',
+                            url: ''
+                        })
+                    } else {
+                        this.$set(newItem.content[input.columnname], 'value', input.default)
+                    }
                     this.$set(newItem.content[input.columnname], 'errors', [])
                 });
                 if ( !Array.isArray(this.items) ) {
                     this.items = []
                 }
                 this.items.push(newItem)
+                console.log(this.items)
             },
             removeItem(index) {
                 this.items.splice(index, 1)
             },
             move(array, index, delta) {
-                var newIndex = index + delta;
-                if (newIndex < 0 || newIndex == array.length) return; //Already at the top or bottom.
-                var indexes = [index, newIndex].sort((a, b) => a - b); //Sort the indixes (fixed)
-                array.splice(indexes[0], 2, array[indexes[1]], array[indexes[0]]); //Replace from lowest index, two elements, reverting the order
+                this.display = false
+                this.$nextTick().then(() => {
+                    var newIndex = index + delta;
+                    if (newIndex < 0 || newIndex == array.length) return; //Already at the top or bottom.
+                    var indexes = [index, newIndex].sort((a, b) => a - b); //Sort the indixes (fixed)
+                    array.splice(indexes[0], 2, array[indexes[1]], array[indexes[0]]); //Replace from lowest index, two elements, reverting the order
+
+                    this.display = true
+                });
             },
             moveUp(index) {
                 this.move(this.items, index, -1);
