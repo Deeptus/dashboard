@@ -160,7 +160,7 @@ class CrudController extends Controller
                                         'url'  => asset(Storage::url($file->path)),
                                         'path' => $file->path,
                                         'id'   => $file->id,
-                                        'type' => Storage::mimeType($file->path)
+                                        'type' => Storage::exists($file->path)?Storage::mimeType($file->path):null
                                     ];
                                 }                    
                             }
