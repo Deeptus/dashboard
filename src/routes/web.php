@@ -12,6 +12,12 @@
 */
 
 Route::group([
+    'prefix' => 'contact',
+    'as' => 'contact',
+], function() {
+    Route::post('/submit', 'ContactController@submit')->name('.submit');
+});
+Route::group([
     'prefix'     => config('adashboard.prefix', 'adm'),
 ], function() {
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -77,6 +83,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::post('save', 'HomeworkController@save')->name('.save');
             Route::post('find', 'HomeworkController@find')->name('.find');
         });
+    
         Route::group([
             'prefix' => 'api/notification',
             'as' => '.notification',
@@ -121,7 +128,17 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/{tablename}/api/data/{id?}', 'CrudController@data')->name('.data');
             Route::get ('/{tablename}/{id}/copy', 'CrudController@copy')->name('.copy');
         });
-
+        Route::group([
+            'prefix' => 'contact',
+            'as' => '.contact',
+        ], function() {
+            Route::get ('/{type}/',             'ContactController@index');
+            Route::get ('/{type}/{id}/view',    'ContactController@show')->name('.show');
+            //
+            Route::get ('/{type}/{id}/delete',  'ContactController@destroy')->name('.destroy');
+            Route::get ('/{type}/trash',        'ContactController@trash')  ->name('.trash');
+            Route::get ('/{type}/{id}/restore', 'ContactController@restore')->name('.restore');
+        });
         Route::group([
             'prefix' => 'user',
             'as' => '.user',
