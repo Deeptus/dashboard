@@ -49,14 +49,14 @@ class ContactController extends Controller {
         return view('Dashboard::admin.contact.index', [
             'data'           => $data,
             'type'           => $type,
-            '__admin_active' => 'admin.grupo'
+            '__admin_active' => 'admin.contact-'.$type
         ]);
     }
-    public function show() {
-        $data = Group::get();
+    public function show($type, $uuid) {
+        $message = ContactRequest::where('type', $type)->where('uuid', $uuid)->first();
         return view('Dashboard::admin.contact.show', [
-            'data'           => $data,
-            '__admin_active' => 'admin.grupo'
+            'message'           => $message,
+            '__admin_active' => 'admin.contact-'.$type
         ]);
     }
 }

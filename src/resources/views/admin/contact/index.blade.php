@@ -52,17 +52,23 @@
 
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-12 col-md-12 mb-12">
-        <table class="table table-striped table-bordered display">
+        <table class="table table-striped table-bordered display table-layout-fixed">
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Empresa</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($data as $item)
                 <tr>
-                    <td>{{ $item->name }}</td>
+                    <td><a href="{{ route('admin.contact.show', ['type' => $item->type, 'id' => $item->uuid]) }}">{{ $item->name }}</a></td>
                     <td>{{ $item->company }}</td>
+                    <td>{{ $item->phone }}</td>
+                    <td>{{ $item->email }}</td>
+                    {{--
                     <td>
                         @if (!$item->trashed())
                         <a href="{{ route('admin.contact.show', ['type' => $item->type, 'id' => $item->uuid]) }}" class="btn btn-primary btn-sm">
@@ -80,6 +86,7 @@
                         </a>
                         @endif
                     </td>
+                    --}}
                 </tr>
                 @endforeach
             </tbody>
