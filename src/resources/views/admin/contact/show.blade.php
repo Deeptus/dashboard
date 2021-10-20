@@ -54,4 +54,20 @@
     </tbody>
 </table>
 @endif
+@if ($message->files && count($message->files))
+<table class="table align-middle table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Archivo adjunto</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($message->files as $item)
+        <tr>
+            <td><i class="fas fa-paperclip"></i> <a href="{{ asset(Storage::url($item->path)) }}" target="_blank">{{ $item->original_name }}</a></td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+@endif
 @endsection

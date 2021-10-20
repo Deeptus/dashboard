@@ -44,4 +44,7 @@ class ContactRequest extends Model {
     public function items() {
         return $this->hasMany(ContactRequestItems::class, 'contact_request_id', 'id');
     }
+    public function files() {
+        return $this->hasMany(ContactRequestFile::class, 'contact_request_id', 'id');
+    }
 }

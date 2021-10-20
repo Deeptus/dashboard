@@ -1,7 +1,12 @@
 <template>
     <div class="row">
-        <contact-message :form="form" v-if="type == 'contact-message'"></contact-message>
-        <budget :form="form" v-if="type == 'budget'"></budget>
+        <template v-if="form.state == null">
+            <contact-message :form="form" v-if="type == 'contact-message'"></contact-message>
+            <budget :form="form" v-if="type == 'budget'"></budget>
+        </template>
+        <div class="col-md-12" v-else>
+            <state :componentState="form.state"></state>
+        </div>
     </div>
 </template>
 
@@ -9,6 +14,7 @@
     import InputText from './inputs/text.vue'
     import ContactMessage from './ContactMessage.vue'
     import Budget from './Budget.vue'
+    import State from './State.vue'
     export default {
         props: {
             endpoint: {},
@@ -17,9 +23,10 @@
             },
         },
         components: {
+            'state': State,
             'input-text': InputText,
             'contact-message': ContactMessage,
-            'budget': Budget
+            'budget': Budget,
         },
         data(){
             return {
@@ -69,6 +76,10 @@
                         },
                         accept_conditions: {
                             value: '',
+                            disabled: false
+                        },
+                        files: {
+                            value: [],
                             disabled: false
                         },
                     },
@@ -186,10 +197,16 @@
                 formData.append('type',            this.type);
                 formData.append('recaptcha_token', this.form.recaptcha_token);
                 formData.append('cart',            JSON.stringify(this.form.cart));
-
+                if (this.form.inputs.files.value.length) {
+                    this.form.inputs.files.value.forEach((file, key) => {
+                        if (file && file instanceof File) {
+                            formData.append('files['+key+']', file);
+                        }
+                    })
+                }
                 axios.post(this.endpoint + '/contact/submit', formData).then((response) => {
-                    this.form.state = null
                     setTimeout(function(){
+                        this.form.state = 'message-sent'
                        // window.location.href = this.urlBack
                     }.bind(this), 1000)
                 })

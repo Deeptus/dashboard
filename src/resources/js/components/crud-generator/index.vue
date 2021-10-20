@@ -201,6 +201,32 @@
                     </div>
                 </div>
             </div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    Data Export
+                </div>
+                <div class="card-body pb-0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3" v-for="(f, key) in available_formats" :key="key">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-text">
+                                            <input
+                                            type="checkbox"
+                                            v-bind:value="f.format"
+                                            v-model="data_export.formats"
+                                            :id="'data_export-'+f.format"
+                                            >
+                                        </div>
+                                        <label :for="'data_export-'+f.format" class="form-control">{{ f.label }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <fieldset class="mt-3">
                 <legend>Inputs:</legend>
                 <div class="card mt-3" v-for="( input, inputKey ) in inputs" :key="inputKey">
@@ -331,7 +357,7 @@
                                             <label>NULLABLE</label>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="inputParams(input).includes('translatable')">
+                                    <div class="col-md" v-if="inputParams(input).includes('translatable') && table.translation_method != 'none'">
                                         <div class="form-floating">
                                             <select class="form-select" v-model="input.translatable">
                                                 <option value="0">No</option>
@@ -509,6 +535,15 @@
                 },
                 inputs: [],
                 conditions: [],
+                data_export: {
+                    formats: []
+                },
+                available_formats: [
+                    { format: 'xls', label: 'Excel (.xls)'},
+                    { format: 'xlsx', label: 'Excel (.xlsx)'},
+                    { format: 'csv', label: 'Texto (.csv)'},
+                    { format: 'pdf', label: 'PDF (.pdf)'}
+                ],
                 loaded: 0
             }
         },

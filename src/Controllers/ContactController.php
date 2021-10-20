@@ -16,6 +16,8 @@ use AporteWeb\Dashboard\Models\Gallery;
 use AporteWeb\Dashboard\Models\Multimedia;
 use \App\Models\CompanyData;
 use AporteWeb\Dashboard\Models\ContactRequest;
+use AporteWeb\Dashboard\Models\ContactRequestItems;
+use AporteWeb\Dashboard\Models\ContactRequestFile;
 use Illuminate\Support\Facades\Mail;
 use AporteWeb\Dashboard\Mail\ContactMessageMail;
 
@@ -41,11 +43,21 @@ class ContactController extends Controller {
             if (count($cart) && request()->type == 'budget') {
                 $message->items()->createMany($cart);
             }
-            Mail::to($config->email_system)->send(new ContactMessageMail(request()->all(), $cart));
+            $uploads = [];
+            if(request()->has('files')){
+                foreach (request()->file('files') as $key => $file) {
+                    $uploads[] = [
+                        'path'          => $file->store('public/public-uploads'),
+                        'original_name' => $file->getClientOriginalName()
+                    ];
+                }
+                $message->files()->createMany($uploads);
+            }
+            Mail::to($config->email_system)->send(new ContactMessageMail(request()->all(), $cart, $uploads));
         }
     }
     public function index($type) {
-        $data = ContactRequest::where('type', $type)->paginate(20);
+        $data = ContactRequest::where('type', $type)->orderBy('id', 'DESC')->paginate(20);
         return view('Dashboard::admin.contact.index', [
             'data'           => $data,
             'type'           => $type,

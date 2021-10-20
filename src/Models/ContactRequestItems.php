@@ -32,7 +32,7 @@ class ContactRequestItems extends Model {
     public static function boot() {
         parent::boot();
         self::creating(function ($model) {
-            if (Schema::hasColumn('contact_request', 'uuid')) {
+            if (Schema::hasColumn('contact_request_items', 'uuid')) {
                 $model->uuid = __uuid();
             }    
         });

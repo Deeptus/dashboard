@@ -14,15 +14,17 @@ class ContactMessageMail extends Mailable
 
     protected $data;
     protected $cart;
+    protected $uploads;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $cart)
+    public function __construct($data, $cart, $uploads)
     {
         $this->data = $data;
         $this->cart = $cart;
+        $this->uploads = $uploads;
     }
 
     /**
@@ -44,9 +46,11 @@ class ContactMessageMail extends Mailable
         if ($this->data['type'] == 'contact-message') {
             $email = $email->subject('Mensaje de contacto');
         }
-        /*foreach ($this->purchase->attached as $file) {
-            $email = $email->attach(public_path() . '/' . Storage::url($file));
-        }*/
+        foreach ($this->uploads as $key => $file) {
+            $email = $email->attach(public_path() . '/' . Storage::url($file['path']), [
+                'as' => $file['original_name']
+            ]);
+        }
         return $email;
     }
 }

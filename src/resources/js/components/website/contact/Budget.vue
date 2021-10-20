@@ -42,6 +42,10 @@
         <div :class="'offset-md-2 col-md-10'">
             <div class="row">
                 <form-contact-request-input-text class="col-md-12 mb-3" type="textarea" :input="form.inputs.message"></form-contact-request-input-text>
+                <div class="col-md-12 mb-3">
+                    <label for="formFile" class="form-label m-0">Examinar Archivo </label>
+                    <input class="form-control" type="file" id="formFile" @change="selectFile($event)">
+                </div>
             </div>
             <div class="row" v-if="form.cart.length">
                 <div class="col-md-12">
@@ -89,6 +93,7 @@
 </div>
 </template>
 <script>
+    import Swal from 'sweetalert2'
     export default {
         props: {
             form: {
@@ -111,6 +116,76 @@
             this.$nextTick(() => {});
         },
         methods: {
+            selectFile(event) {
+                const file = event.target.files[0]
+                const maxSize = 1.1 * 1024 * 1000
+                if (file.size > maxSize) {
+                    event.target.value = ""
+                    this.form.inputs.files.value = []
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'El tamaño del archivo excede el maximo permitido',
+                        html: 'El archivo no puede exeder a <strong>1mb</strong>',
+                    })
+                    return true
+                }
+                const types = [
+                    {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        ext: 'xlsx',
+                        description: 'Excel'
+                    },
+                    {
+                        type: 'application/vnd.ms-excel',
+                        ext: 'xls',
+                        description: 'Excel'
+                    },
+                    {
+                        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        ext: 'docx',
+                        description: 'Word'
+                    },
+                    {
+                        type: 'application/msword',
+                        ext: 'doc',
+                        description: 'Word'
+                    },
+                    {
+                        type: 'application/pdf',
+                        ext: 'pdf',
+                        description: 'PDF'
+                    },
+                    {
+                        type: 'image/png',
+                        ext: 'png',
+                        description: 'Imagen'
+                    },
+                    {
+                        type: 'image/jpeg',
+                        ext: 'jpeg',
+                        description: 'Imagen'
+                    },
+                ]
+                let formatValid = false
+                let formatErrorMessage = []
+                types.forEach(t => {
+                    formatErrorMessage.push('<strong>' + t.description + '</strong>(.' + t.ext + ')')
+                    if (file.type == t.type) {
+                        formatValid = true
+                    }
+                })
+                if (!formatValid) {
+                    event.target.value = ""
+                    this.form.inputs.files.value = []
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'El archivo seleccionado no es de formato valido',
+                        html: 'Puede subir cualquiera de los siguientes formatos: ' + formatErrorMessage.join(', '),
+                    })
+                    return true
+                }
+                this.form.inputs.files.value = [ file ]
+            },
             goStep2() {
                 this.step1 = 'gray'
                 this.step = 2
