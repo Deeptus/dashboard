@@ -85,7 +85,7 @@ if (!function_exists('__meta')) {
                 return $meta->{$key};
             }
         }
-        return null;
+        return '';
     }
 }
 
