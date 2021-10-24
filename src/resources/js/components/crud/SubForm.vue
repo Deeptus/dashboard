@@ -3,8 +3,9 @@
         <legend>{{ input.label[this.lang()] }}:</legend>
         <div v-for="(item, key) in items" :key="key">
             <div class="subform">
-                <div class="subform__buttons-left">
-                    <button class="btn btn-danger" @click="removeItem(key)"><i class="fas fa-trash"></i></button>
+                <div class="subform__buttons-left d-flex flex-column">
+                    <button class="btn btn-danger my-1" @click="removeItem(key)"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-warning my-1" @click="copyItem(key)"><i class="fas fa-copy"></i></button>
                 </div>
                 <div class="row subform__row">
                     <InputLayout :languages="languages" :relations="relations" :subForm="{}" :value="item.content[input.columnname]" :input="input" v-for="(input, inputk) in subForm[input.columnname].inputs" :key="inputk"></InputLayout>
@@ -133,6 +134,11 @@
             },
             removeItem(index) {
                 this.items.splice(index, 1)
+            },
+            copyItem(index) {
+                let newItem = JSON.parse(JSON.stringify(this.items[index]))
+                delete newItem.content.id
+                this.items.splice(index + 1, 0, newItem)
             },
             move(array, index, delta) {
                 this.display = false
