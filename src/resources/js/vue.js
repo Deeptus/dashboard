@@ -33,6 +33,8 @@ Vue.component('awesome-modal', require('./components/awesome-modal').default);
 
 Vue.component('input-switch', require('./components/crud/InputSwitch.vue').default);
 
+Vue.component('email-layout-form', require('./components/EmailLayoutFormComponent.vue').default);
+
 window.aa = () => {
     return window.vueApp.$root.$refs['awesome-alert']
 }

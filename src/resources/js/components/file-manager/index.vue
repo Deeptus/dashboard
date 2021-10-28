@@ -33,7 +33,9 @@
                 </div>
                 <div class="file-manager__files">
                     <template v-for="(file, key) in files">
-                        <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id) && (displayOnly=='all' || displayOnly==file.type)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key" :style="'background-image: url(' + getPreviewImage(file) + ')'"></div>
+                        <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id) && (displayOnly=='all' || displayOnly==file.type)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key" :style="'background-image: url(' + getPreviewImage(file) + ')'">
+                            <div class="file-manager__details" @click="details(file, $event)">Detalles</div>
+                        </div>
                     </template>
                 </div>
             </template>
@@ -49,6 +51,7 @@
 </template>
 <script>
     var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
+    import Details from './details.vue';
     export default {
         props: [ 'urlData' ],
         data(){
@@ -101,6 +104,10 @@
                 this.display = false
                 this.selected_id = 0
                 this.returnSelected = null
+            },
+            details(file, event) {
+                event.stopPropagation()
+                am().openModal(Details,{ file })
             },
             getFileIcon(file) {
                 // Este metodo deberia encargarse se sacar las preview de imagenes y pdf
@@ -333,6 +340,14 @@
                 width: 100%;
                 display: block;
             }
+        }
+        &__details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            padding: 5px 15px;
+            background-color: #0073aa;
+            color: #FFF;
         }
         &__controls {
             display: flex;

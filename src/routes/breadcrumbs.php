@@ -203,3 +203,29 @@ Breadcrumbs::for('admin.multimedia.trash', function ($trail) {
 	$trail->parent('admin.multimedia');
 	$trail->push('Papelera', route('admin.multimedia.trash'));
 });
+
+
+
+
+//*************************************************************//
+
+// Panel > Email Layouts
+Breadcrumbs::for('admin.email-layout', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Email Layouts', route('admin.email-layout'));
+});
+// Panel > Email Layouts > Añadir
+Breadcrumbs::for('admin.email-layout.create', function ($trail) {
+    $trail->parent('admin.email-layout');
+    $trail->push('Añadir', route('admin.email-layout.create'));
+});
+// Panel > Email Layouts > Editar
+Breadcrumbs::for('admin.email-layout.edit', function ($trail, $element) {
+    $trail->parent('admin.email-layout');
+    $trail->push('Editar', route('admin.email-layout'));
+});
+// Panel > Email Layouts > Papelera
+Breadcrumbs::for('admin.email-layout.trash', function ($trail) {
+    $trail->parent('admin.email-layout');
+    $trail->push('Papelera', route('admin.email-layout.trash'));
+});

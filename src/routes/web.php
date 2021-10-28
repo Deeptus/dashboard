@@ -83,7 +83,23 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::post('save', 'HomeworkController@save')->name('.save');
             Route::post('find', 'HomeworkController@find')->name('.find');
         });
-    
+        Route::group([
+            'prefix' => 'email-layout',
+            'as' => '.email-layout',
+        ], function() {
+            Route::get ('/', 'EmailLayoutController@index');
+            Route::get ('/create', 'EmailLayoutController@create')->name('.create');
+            Route::post('/', 'EmailLayoutController@store')->name('.store');
+            Route::get ('/{id}/edit', 'EmailLayoutController@edit')->name('.edit');
+            Route::post('/{id?}', 'EmailLayoutController@store')->name('.update');
+            //
+            Route::get ('/{id}/delete', 'EmailLayoutController@destroy')->name('.destroy');
+            Route::get ('/trash', 'EmailLayoutController@trash')->name('.trash');
+            Route::get ('/{id}/restore', 'EmailLayoutController@restore')->name('.restore');
+        
+            Route::get ('/api/data/{id?}', 'EmailLayoutController@data')->name('.data');
+            Route::get ('/{id}/copy', 'EmailLayoutController@copy')->name('.copy');
+        });        
         Route::group([
             'prefix' => 'api/notification',
             'as' => '.notification',

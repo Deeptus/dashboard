@@ -322,3 +322,31 @@ if (!function_exists('__toSql')) {
         })->toArray());
     }
 }
+
+use Illuminate\Support\Facades\Mail;
+use \Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use \AporteWeb\Dashboard\Models\EmailLayout;
+use AporteWeb\Dashboard\Mail\Base AS BaseMail;
+
+if (! function_exists('__send_mail')) {
+    /**
+     * Generate Title for table filter.
+     *
+     * @param  object  $item
+     * @param  string  $metaKey
+     * @return string
+     */
+    function __send_mail($layout_key, $mail, $to, $data, $components, $lang = 'default')
+    {
+    	if ($lang == 'default') {
+        	$lang = LaravelLocalization::getCurrentLocale();
+    	}
+        $layout = EmailLayout::where('key', $layout_key . '_' . $lang)->first();
+
+    	$mails = [
+    		'base' => new BaseMail($layout, $data, $components),
+    	];
+    	
+        Mail::to($to)->send($mails[$mail]);
+    }
+}
