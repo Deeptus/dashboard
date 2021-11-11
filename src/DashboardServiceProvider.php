@@ -88,31 +88,6 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             $bar = $this->output->createProgressBar(count($actions));
 
             $bar->start();
-            if (in_array('key:generate', $actions)) {
-                Artisan::call('key:generate');
-                $bar->advance();
-            }
-            if (in_array('storage:link', $actions)) {
-                Artisan::call('storage:link');
-                $bar->advance();
-            }
-            if (in_array('migrate:fresh', $actions)) {
-                Artisan::call('migrate:fresh', [
-                    '--seed' => true
-                ]);
-                $bar->advance();
-            }
-            if (in_array('Create default admin user', $actions)) {
-                DB::table('users')->insert([
-                    'uuid'     => __uuid(),
-                    'name'     => 'Administrador',
-                    'username' => 'admin',
-                    'email'    => 'admin@local.test',
-                    'password' => bcrypt('admin'),
-                    'root'     => 1,
-                ]);
-                $bar->advance();
-            }
             // get content package.json file
             if (in_array('Install package.json', $actions)) {
                 $path = base_path('package.json');
@@ -153,14 +128,43 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                 }
                 // Copy folder
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/Controllers " . app_path('Http'));
+                shell_exec("cp -r " . __DIR__ . "/Generators/templates/Models " . app_path('/'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/resources/views " . resource_path('/'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/public/* " . public_path('/'));
+                shell_exec("cp -r " . __DIR__ . "/Generators/templates/routes " . base_path('/'));
                 shell_exec("chmod -R 777 " . base_path('/'));
                 file_put_contents(base_path('/routes/admin.php'), '<?php');
                 file_put_contents(base_path('/routes/client.php'), '<?php');
                 $bar->advance();
             }
-                          
+
+
+            if (in_array('key:generate', $actions)) {
+                Artisan::call('key:generate');
+                $bar->advance();
+            }
+            if (in_array('storage:link', $actions)) {
+                Artisan::call('storage:link');
+                $bar->advance();
+            }
+            if (in_array('migrate:fresh', $actions)) {
+                Artisan::call('migrate:fresh', [
+                    '--seed' => true
+                ]);
+                $bar->advance();
+            }
+            if (in_array('Create default admin user', $actions)) {
+                DB::table('users')->insert([
+                    'uuid'     => __uuid(),
+                    'name'     => 'Administrador',
+                    'username' => 'admin',
+                    'email'    => 'admin@local.test',
+                    'password' => bcrypt('admin'),
+                    'root'     => 1,
+                ]);
+                $bar->advance();
+            }
+
             $bar->finish();
             $this->info("\nSe ejecutaron las migraciones, seeders y se creo el usuario admin!");
         });
