@@ -142,6 +142,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                     __DIR__ . '/Generators/templates/resources/sass/sections/.keep' => resource_path('sass/sections/.keep'),
                     __DIR__ . '/Generators/templates/webpack.mix.js' => base_path('webpack.mix.js'),
                     __DIR__ . '/Generators/templates/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
+                    __DIR__ . '/Generators/templates/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
                     __DIR__ . '/Generators/templates/config/auth.php' => config_path('auth.php'),
                 ];
                 foreach ($paths as $path => $destination) {
@@ -151,10 +152,12 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                     copy($path, $destination);
                 }
                 // Copy folder
+                shell_exec("cp -r " . __DIR__ . "/Generators/templates/Controllers " . app_path('Http'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/resources/views " . resource_path('/'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/public/* " . public_path('/'));
                 shell_exec("chmod -R 777 " . base_path('/'));
                 file_put_contents(base_path('/routes/admin.php'), '<?php');
+                file_put_contents(base_path('/routes/client.php'), '<?php');
                 $bar->advance();
             }
                           
