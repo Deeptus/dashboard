@@ -350,3 +350,36 @@ if (! function_exists('__send_mail')) {
         Mail::to($to)->send($mails[$mail]);
     }
 }
+
+use Jenssegers\Date\Date;
+if (! function_exists('__tableContentEval')) {
+    /**
+     * Generate Title for table filter.
+     *
+     * @param  string  $content
+     * @return string
+     */
+    function __tableContentEval($content) {
+        // search string __table_name__column_name__ and replace with column value
+        // Example: __company_data__ultima_actualizacion_cte__
+        $pattern = '/__(.*?)__(.*?)__/';
+        $replace = function ($match) {
+            $table = $match[1];
+            $column = $match[2];
+            $value = '';
+            if (Schema::hasTable($table)) {
+                if (Schema::hasColumn($table, $column)) {
+                    // Check column type
+                    $value = DB::table($table)->first()->$column;
+                    $type = Schema::getColumnType($table, $column);
+                    if ($type == 'datetime') {
+                        // Format: miércoles, 03 de noviembre del 2021 a las 12:00 pm
+                        $value = (new Date($value))->format('l, d \d\e F \d\e\l Y \a \l\a\s h:i a');
+                    }
+                }
+            }
+            return $value;
+        };
+        return preg_replace_callback($pattern, $replace, $content);
+    }
+}

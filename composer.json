@@ -12,7 +12,7 @@
         "doctrine/dbal": "^3.1",
         "diglactic/laravel-breadcrumbs": "7.x",
         "mcamara/laravel-localization": "^1.6",
-        "phpoffice/phpspreadsheet": "^1.18",
+        "phpoffice/phpspreadsheet": "^1.19",
         "mateusjunges/laravel-acl": "^3.0",
         "spatie/laravel-translatable": "^4.6",
         "barryvdh/laravel-debugbar": "^3.6",
@@ -20,7 +20,10 @@
         "webpatser/laravel-uuid": "^4.0",
         "jenssegers/date": "^4.0",
         "fabpot/goutte": "^4.0",
-        "guzzlehttp/guzzle": "^7.3"
+        "guzzlehttp/guzzle": "^7.3",
+        "laravel/ui": "^3.1",
+        "orangehill/iseed": "^3.0",
+        "aporteweb/console-select": "dev-master"
     },
     "autoload": {
         "files": [

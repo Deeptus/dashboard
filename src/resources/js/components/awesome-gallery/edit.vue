@@ -6,13 +6,13 @@
         <div class="awesome-modal__body py-2">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-floating mb-2">
+                    <div class="form-floating mb-2" v-if="enableEdit.original_name == true">
                         <input type="text" class="form-control" v-model="original_name">
                         <label for="floatingInput">Nombre del Archivo</label>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="form-floating">
+                    <div class="form-floating" v-if="enableEdit.caption == true">
                         <textarea class="form-control" style="height: 100px" v-model="caption"></textarea>
                         <label for="floatingTextarea2">Observación</label>
                     </div>
@@ -30,7 +30,8 @@
 export default {
     props: {
         componentCallback: {},
-        item: {}
+        item: {},
+        enableEdit: {}
     },
     data() {
         return {

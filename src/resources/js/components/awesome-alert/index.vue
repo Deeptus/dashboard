@@ -3,6 +3,9 @@
         <div class="awesome-alert__container">
             <div class="awesome-alert__icon"><i :class="icon" :style="'color: ' + iconColor"></i></div>
             <div class="awesome-alert__title" v-html="title"></div>
+            <div class="awesome-alert__buttons">
+                <button class="awesome-alert__button" v-for="(button, key) in buttons" :key="key" :class="button.class" @click="btnClick(button)" v-html="button.text"></button>
+            </div>
         </div>
     </div>
 </template>
@@ -15,21 +18,57 @@ export default {
             icon: '',
             iconColor: '',
             display: false,
-            interval: false
+            interval: false,
+            closeTimeout: false,
+            buttons: [],
+            e: { componentCallback: {} }
         }
     },
     methods: {
         /*
-        example for buttons:
+        * Example call:
+        aa().open({style: 'success', title: 'Alert Text', buttons: [
             {
                 text: "OK",
-                value: true,
+                value: '19',
                 visible: true,
-                className: "",
+                class: "btn-primary",
+                closeModal: true
+            },
+            {
+                text: "SIUEEE",
+                value: '13',
+                visible: true,
+                class: "btn-danger",
                 closeModal: true
             }
+        ] })
+        .then(response => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error)
+        })
         */
         open({ style = '', icon = '', iconColor = '', title = '', buttons = [], sleep = false }) {
+            this.e.componentCallback.promise = new Promise((resolve, reject) => {
+                Object.assign(this.e.componentCallback, { resolve, reject })
+            })
+
+            /*
+            example for buttons:
+                {
+                    text: "OK",
+                    value: true,
+                    visible: true,
+                    class: "",
+                    closeModal: true,
+                    action: () => {
+                        // this.close()
+                    }
+                }
+            */
+            this.buttons = buttons;
             const styles = [
                 {
                     slug: 'loading',
@@ -84,9 +123,22 @@ export default {
             this.iconColor = iconColor
             this.display = true
             if (sleep) {
-                setTimeout(() => {
+                clearTimeout(this.closeTimeout)
+                this.closeTimeout = setTimeout(() => {
                     this.close()
                 }, sleep)
+            } else {
+                clearTimeout(this.closeTimeout)
+            }
+            return this.e.componentCallback.promise
+        },
+        btnClick(button) {
+            if (button.closeModal) {
+                this.e.componentCallback.resolve(button.value)
+                this.close()
+            }
+            if (button.action) {
+                button.action()
             }
         },
         close() {
@@ -120,12 +172,27 @@ export default {
             justify-content: center;
             align-items: center;
             flex-direction: column;
+        }
+        &__icon {
             font-size: 44px;
         }
         &__title {
             font-size: 30px;
             text-align: center;
             line-height: 33px;
+        }
+        &__buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            margin-top: 5px;
+            width: 100%;
+            flex-wrap: wrap;
+            padding: 0 15px;
+        }
+        &__button {
+            margin: 2.5px;
         }
     }
 </style>

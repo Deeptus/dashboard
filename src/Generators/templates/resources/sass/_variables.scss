@@ -1,0 +1,26 @@
+:root {
+    // Fonts
+    --raleway: font-family: 'Raleway', sans-serif;
+    --roboto: 'Roboto', sans-serif;
+    --montserrat: 'Montserrat', sans-serif;
+    // Colors
+    --darkgray: #1D1D1A;
+    --gray: #707070;
+    --gray-alpha: #7070702B;
+    --orange: #FA9B26;
+    --blue: #002395;
+    --darkblue: #1371a0;
+    --green: #0DC143;
+    --darkpink: #D4499A;
+    --darkpink-alpha: #D4499A2B;
+    --primary: #002395;
+}
+
+$font-family-sans-serif: 'Roboto', sans-serif;
+$body-color: #707070;
+$primary: #002395;
+/*
+$theme-colors: (
+  "primary": $primary,
+);
+*/

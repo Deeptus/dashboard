@@ -2,7 +2,7 @@
     <div :class="getClass(input)" v-if="input.settable == 0">
         <InputText :value="value" :input="input" v-if="layout[input.type] == 'basic'" :languages="languages"></InputText>
         <InputColor :value="value" :input="input" v-if="layout[input.type] == 'color'"></InputColor>
-        <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'"></InputDate>
+        <InputDate :value="value" :input="input" v-if="layout[input.type] == 'date'" :languages="languages"></InputDate>
         <InputSelect :relations="relations" :value="value" :input="input" v-if="layout[input.type] == 'select'"></InputSelect>
         <SubForm :languages="languages" :relations="relations" :value="value" :subForm="subForm" :input="input" v-if="layout[input.type] == 'subForm'"></SubForm>
         <CustomGallery :useFileManager="true" :label="input.label[lang()]" :model.sync="value" v-if="input.type == 'gallery'"></CustomGallery>

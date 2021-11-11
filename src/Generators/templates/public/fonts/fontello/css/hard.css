@@ -1,0 +1,93 @@
+@font-face {
+  font-family: 'hard';
+  src: url('../font/hard.eot?39258211');
+  src: url('../font/hard.eot?39258211#iefix') format('embedded-opentype'),
+       url('../font/hard.woff2?39258211') format('woff2'),
+       url('../font/hard.woff?39258211') format('woff'),
+       url('../font/hard.ttf?39258211') format('truetype'),
+       url('../font/hard.svg?39258211#hard') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'hard';
+    src: url('../font/hard.svg?39258211#hard') format('svg');
+  }
+}
+*/
+ 
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "hard";
+  font-style: normal;
+  font-weight: normal;
+  speak: never;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
+.icon-cash-register:before { content: '\e800'; } /* '' */
+.icon-cash-register2:before { content: '\e801'; } /* '' */
+.icon-cash-register3:before { content: '\e802'; } /* '' */
+.icon-cinema-ticket-window:before { content: '\e803'; } /* '' */
+.icon-aerofalcon:before { content: '\e804'; } /* '' */
+.icon-aerofalcon-outline:before { content: '\e805'; } /* '' */
+.icon-tools:before { content: '\e806'; } /* '' */
+.icon-nutrition-coaching:before { content: '\e807'; } /* '' */
+.icon-graph-up:before { content: '\e808'; } /* '' */
+.icon-personal-trainer:before { content: '\e809'; } /* '' */
+.icon-personal-training-equipment:before { content: '\e80a'; } /* '' */
+.icon-private-personal:before { content: '\e80b'; } /* '' */
+.icon-customer:before { content: '\e80c'; } /* '' */
+.icon-maps-and-flags:before { content: '\e80d'; } /* '' */
+.icon-telephone:before { content: '\e80e'; } /* '' */
+.icon-iconmonstr-product-7:before { content: '\e80f'; } /* '' */
+.icon-budget:before { content: '\e810'; } /* '' */
+.icon-iconmonstr-product-11:before { content: '\e811'; } /* '' */
+.icon-budget-3:before { content: '\e812'; } /* '' */
+.icon-budget-2:before { content: '\e814'; } /* '' */
+.icon-packages-transportation-on-a-truck:before { content: '\e815'; } /* '' */
+.icon-download-button:before { content: '\e819'; } /* '' */
+.icon-truck-time:before { content: '\e81a'; } /* '' */
+.icon-truck-driver:before { content: '\e81b'; } /* '' */
+.icon-truck-driver-2:before { content: '\e81c'; } /* '' */
+.icon-drum-container:before { content: '\e81e'; } /* '' */
+.icon-home-button:before { content: '\e81f'; } /* '' */
+.icon-send-button:before { content: '\e820'; } /* '' */
+.icon-iconmonstr-product-13:before { content: '\e821'; } /* '' */
+.icon-iconmonstr-product-5:before { content: '\e822'; } /* '' */
+.icon-_ionicons_svg_ios-analytics:before { content: '\e82a'; } /* '' */
+.icon-_ionicons_svg_md-analytics:before { content: '\e82b'; } /* '' */
+.icon-monitor-tablet-and-smartohone:before { content: '\e82c'; } /* '' */
+.icon-monitor-with-text:before { content: '\e82d'; } /* '' */
+.icon-smartphone-with-message:before { content: '\e82e'; } /* '' */
+.icon-shopping-bag:before { content: '\f290'; } /* '' */

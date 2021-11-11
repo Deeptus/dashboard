@@ -57,8 +57,18 @@
                         Swal.fire({
                             html: "Producto <strong>" + this.name + "</strong> añadido al pedido",
                             icon: "success",
-                            confirmButtonText: "Listo",
+                            showCancelButton: true,
+                            confirmButtonText: "Ir a solicitar presupuesto",
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            cancelButtonText: "Seguir comprando",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                let publicPath = document.head.querySelector('meta[name="public-path"]').content
+                                window.location.href = publicPath + 'presupuesto'
+                            }
                         })
+
                         let cart = JSON.parse(localStorage.getItem(this.storage))
                         if (!cart) {
                             cart = {}

@@ -67,7 +67,13 @@
             readonly: {
                 type: Boolean,
                 default: false
-            }
+            },
+            enableEdit: {
+                type: Object,
+                default: function () {
+                    return { original_name: true, caption: true }
+                }
+            },
         },
         components: {
             draggable,
@@ -135,7 +141,7 @@
                 return true
             },
             btnEdit(item) {
-                am().openModal(edit, { item }).then( response => {
+                am().openModal(edit, { item, enableEdit: this.enableEdit }).then( response => {
                     item.medicion_fecha.push(response)
                     if (item.step < 1.3) {
                         item.step = 1.3

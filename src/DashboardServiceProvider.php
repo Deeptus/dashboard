@@ -26,7 +26,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 use Junges\ACL\Models\Permission;
-
+use Illuminate\Support\Facades\Storage;
 
 class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -73,25 +73,91 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
 
         Paginator::useBootstrap();
         Artisan::command('dashboard:init', function () {
-            $bar = $this->output->createProgressBar(4);
+            $actions = $this->select(
+                "\nSelect options",
+                [
+                  0 => 'key:generate',
+                  1 => 'storage:link',
+                  2 => 'migrate:fresh',
+                  3 => 'Create default admin user',
+                  4 => 'Install package.json',
+                  5 => 'Website basic scaffolding',
+                  6 => 'Admin basic scaffolding',
+                ]
+            );
+            $bar = $this->output->createProgressBar(count($actions));
+
             $bar->start();
-            Artisan::call('key:generate');
-            $bar->advance();
-            Artisan::call('storage:link');
-            $bar->advance();
-            Artisan::call('migrate:fresh', [
-                '--seed' => true
-            ]);
-            $bar->advance();
-            DB::table('users')->insert([
-                'uuid'     => __uuid(),
-                'name'     => 'Administrador',
-                'username' => 'admin',
-                'email'    => 'admin@local.test',
-                'password' => bcrypt('admin'),
-                'root'     => 1,
-            ]);
-            $bar->advance();
+            if (in_array('key:generate', $actions)) {
+                Artisan::call('key:generate');
+                $bar->advance();
+            }
+            if (in_array('storage:link', $actions)) {
+                Artisan::call('storage:link');
+                $bar->advance();
+            }
+            if (in_array('migrate:fresh', $actions)) {
+                Artisan::call('migrate:fresh', [
+                    '--seed' => true
+                ]);
+                $bar->advance();
+            }
+            if (in_array('Create default admin user', $actions)) {
+                DB::table('users')->insert([
+                    'uuid'     => __uuid(),
+                    'name'     => 'Administrador',
+                    'username' => 'admin',
+                    'email'    => 'admin@local.test',
+                    'password' => bcrypt('admin'),
+                    'root'     => 1,
+                ]);
+                $bar->advance();
+            }
+            // get content package.json file
+            if (in_array('Install package.json', $actions)) {
+                $path = base_path('package.json');
+                $package = json_decode(file_get_contents($path));
+                $package->devDependencies = new \stdClass();
+                $package->dependencies = [
+                    "aporteweb-dashboard" => "file:../packages/aporteweb/dashboard-js",
+                    "animate.css" => "^4.1.1",
+                    "aos" => "^3.0.0-beta.6",        
+                ];
+                // put content package.json file
+                file_put_contents($path, json_encode($package, JSON_PRETTY_PRINT));
+                $bar->advance();
+            }
+            if (in_array('Website basic scaffolding', $actions) || in_array('Admin basic scaffolding', $actions)) {
+                $paths = [
+                    __DIR__ . '/Generators/templates/resources/js/bootstrap.js' => resource_path('js/bootstrap.js'),
+                    __DIR__ . '/Generators/templates/resources/js/dashboard.js' => resource_path('js/dashboard.js'),
+                    __DIR__ . '/Generators/templates/resources/js/website.js' => resource_path('js/website.js'),
+                    __DIR__ . '/Generators/templates/resources/js/components/admin/.keep' => resource_path('js/components/admin/.keep'),
+                    __DIR__ . '/Generators/templates/resources/js/components/website/.keep' => resource_path('js/components/website/.keep'),
+                    __DIR__ . '/Generators/templates/resources/sass/_variables.scss' => resource_path('sass/_variables.scss'),
+                    __DIR__ . '/Generators/templates/resources/sass/dashboard.scss' => resource_path('sass/dashboard.scss'),
+                    __DIR__ . '/Generators/templates/resources/sass/website.scss' => resource_path('sass/website.scss'),
+                    __DIR__ . '/Generators/templates/resources/sass/website.scss' => resource_path('sass/website.scss'),
+                    __DIR__ . '/Generators/templates/resources/sass/components/.keep' => resource_path('sass/components/.keep'),
+                    __DIR__ . '/Generators/templates/resources/sass/sections/.keep' => resource_path('sass/sections/.keep'),
+                    __DIR__ . '/Generators/templates/webpack.mix.js' => base_path('webpack.mix.js'),
+                    __DIR__ . '/Generators/templates/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
+                    __DIR__ . '/Generators/templates/config/auth.php' => config_path('auth.php'),
+                ];
+                foreach ($paths as $path => $destination) {
+                    if (!file_exists(dirname($destination))) {
+                        mkdir(dirname($destination), 0777, true);
+                    }
+                    copy($path, $destination);
+                }
+                // Copy folder
+                shell_exec("cp -r " . __DIR__ . "/Generators/templates/resources/views " . resource_path('/'));
+                shell_exec("cp -r " . __DIR__ . "/Generators/templates/public/* " . public_path('/'));
+                shell_exec("chmod -R 777 " . base_path('/'));
+                file_put_contents(base_path('/routes/admin.php'), '<?php');
+                $bar->advance();
+            }
+                          
             $bar->finish();
             $this->info("\nSe ejecutaron las migraciones, seeders y se creo el usuario admin!");
         });
