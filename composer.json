@@ -23,7 +23,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "laravel/ui": "^3.1",
         "orangehill/iseed": "^3.0",
-        "aporteweb/console-select": "dev-master"
+        "aporteweb/console-select": "dev-main"
     },
     "autoload": {
         "files": [
