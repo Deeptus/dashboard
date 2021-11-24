@@ -24,7 +24,6 @@ class CrudGeneratorController extends Controller
     public function index() {
         $dirPath = __crudFolder();
         $data = File::allFiles($dirPath);
-        
         return view('Dashboard::admin.crud-generator.index', [
             'data'           => $data,
             '__admin_active' => 'admin.crud-generator'
@@ -40,11 +39,13 @@ class CrudGeneratorController extends Controller
             $inputs     = $content->inputs;
             $conditions = $content->conditions;
         }
-
         $className = str_replace(['_', '-', '.'], ' ', $tablename);
         $className = ucwords($className);
         $className = str_replace(' ', '', $className);
         $model = "\\App\\Models\\" . $className;
+        if ( $table->model ) { 
+            $model = $table->model;
+        }
         foreach ($model::get() as $key => $item) {
             if ($item->uuid == null || $item->uuid == '') {
                 $item->uuid = __uuid();
@@ -146,11 +147,20 @@ class CrudGeneratorController extends Controller
         return DB::connection()->getDoctrineSchemaManager()->listTableNames();
     }
     public function tableInfo() {
+        // Obtener información de la tabla, entre ella el comentario
+        $table = DB::connection()->getDoctrineSchemaManager()->listTableDetails(request('table'));
+        // $table->getColumns(): tambien trae las columnas pero con mas informacion
         $columns = Schema::getColumnListing(request()->table);
-        $table = [];
+        $table = [
+            'info' => [
+                'name' => request()->table,
+                'comment' => $table->getComment(),
+            ],
+            'columns' => []
+        ];
         foreach ($columns as $columnName) {
             $column = Schema::getConnection()->getDoctrineColumn(request()->table, $columnName);
-            $table[] = [
+            $table['columns'][] = [
                 'name'      => $column->getName(),
                 'notnull'   => $column->getNotnull(),
                 'default'   => $column->getDefault(), 

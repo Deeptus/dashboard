@@ -406,6 +406,7 @@
                                             <select class="form-select" v-model="input.valueoriginselector">
                                                 <option value="table">Table</option>
                                                 <option value="values">Values</option>
+                                                <option value="model-nocrud">Model no CRUD</option>
                                             </select>
                                             <label>VALUES ORIGIN</label>
                                         </div>
@@ -439,19 +440,19 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="(inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table') || inputParams(input).includes('tabledata')">
+                                    <div class="col-md" v-if="(inputParams(input).includes('valueoriginselector') && ( input.valueoriginselector == 'table' || input.valueoriginselector == 'model-nocrud' ) ) || inputParams(input).includes('tabledata')">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tabledata">
                                             <label for="floatingInput">TABLE DATA</label>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="(inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table') || inputParams(input).includes('tablekeycolumn')">
+                                    <div class="col-md" v-if="(inputParams(input).includes('valueoriginselector') && ( input.valueoriginselector == 'table' || input.valueoriginselector == 'model-nocrud' ) ) || inputParams(input).includes('tablekeycolumn')">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tablekeycolumn">
                                             <label for="floatingInput">TABLE KEY COlUMN</label>
                                         </div>
                                     </div>
-                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector') && input.valueoriginselector == 'table'">
+                                    <div class="col-md" v-if="inputParams(input).includes('valueoriginselector') && ( input.valueoriginselector == 'table' || input.valueoriginselector == 'model-nocrud' ) ">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" v-model="input.tabletextcolumn">
                                             <label for="floatingInput">TABLE TEXT COlUMN</label>
@@ -568,7 +569,8 @@
                     }
                     console.log()
                     this.inputs.forEach(input => {
-                        if (input.type == 'text' && input.translatable === undefined) {
+                        let types = ['text', 'textarea', 'wysiwyg']
+                        if (input.translatable === undefined && types.includes(input.type)) {
                             input.translatable = 0
                         }
                         if (input.settable === undefined) {
@@ -593,9 +595,9 @@
                     this.table.translation_method = 'none'
                     this.table.uuid = 1
                     this.table.order_index = 0
-                    this.table.tablename = response.table
+                    this.table.tablename = response.info.name
                     this.table.name = {
-                        'es': response.table
+                        'es': response.info.name
                     }
                     this.table.timestamps = 1
                     this.table.softDeletes = 1
@@ -727,10 +729,10 @@
                 if (input.type == 'card-header') {
                 }
                 if (input.type == 'textarea') {
-                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'translatable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'wysiwyg') {
-                    params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
+                    params.push('listable', 'translatable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')
                 }
                 if (input.type == 'email') {
                     params.push('listable', 'settable', 'validate', 'label', 'unique', 'default', 'gridcols', 'nullable', 'max', 'min')

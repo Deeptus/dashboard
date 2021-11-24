@@ -163,7 +163,7 @@
                             }
                         })
                     }
-                }else if (input.type == 'multimedia_file') {
+                } else if (input.type == 'multimedia_file') {
                     if (content.value && content.value instanceof File) {
                         formData.append(input.columnname, content.value)
                     }
@@ -174,10 +174,10 @@
                         formData.append(input.columnname, content.value.id)
                     }
 
-                }else if (input.type == 'map-select-lat-lng') {
+                } else if (input.type == 'map-select-lat-lng') {
                     formData.append(input.columnname + '_lat', content.value.lat);
                     formData.append(input.columnname + '_lng', content.value.lng);
-                }else if (input.type == 'subForm') {
+                } else if (input.type == 'subForm') {
                     content.value.forEach((item, index) => {
                         let subFormData = new FormData()
                         this.subForm[input.columnname].inputs.forEach(subInput => {

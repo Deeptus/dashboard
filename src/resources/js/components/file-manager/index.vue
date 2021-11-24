@@ -33,7 +33,10 @@
                 </div>
                 <div class="file-manager__files">
                     <template v-for="(file, key) in files">
-                        <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id) && (displayOnly=='all' || displayOnly==file.type)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key" :style="'background-image: url(' + getPreviewImage(file) + ')'">
+                        <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id) && (displayOnly=='all' || displayOnly==file.type)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key">
+                            <div class="file-manager__img">
+                                <img :src="getPreviewImage(file)" alt="">
+                            </div>
                             <div class="file-manager__details" @click="details(file, $event)">Detalles</div>
                         </div>
                     </template>
@@ -305,9 +308,9 @@
             margin-bottom: 15px;
         }
         &__file {
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
+            background: linear-gradient(-45deg, #4d4d4d, #838383, #b8b8b8, #ffffff);
+            background-size: 500% 500%;
+            animation: file-manager__file_gradient 5s ease infinite;
             cursor: pointer;
             position: relative;
             &:hover {
@@ -341,6 +344,20 @@
                 display: block;
             }
         }
+        &__img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+                max-width: calc(100% - 15px);
+                max-height: calc(100% - 15px);
+            }
+        }
         &__details {
             position: absolute;
             bottom: 0;
@@ -353,6 +370,17 @@
             display: flex;
             justify-content: flex-end;
             margin-top: auto;
+        }
+    }
+    @keyframes file-manager__file_gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
         }
     }
 </style>

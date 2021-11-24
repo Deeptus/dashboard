@@ -4,7 +4,8 @@
             <div class="row">
                 <div class="col" v-for="l in Object.keys(languages)" :key="l">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" v-model="value.value[l]" :placeholder="input.label[lang()]">
+                        <textarea  style="height: 100px" class="form-control" v-model="value.value[l]" :placeholder="input.label[lang()]" v-if="input.type == 'textarea'"></textarea>
+                        <input type="text" class="form-control" v-model="value.value[l]" :placeholder="input.label[lang()]" v-else>
                         <label>{{ input.label[lang()] }} - {{ l }}</label>
                     </div>
                 </div>
@@ -12,7 +13,8 @@
         </template>
         <template v-else>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" v-model="value.value" :placeholder="input.label[lang()]">
+                <textarea  style="height: 100px" class="form-control" v-model="value.value" :placeholder="input.label[lang()]" v-if="input.type == 'textarea'"></textarea>
+                <input type="text" class="form-control" v-model="value.value" :placeholder="input.label[lang()]" v-else>
                 <label>{{ input.label[lang()] }}</label>
             </div>
         </template>

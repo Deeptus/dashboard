@@ -105,7 +105,11 @@ class GenerateCrudTables extends Migration
                 $change = true;
             }
             if($input->type == 'text') {
-                $col[] = $table->string($input->columnname);
+                if ($input->translatable == 1) {
+                    $col[] = $table->json($input->columnname);
+                } else {
+                    $col[] = $table->string($input->columnname);
+                }
             }
             if($input->type == 'color') {
                 $col[] = $table->string($input->columnname);
@@ -114,10 +118,18 @@ class GenerateCrudTables extends Migration
                 $col[] = $table->string($input->columnname);
             }
             if($input->type == 'textarea') {
-                $col[] = $table->longText($input->columnname);
+                if ($input->translatable == 1) {
+                    $col[] = $table->json($input->columnname);
+                } else {
+                    $col[] = $table->longText($input->columnname);
+                }
             }
             if($input->type == 'wysiwyg') {
-                $col[] = $table->longText($input->columnname);
+                if ($input->translatable == 1) {
+                    $col[] = $table->json($input->columnname);
+                } else {
+                    $col[] = $table->longText($input->columnname);
+                }
             }
             if($input->type == 'number') {
                 $col[] = $table->double($input->columnname);

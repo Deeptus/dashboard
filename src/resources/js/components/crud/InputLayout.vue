@@ -9,7 +9,7 @@
         <MapSelectLatLon :value="value" :input="input" v-if="input.type == 'map-select-lat-lng'"></MapSelectLatLon>
         <MultimediaFile :value="value" :input="input" v-if="input.type == 'multimedia_file'"></MultimediaFile>
         <InputCheckbox :relations="relations" :value="value" :input="input" v-if="input.type == 'checkbox'"></InputCheckbox>
-        <wysiwyg :value="value" :input="input" v-if="input.type == 'wysiwyg'"></wysiwyg>
+        <wysiwyg :value="value" :input="input" v-if="input.type == 'wysiwyg'" :languages="languages"></wysiwyg>
         <div v-if="displayDebug == 1">{{ value }} <button @click="reloadDebug">reload</button></div>
         <div v-if="input.type == 'card-header'" class="card-header">
             {{ input.columnname }}

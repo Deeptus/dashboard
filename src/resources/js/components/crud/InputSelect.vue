@@ -4,6 +4,9 @@
             <template v-if="mode == 'table'">
                 <option :value="key" v-for="(option, key) in options" :key="key">{{ option }}</option>
             </template>
+            <template v-if="mode == 'model-nocrud'">
+                <option :value="key" v-for="(option, key) in options" :key="key">{{ option }}</option>
+            </template>
             <template v-if="mode == 'values'">
                 <option :value="option.key" v-for="(option, key) in options" :key="key">{{ option.text }}</option>
             </template>
@@ -42,8 +45,12 @@
 
             if (this.mode == 'table') {
                 this.options = this.relations[this.input.tabledata]
-            }else if(this.mode == 'values'){
+            }
+            if(this.mode == 'values'){
                 this.options = this.input.options
+            }
+            if(this.mode == 'model-nocrud'){
+                this.options = this.relations[this.input.tabledata]
             }
             
         },

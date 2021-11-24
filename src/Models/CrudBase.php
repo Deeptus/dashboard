@@ -209,6 +209,15 @@ trait CrudBase {
                             return null;
                         }
                     }
+                    if ($input->valueoriginselector == 'model-nocrud') {
+                        $subModel = $input->tabledata;
+                        $item = $subModel::where($input->tablekeycolumn, $this->getAttribute($column))->first();
+                        try {
+                            return $item->{ $input->tabletextcolumn };
+                        } catch (\Throwable $th) {
+                            return null;
+                        }
+                    }
                 }
                 if ($input->type == 'gallery') {
                     $column = str_replace('_rel_val', '', $key);

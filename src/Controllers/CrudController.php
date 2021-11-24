@@ -29,20 +29,12 @@ class CrudController extends Controller
             $this->tablename = request()->route()->parameters()['tablename'];
     
             if($this->tablename) {
-                $dirPath  = app_path('Dashboard');
-                $filePath = $dirPath . '/' . $this->tablename . '.json';
-    
-                if (file_exists($filePath)) {
-                    $content          = json_decode(file_get_contents($filePath));
-                    $this->table      = $content->table;
-                    $this->inputs     = $content->inputs;
-                    $this->conditions = $content->conditions;
-                }
-    
-                $className = str_replace(['_', '-', '.'], ' ', $this->tablename);
-                $className = ucwords($className);
-                $className = str_replace(' ', '', $className);
-                $this->model = "\\App\\Models\\" . $className;
+                $info = __crudInfo($this->tablename);
+                $this->tablename  = $info['tablename'];
+                $this->table      = $info['table'];
+                $this->inputs     = $info['inputs'];
+                $this->conditions = $info['conditions'];
+                $this->model      = $info['model'];
             }
         }
 
@@ -53,7 +45,25 @@ class CrudController extends Controller
 
         if ( ( $input->type == 'select' || $input->type == 'select_string' ) && $input->valueoriginselector == 'table') {
             $found = true;
-            $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            $info = __crudInfo($input->tabledata, $input->tabletextcolumn);
+            if ( $info == 'no-crud' ) {
+                $relations[$input->tabledata] = DB::table($input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            } else {
+                $relations[$input->tabledata] = (new $info['model'])->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            }
+            /*
+            if ( $info['table']->translation_method == 'spatie-laravel-translatable' && $info['column']->translatable == 1 ) {
+                dd($relations[$input->tabledata]);
+            }
+            */
+            if ($item) {
+                $content[$input->columnname] = $item->{$input->columnname};
+            }
+        }
+
+        if ( ( $input->type == 'select' || $input->type == 'select_string' ) && $input->valueoriginselector == 'model-nocrud') {
+            $found = true;
+            $relations[$input->tabledata] = (new $input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
             if ($item) {
                 $content[$input->columnname] = $item->{$input->columnname};
             }
@@ -121,7 +131,6 @@ class CrudController extends Controller
             $className = ucwords($className);
             $className = str_replace(' ', '', $className);
             $subModel = "\\App\\Models\\" . $className;
-
             if (file_exists($filePath)) {
                 $subFormLayout      = json_decode(file_get_contents($filePath));
                 $subForm[$input->columnname] = [
@@ -494,7 +503,17 @@ class CrudController extends Controller
         }
         try {
             if ($this->table->slug == 1 && ( $item->slug == null || $item->slug == '' ) ) {
-                $slug = Str::slug($request->{$this->table->slug_col} . ' ' . Str::random(6));
+                $slug_col = $this->table->slug_col;
+                $colinfo = array_filter($this->inputs, function($input) use ($slug_col) {
+                    return $input->columnname == $slug_col;
+                });
+                if(intval($input->translatable)) {
+                    $val = json_decode($request->{$slug_col}, true);
+                    $slug = $val[App::getLocale()];
+                    $slug = Str::slug($slug. ' ' . Str::random(6));
+                } else {
+                    $slug = Str::slug($request->{$slug_col} . ' ' . Str::random(6));
+                }
                 $item->slug = $slug;
             }
         } catch (\Throwable $th) {
@@ -521,9 +540,11 @@ class CrudController extends Controller
         return redirect()->route('admin.crud', ['tablename' => $tablename])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
     }
     public function trash($tablename) {
+        $enable_create = true;
         $data = $this->model::onlyTrashed()->paginate(20);
         return view('Dashboard::admin.crud.index', [
             'trash'          => true,
+            'enable_create'  => $enable_create,
             'data'           => $data,
             'tablename'      => $this->tablename,
             'table'          => $this->table,

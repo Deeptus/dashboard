@@ -383,3 +383,49 @@ if (! function_exists('__tableContentEval')) {
         return preg_replace_callback($pattern, $replace, $content);
     }
 }
+
+if (! function_exists('__crudInfo')) {
+    /**
+     * Generate Title for table filter.
+     *
+     * @param  string  $tablename
+     * @param  string  $columnname
+     * @return array
+     */
+    function __crudInfo($tablename, $columnname = null) {
+        $info = [];
+        $dirPath  = app_path('Dashboard');
+        $filePath = $dirPath . '/' . $tablename . '.json';
+
+        if (file_exists($filePath)) {
+            $content            = json_decode(file_get_contents($filePath));
+            $info['tablename']  = $tablename;
+            $info['table']      = $content->table;
+            $info['inputs']     = $content->inputs;
+            $info['conditions'] = $content->conditions;
+        } else {
+            return 'no-crud';
+        }
+
+        $className = str_replace(['_', '-', '.'], ' ', $tablename);
+        $className = ucwords($className);
+        $className = str_replace(' ', '', $className);
+        $info['model'] = "\\App\\Models\\" . $className;
+        try {
+            if ( method_exists($content->table, 'model') && $content->table->model ) {
+                $info['model'] = $content->table->model;
+            }
+        } catch (\Throwable $th) {
+            dd($tablename);
+        }
+        if ($columnname) {
+            foreach ($info['inputs'] as $key => $input) {
+                if ($input->columnname == $columnname) {
+                    $info['column'] = $input;
+                    break;
+                }
+            }
+        }
+        return $info;
+    }
+}

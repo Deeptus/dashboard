@@ -30,7 +30,8 @@
         <table class="data_table table table-striped table-bordered display">
             <thead>
                 <tr>
-                    <th>Nombre</th>
+                    <th>Name</th>
+                    <th>Table exists in database</th>
                     <th class="no-sort"></th>
                 </tr>
             </thead>
@@ -38,6 +39,7 @@
                 @foreach ($data as $item)
                 <tr>
                     <td>{{ $item->getfilename() }}</td>
+                    <td>{{ Schema::hasTable(str_replace('.json', '', $item->getfilename())) ? 'Yes' : 'No' }}</td>
                     <td>
                         <a href="{{ route('admin.crud-generator.edit', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-sm text-white-50 fa-edit"></i>

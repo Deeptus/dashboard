@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Blade;
 use AporteWeb\Dashboard\Models\Content;
 use AporteWeb\Dashboard\View\Components\Messages;
+use AporteWeb\Dashboard\View\Components\SidebarMenu;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 use AporteWeb\Dashboard\Models\ConfigVar;
@@ -118,7 +119,10 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                     __DIR__ . '/Generators/templates/webpack.mix.js' => base_path('webpack.mix.js'),
                     __DIR__ . '/Generators/templates/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
                     __DIR__ . '/Generators/templates/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
+                    __DIR__ . '/Generators/templates/config/acl.php' => config_path('acl.php'),
                     __DIR__ . '/Generators/templates/config/auth.php' => config_path('auth.php'),
+                    __DIR__ . '/Generators/templates/config/laravellocalization.php' => config_path('laravellocalization.php'),
+                    __DIR__ . '/Generators/templates/config/translatable.php' => config_path('translatable.php'),
                 ];
                 foreach ($paths as $path => $destination) {
                     if (!file_exists(dirname($destination))) {
@@ -126,9 +130,26 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                     }
                     copy($path, $destination);
                 }
+
+                $replacing = [
+                    config_path('app.php') => [
+                        "'locale' => 'en'" => "'locale' => 'es'",
+                        "'fallback_locale' => 'en'" => "'fallback_locale' => 'es'",
+                        "'faker_locale' => 'en_US'" => "'faker_locale' => 'es_ES'",
+                    ]
+                ];
+                foreach ($replacing as $path => $replacements) {
+                    $content = file_get_contents($path);
+                    foreach ($replacements as $search => $replace) {
+                        $content = str_replace($search, $replace, $content);
+                    }
+                    file_put_contents($path, $content);
+                }
                 // Copy folder
+                // I am observation you have to try it in windows
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/Controllers " . app_path('Http'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/Models " . app_path('/'));
+                shell_exec("cp -r " . __DIR__ . "/Generators/templates/Dashboard " . app_path('/'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/resources/views " . resource_path('/'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/public/* " . public_path('/'));
                 shell_exec("cp -r " . __DIR__ . "/Generators/templates/routes " . base_path('/'));
@@ -231,6 +252,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             'log-viewer.route.enabled' => false
         ]);
         Blade::component('dashboard-messages', Messages::class);
+        Blade::component('sidebar-menu', SidebarMenu::class);
         
         // hasAnyPermission
         Blade::directive('hap', function ($permissions) {
@@ -306,7 +328,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         }
         */
         config(['admin.theme.styles' => 'css/dashboard.css']);
-        config(['admin.text.footer' => 'Todos los derechos reservados © Dashboard 2019']);
+        config(['admin.text.footer' => 'Todos los derechos reservados']);
         view()->share([
             '__admin_active' => 'admin',
         ]);

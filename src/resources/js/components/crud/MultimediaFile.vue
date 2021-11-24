@@ -1,6 +1,8 @@
 <template>
     <label class="multimedia-file mb-3" @click="selectFile()">
-        <div class="multimedia-file__preview" :style="'background-image: url('+getPreviewImage()+');'"></div>
+        <div class="multimedia-file__preview">
+            <img :src="getPreviewImage()" alt="">
+        </div>
         <div class="multimedia-file__label">{{ input.label[lang()] }}</div>
         <div class="multimedia-file__text">{{ getText() }}</div>
         <!-- <input class="visually-hidden" type="file" @change="onFileChange($event)"> -->
@@ -195,14 +197,32 @@
             width: 85px;
             border-right: 1px solid #cbc8d0;
             position: absolute;
-            background-position: center;
-            background-size: cover;
-            background-repeat: no-repeat;
+            background: linear-gradient(-45deg, #4d4d4d, #838383, #b8b8b8, #ffffff);
+            background-size: 500% 500%;
+            animation: file-manager__file_gradient 15s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
         }
         &__text {
             position: absolute;
             left: 94px;
             top: 25px;
+        }
+    }
+    @keyframes file-manager__file_gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
         }
     }
 </style>

@@ -11,8 +11,7 @@ class CreateContactRequestTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::dropIfExists('contact_request');
         Schema::create('contact_request', function (Blueprint $table) {
             $table->bigIncrements('id');
@@ -29,13 +28,14 @@ class CreateContactRequestTable extends Migration
             // purchase
             $table->double('shipping_price')->nullable(); // Envio
             $table->double('subtotal')->nullable(); // Descuentos calculado
-            $table->string('discounts')->nullable(); // Descuentos, -1500,-30%,-150
+            $table->string('discounts')->nullable(); // Descuentos: -1500,-30%,-150
             $table->double('discount')->nullable(); // Descuentos calculado
             $table->string('taxes')->nullable(); // Impuestos IVA 21%, simil a discounts
             $table->double('tax')->nullable(); // Impuestos calculado
             $table->double('total')->nullable(); // Total con descuentos y impuestos aplicado
 
             $table->unsignedBigInteger('ref_id')->nullable(); // reserved for user or customer(Cliente) ID
+            $table->string('lang')->nullable(); // El idioma activo en el momento de la solicitud
             $table->string('type')->nullable(); // budget => 'Presupuesto', contact-message => 'Mensaje de contacto', shopping_cart => 'Carrito'
             $table->timestamp('read_at')->nullable();
             $table->timestamp('notified_at')->nullable();
@@ -63,11 +63,11 @@ class CreateContactRequestTable extends Migration
             $table->string('image_url')->nullable();
             $table->string('description')->nullable();
             $table->string('code')->nullable();
-            $table->string('presentation')->nullable();
-            $table->string('color_name')->nullable();
-            $table->string('size')->nullable();
-            $table->string('piece_weight')->nullable();
+            $table->unsignedBigInteger('product_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('presentation_id')->unsigned()->nullable();
+            $table->string('presentation')->nullable(); // Ej: Camisa, Negra, XL, etc
             // purchase info
+            $table->unsignedBigInteger('price_list_id')->unsigned()->nullable();
             $table->double('base_price')->nullable(); // Precio sin nada aplicado
             $table->string('discounts')->nullable(); // Descuentos, -1500,-30%,-150
             $table->double('discount')->nullable(); // Descuentos calculado
@@ -79,6 +79,7 @@ class CreateContactRequestTable extends Migration
             $table->unsignedBigInteger('contact_request_id')->references('id')->on('contact_request');
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 
@@ -87,8 +88,7 @@ class CreateContactRequestTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('contact_request_items');
         Schema::dropIfExists('contact_request_file');
         Schema::dropIfExists('contact_request');

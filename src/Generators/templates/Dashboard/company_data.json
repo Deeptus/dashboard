@@ -1,0 +1,339 @@
+{
+    "table": {
+        "id": 1,
+        "single_record": "1",
+        "translation_method": "none",
+        "uuid": 1,
+        "order_index": 0,
+        "tablename": "company_data",
+        "name": {
+            "es": "Datos de la empresa"
+        },
+        "timestamps": 1,
+        "softDeletes": 1,
+        "slug": 0,
+        "slug_col": "",
+        "slug_global": 0,
+        "is_authenticatable": 0
+    },
+    "inputs": [
+        {
+            "columnname": "imagenes",
+            "type": "card-header",
+            "label": {},
+            "unique": 0,
+            "default": "",
+            "nullable": 0,
+            "validate": 1,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 1
+        },
+        {
+            "columnname": "header_logo",
+            "type": "multimedia_file",
+            "label": {
+                "es": "Logo Header",
+                "en": "Logo Header"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": "1",
+            "validate": "0",
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": "0"
+        },
+        {
+            "columnname": "footer_logo",
+            "type": "multimedia_file",
+            "label": {
+                "es": "Logo Footer",
+                "en": "Logo Footer"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": "1",
+            "validate": "0",
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": "0"
+        },
+        {
+            "columnname": "footer_logo_background",
+            "type": "multimedia_file",
+            "label": {
+                "es": "Logo Footer Fondo",
+                "en": "Logo Footer"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": "1",
+            "validate": "0",
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": "0"
+        },
+        {
+            "columnname": "footer_contacto",
+            "type": "subForm",
+            "label": {
+                "es": "Footer Contacto",
+                "en": "Footer Contacto"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": "1",
+            "validate": 1,
+            "max": "",
+            "min": "",
+            "tabledata": "company_data_footer_contacto",
+            "tablekeycolumn": "section_id",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": "1",
+            "gridcols": "12"
+        },
+        {
+            "columnname": "contacto",
+            "type": "card-header",
+            "label": {},
+            "unique": 0,
+            "default": "",
+            "nullable": 0,
+            "validate": 1,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 1
+        },
+        {
+            "columnname": "email_system",
+            "type": "text",
+            "label": {
+                "es": "A que email llegaran los mensajes"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0,
+            "gridcols": "12"
+        },
+        {
+            "columnname": "contacto_leyenda",
+            "type": "text",
+            "label": {
+                "es": "Leyenda",
+                "en": "Leyenda"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": "1",
+            "validate": "0",
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": "1",
+            "gridcols": "12",
+            "translatable": "0"
+        },
+        {
+            "columnname": "headband_contacto",
+            "type": "subForm",
+            "label": {
+                "es": "Headband Contacto",
+                "en": "Footer Contacto"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": "1",
+            "validate": 1,
+            "max": "",
+            "min": "",
+            "tabledata": "company_data_headband_contacto",
+            "tablekeycolumn": "section_id",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": "1",
+            "gridcols": "12"
+        },
+        {
+            "columnname": "recaptcha_public_key",
+            "type": "text",
+            "label": {
+                "es": "reCAPTCHA public-key"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0
+        },
+        {
+            "columnname": "recaptcha_private_key",
+            "type": "text",
+            "label": {
+                "es": "reCAPTCHA private-key"
+            },
+            "unique": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0
+        },
+        {
+            "columnname": "client_area_movimientos_de_articulos_header",
+            "type": "wysiwyg",
+            "label": {
+                "es": "\u00c1rea de Clientes Movimientos de Art\u00edculos Cabecera"
+            },
+            "unique": 0,
+            "precision": 0,
+            "scale": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0,
+            "gridcols": "6"
+        },
+        {
+            "columnname": "client_area_movimientos_de_articulos_footer",
+            "type": "wysiwyg",
+            "label": {
+                "es": "\u00c1rea de Clientes Movimientos de Art\u00edculos Pie "
+            },
+            "unique": 0,
+            "precision": 0,
+            "scale": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0,
+            "gridcols": "6"
+        },
+        {
+            "columnname": "client_area_resumen_de_cuenta_header",
+            "type": "wysiwyg",
+            "label": {
+                "es": "\u00c1rea de Clientes Resumen de Cuenta Cabecera"
+            },
+            "unique": 0,
+            "precision": 0,
+            "scale": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0,
+            "gridcols": "6"
+        },
+        {
+            "columnname": "client_area_resumen_de_cuenta_footer",
+            "type": "wysiwyg",
+            "label": {
+                "es": "\u00c1rea de Clientes Resumen de Cuenta Pie"
+            },
+            "unique": 0,
+            "precision": 0,
+            "scale": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0,
+            "gridcols": "6"
+        },
+        {
+            "columnname": "ultima_actualizacion_cte",
+            "type": "datetime",
+            "label": {
+                "es": "Ultima actualizaci\u00f3n"
+            },
+            "unique": 0,
+            "precision": 0,
+            "scale": 0,
+            "default": "",
+            "nullable": 1,
+            "validate": 0,
+            "max": "",
+            "min": "",
+            "tabledata": "",
+            "tablekeycolumn": "",
+            "tabletextcolumn": "",
+            "settable": 0,
+            "listable": 0,
+            "translatable": 0
+        }
+    ],
+    "conditions": []
+}

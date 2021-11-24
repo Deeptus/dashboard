@@ -43,7 +43,7 @@ export default {
             formData.append('table', table)
             axios.post(this.endpoint + '/api/table-info', formData).then((response) => {
                 aa().close()
-                this.componentCallback.resolve({ table, columns: response.data })
+                this.componentCallback.resolve({ info: response.data.info, columns: response.data.columns })
             }).catch((error) => {
 
             })

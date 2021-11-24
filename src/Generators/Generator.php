@@ -13,8 +13,10 @@ class Generator
         $this->table  = $table;
         $this->inputs = $inputs;
     }
-    public function model()
-    {
+    public function model() {
+        if ( method_exists($this->table, 'model') && $this->table->model ) { 
+            return true;
+        }
         $path = realpath(__DIR__ . '/templates/model.php');
 
         $className = str_replace(['_', '-', '.'], ' ', $this->table->tablename);
@@ -51,8 +53,7 @@ class Generator
 
         return true;
     }
-    public function crud()
-    {
+    public function crud() {
         $this->model();
         // $this->controller();
     }
