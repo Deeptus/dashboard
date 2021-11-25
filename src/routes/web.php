@@ -68,7 +68,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
     	'middleware' => 'auth',
     	//'namespace'  => 'Admin',
     ], function() {
-        Route::get('translate', 'GoogleTranslateController@getTranslate')->name('.translate');
+        Route::any('translate', 'GoogleTranslateController@getTranslate')->name('.translate');
         Route::post('chat-area',    'ChatAreaController@getMessages')->name('.chat-area');
         Route::get ('file-manager', 'FileManagerController@data')->name('.file-manager');
         Route::post('file-manager', 'FileManagerController@upload');

@@ -207,13 +207,9 @@ window.slugify = (text, divider = '-') => {
 }
 
 window.translate = (text) => {
-    return axios.get(window.apis.translate, {
-        params: {
-            text: text,
-            //from: 'es',
-            //to: 'en'
-        }
-    })
+    let formData = new FormData()
+    formData.append('text', text)
+    return axios.post(window.apis.translate, formData)
 }
 Vue.filter('toCurrency',         window.toCurrency);
 Vue.filter('getFileSize',        window.getFileSize);

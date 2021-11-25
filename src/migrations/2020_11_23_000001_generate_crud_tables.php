@@ -24,21 +24,25 @@ class GenerateCrudTables extends Migration
         $files = File::allFiles($dirPath);
         foreach ($files as $fileKey => $file) {
             $content = json_decode(file_get_contents($file->getPathname()));
-            if (Schema::hasTable($content->table->tablename)) {
-                Schema::table($content->table->tablename, function (Blueprint $table) use ($content) {
-                    $data = DB::select('SHOW INDEX FROM '.$content->table->tablename);
-                    foreach ($data as $key) {
-                        if ($key->Key_name == 'PRIMARY' && $key->Column_name != 'id') {
-                            DB::statement("ALTER TABLE ".$content->table->tablename." DROP PRIMARY KEY");
-                            /*$table->unique($key->Column_name);*/
-                        }
-                    }        
-                    $this->table($table, $content);
-                });
-            } else {
-                Schema::create($content->table->tablename, function (Blueprint $table) use ($content) {
-                    $this->table($table, $content);
-                });
+            try {
+                if (Schema::hasTable($content->table->tablename)) {
+                    Schema::table($content->table->tablename, function (Blueprint $table) use ($content) {
+                        $data = DB::select('SHOW INDEX FROM '.$content->table->tablename);
+                        foreach ($data as $key) {
+                            if ($key->Key_name == 'PRIMARY' && $key->Column_name != 'id') {
+                                DB::statement("ALTER TABLE ".$content->table->tablename." DROP PRIMARY KEY");
+                                /*$table->unique($key->Column_name);*/
+                            }
+                        }        
+                        $this->table($table, $content);
+                    });
+                } else {
+                    Schema::create($content->table->tablename, function (Blueprint $table) use ($content) {
+                        $this->table($table, $content);
+                    });
+                }
+            } catch (\Throwable $th) {
+                abort(500, $content->table->tablename. ' - ' . $th->getMessage());
             }
         }
     }
@@ -105,7 +109,7 @@ class GenerateCrudTables extends Migration
                 $change = true;
             }
             if($input->type == 'text') {
-                if ($input->translatable == 1) {
+                if ( @$input->translatable == 1 ) {
                     $col[] = $table->json($input->columnname);
                 } else {
                     $col[] = $table->string($input->columnname);
@@ -118,14 +122,14 @@ class GenerateCrudTables extends Migration
                 $col[] = $table->string($input->columnname);
             }
             if($input->type == 'textarea') {
-                if ($input->translatable == 1) {
+                if ( @$input->translatable == 1 ) {
                     $col[] = $table->json($input->columnname);
                 } else {
                     $col[] = $table->longText($input->columnname);
                 }
             }
             if($input->type == 'wysiwyg') {
-                if ($input->translatable == 1) {
+                if ( @$input->translatable == 1 ) {
                     $col[] = $table->json($input->columnname);
                 } else {
                     $col[] = $table->longText($input->columnname);

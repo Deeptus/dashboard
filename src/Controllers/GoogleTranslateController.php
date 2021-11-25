@@ -15,6 +15,8 @@ class GoogleTranslateController extends Controller {
     }
     public function getTranslate() {
         $text = json_decode(request()->text, true)['es'];
+        $text = str_replace("\n", "", $text);
+        $text = str_replace("  ", " ", $text);
         $langs = LaravelLocalization::getLocalesOrder();
         $translated = [
             'es' => $text,
