@@ -205,6 +205,16 @@ window.slugify = (text, divider = '-') => {
         .trimChars(' ')
         .trimChars('_')
 }
+
+window.translate = (text) => {
+    return axios.get(window.apis.translate, {
+        params: {
+            text: text,
+            //from: 'es',
+            //to: 'en'
+        }
+    })
+}
 Vue.filter('toCurrency',         window.toCurrency);
 Vue.filter('getFileSize',        window.getFileSize);
 Vue.filter('getPostMaxSize',     window.getPostMaxSize);
@@ -216,6 +226,9 @@ Vue.mixin({
   methods: {
     aa() {
         window.aa()
+    },
+    translate(text) {
+        return window.translate(text)
     },
     fileManager() {
         return this.$root.$refs.FileManager

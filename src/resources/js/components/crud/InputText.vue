@@ -1,14 +1,17 @@
 <template>
     <div>
         <template v-if="input.translatable == 1">
-            <div class="row">
-                <div class="col" v-for="l in Object.keys(languages)" :key="l">
-                    <div class="form-floating mb-3">
-                        <textarea  style="height: 100px" class="form-control" v-model="value.value[l]" :placeholder="input.label[lang()]" v-if="input.type == 'textarea'"></textarea>
-                        <input type="text" class="form-control" v-model="value.value[l]" :placeholder="input.label[lang()]" v-else>
-                        <label>{{ input.label[lang()] }} - {{ l }}</label>
+            <div class="block-translations">
+                <div class="row">
+                    <div class="col" v-for="l in Object.keys(languages)" :key="l">
+                        <div class="form-floating mb-3">
+                            <textarea  style="height: 100px" class="form-control" v-model="value.value[l]" :placeholder="input.label[lang()]" v-if="input.type == 'textarea'"></textarea>
+                            <input type="text" class="form-control" v-model="value.value[l]" :placeholder="input.label[lang()]" v-else>
+                            <label>{{ input.label[lang()] }} - {{ l }}</label>
+                        </div>
                     </div>
                 </div>
+                <button type="button" class="badge bg-secondary block-translations__btn" @click="translate()">Traducir</button>
             </div>
         </template>
         <template v-else>
@@ -55,6 +58,11 @@
         methods: {
             lang() {
                 return document.documentElement.lang
+            },
+            translate() {
+                this.$root.translate(JSON.stringify(this.value.value)).then(response => {
+                    this.value.value = response.data
+                })
             }
         },
         computed: {
@@ -63,5 +71,15 @@
 
 </script>
 <style lang="scss" scoped>
-
+    .block-translations {
+        position: relative;
+        &__btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0.5;
+            font-size: 9px;
+            padding: 2.5px 5px;
+        }
+    }
 </style>

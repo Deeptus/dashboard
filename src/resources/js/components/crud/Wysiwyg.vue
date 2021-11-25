@@ -1,14 +1,17 @@
 <template>
     <div class="mb-3">
         <template v-if="input.translatable == 1">
-            <div class="row">
-                <div class="col" v-for="l in Object.keys(languages)" :key="l">
-                    <label>{{ input.label[lang()] }} - {{ l }}</label>
-                    <jodit-vue
-                        v-model="value.value[l]"
-                        :value="value.value[l]"
-                    ></jodit-vue>
+            <div class="block-translations">
+                <div class="row">
+                    <div class="col" v-for="l in Object.keys(languages)" :key="l">
+                        <label>{{ input.label[lang()] }} - {{ l }}</label>
+                        <jodit-vue
+                            v-model="value.value[l]"
+                            :value="value.value[l]"
+                        ></jodit-vue>
+                    </div>
                 </div>
+                <button type="button" class="badge bg-secondary block-translations__btn" @click="translate()">Traducir</button>
             </div>
         </template>
         <template v-else>
@@ -59,6 +62,11 @@
         methods: {
             lang() {
                 return document.documentElement.lang
+            },
+            translate() {
+                this.$root.translate(JSON.stringify(this.value.value)).then(response => {
+                    this.value.value = response.data
+                })
             }
         },
         computed: {
@@ -67,5 +75,15 @@
 
 </script>
 <style lang="scss" scoped>
-
+    .block-translations {
+        position: relative;
+        &__btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0.5;
+            font-size: 9px;
+            padding: 2.5px 5px;
+        }
+    }
 </style>

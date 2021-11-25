@@ -41,7 +41,8 @@
         window.serverTime = "{{ now() }}"
         window.apis = {
             homework: "{{ route('admin.homework') }}",
-            notification: "{{ route('admin.notification') }}"
+            notification: "{{ route('admin.notification') }}",
+            translate: "{{ route('admin.translate') }}",
         }
     </script>
 </head>
