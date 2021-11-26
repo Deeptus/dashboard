@@ -228,6 +228,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="https://cdn.tiny.cloud/1/lxbhj6gkoej64g83r74omegfd8lfge7t1k9sal38g4qnq3io/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{{ asset('js/dashboard.js') }}?{{ $assets_version }}" defer></script>
 
 </body>

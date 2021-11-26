@@ -35,6 +35,8 @@ Vue.component('input-switch', require('./components/crud/InputSwitch.vue').defau
 
 Vue.component('email-layout-form', require('./components/EmailLayoutFormComponent.vue').default);
 
+Vue.component('tinymce-editor', require('./components/TinyMCEComponent.vue').default);
+
 window.aa = () => {
     return window.vueApp.$root.$refs['awesome-alert']
 }
