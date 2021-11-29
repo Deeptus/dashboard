@@ -19,6 +19,9 @@ Vue.component('InputLayout', require('./components/crud/InputLayout.vue').defaul
 Vue.component('select2', require('./components/Select2Component.vue').default);
 
 Vue.component('file-manager', require('./components/file-manager').default);
+
+Vue.component('translation-manager', require('./components/translation-manager').default);
+
 Vue.component('CustomGallery', require('./components/CustomGalleryComponent.vue').default);
 Vue.component('awesome-gallery', require('./components/awesome-gallery').default);
 
@@ -192,12 +195,14 @@ window.slugify = (text, divider = '-') => {
     if (divider == '-') {
         text = text
             .replace(/\s+/g, '-')     // Replace spaces with -
+            .replace(/\./g, '-')      // Replace . with -
             .replace(/[^\w\-]+/g, '') // Remove all non-word chars
             .replace(/\-\-+/g, '-');  // Replace multiple - with single -
     }
     if (divider == '_') {
         text = text
             .replace(/\s+/g, '_')     // Replace spaces with _
+            .replace(/\./g, '_')      // Replace . with _
             .replace(/[^\w\-]+/g, '') // Remove all non_word chars
             .replace(/\-+/g, '_')     // Replace multiple - with single -
             .replace(/\_\_+/g, '_');  // Replace multiple - with single -

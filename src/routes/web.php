@@ -86,6 +86,14 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::post('find', 'HomeworkController@find')->name('.find');
         });
         Route::group([
+            'prefix' => 'api/translation-manager',
+            'as' => '.translation-manager',
+        ], function() {
+            Route::get ('/',      'TranslationManagerController@data');
+            Route::post('store',  'TranslationManagerController@store') ->name('.store');
+            Route::post('delete', 'TranslationManagerController@delete')->name('.delete');
+        });
+        Route::group([
             'prefix' => 'email-layout',
             'as' => '.email-layout',
         ], function() {

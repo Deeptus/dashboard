@@ -31,6 +31,9 @@
                 <table class="data_table table table-striped table-bordered display">
                     <thead>
                         <tr>
+                            @if ($item->sitio_web != '')
+                            <th>Sitio web</th>
+                            @endif
                             @foreach ($inputs as $input)
                                 @if (
                                     is_array($config) &&
@@ -50,6 +53,9 @@
                 <tbody>
                 @endif
                 <tr>
+                    @if ($item->sitio_web != '')
+                    <td>{{ $item->sitio_web }}</td>
+                    @endif
                     @foreach ($inputs as $input)
                         @if (
                             is_array($config) &&
@@ -62,6 +68,8 @@
                     @endforeach
                     @if ($item->image != '')
                     <td><img src="{{ asset(Storage::url($item->image)) }}" style="max-width: 50px; max-height: 50px;"></td>
+                    @else
+                    <td></td>
                     @endif
                     <td>
                         @if (!$item->trashed())

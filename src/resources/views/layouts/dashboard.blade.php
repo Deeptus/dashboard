@@ -43,6 +43,7 @@
             homework: "{{ route('admin.homework') }}",
             notification: "{{ route('admin.notification') }}",
             translate: "{{ route('admin.translate') }}",
+            translation_manager: "{{ route('admin.translation-manager') }}",
         }
     </script>
 </head>

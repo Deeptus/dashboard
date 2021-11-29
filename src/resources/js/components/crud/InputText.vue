@@ -60,7 +60,7 @@
                 return document.documentElement.lang
             },
             translate() {
-                this.$root.translate(JSON.stringify(this.value.value)).then(response => {
+                this.$root.translate(this.value.value[this.lang()]).then(response => {
                     this.value.value = response.data
                 })
             }

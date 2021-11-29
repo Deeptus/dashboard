@@ -52,6 +52,8 @@ class DynamicContentController extends Controller
                     }
                 } elseif($key == 'date' || $key == 'featured') {
                     $content[$key] = $value;
+                } elseif($key == 'sitio_web') {
+                    $content[$key] = $value;
                 } else {
                     if ($value != null){
                         $content[$key] = json_decode($value);
@@ -126,6 +128,10 @@ class DynamicContentController extends Controller
                 $gallery[$key] = $path;
             }
             $item->gallery  = $gallery;
+        }
+
+        if($data->sitio_web){
+            $item->sitio_web  = $data->sitio_web;
         }
         $item->lang        = (array) $data->lang;
         $item->setTranslations('order', (array) $data->order);
@@ -208,6 +214,9 @@ class DynamicContentController extends Controller
                 }
             }
             $item->gallery  = $gallery;
+        }
+        if($data->sitio_web){
+            $item->sitio_web  = $data->sitio_web;
         }
         $item->setTranslations('image', (array) $image);
         $item->lang        = (array) $data->lang;

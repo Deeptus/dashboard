@@ -14,8 +14,7 @@ class GoogleTranslateController extends Controller {
         $this->middleware('auth');
     }
     public function getTranslate() {
-        $text = json_decode(request()->text, true)['es'];
-        $text = str_replace("\n", "", $text);
+        $text = str_replace("\n", "", request()->text);
         $text = str_replace("  ", " ", $text);
         $langs = LaravelLocalization::getLocalesOrder();
         $translated = [
@@ -28,7 +27,10 @@ class GoogleTranslateController extends Controller {
             $url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl='.$key.'&dt=t&q='.urlencode($text);
             $response = file_get_contents($url);
             $response = json_decode($response, true);
-            $translated[$key] = $response[0][0][0];
+            $translated[$key] = '';
+            foreach ($response[0] as $key2 => $value) {
+                $translated[$key] .= $value[0];
+            }
         }
         return response()->json($translated);
         // foreach (LaravelLocalization::getLocalesOrder() as $key => $value) {

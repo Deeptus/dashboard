@@ -48,6 +48,19 @@
                             </fieldset>
                             <fieldset v-for="(languageKey, index) in content.lang" :key="index">
                                 <legend>{{ languages[languageKey] }}</legend>
+                                <div class="row" v-if="isDisplayInput('sitio_web', languageKey)">
+                                    <div class="form-group col-md-12">
+                                        <label :for="'order-'+languageKey">Sitio web</label>
+                                        <select
+                                            class="form-select"
+                                            :id="'featured-'+languageKey"
+                                            :name="'featured-'+languageKey"
+                                            v-model="content.sitio_web"
+                                        >
+                                            <option :value="key" v-for="key in config['sitio_web']" :key="key">{{ key }}</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="row" v-if="isDisplayInput('use-order', languageKey)">
                                     <div class="form-group col-md-12">
                                         <label :for="'order-'+languageKey">{{ getLabel('use-order')?getLabel('use-order'):'Orden' }}</label>
@@ -164,7 +177,7 @@
                                     <div class="form-group col-md-12">
                                         <label :for="'featured-'+languageKey">{{ getLabel('use-featured') }}</label>
                                         <select
-                                            class="form-control"
+                                            class="form-select"
                                             :id="'featured-'+languageKey"
                                             :name="'featured-'+languageKey"
                                             v-model="content.featured"
@@ -341,7 +354,10 @@
             },
             isDisplayInput(input, language) {
                 let display = false
-
+                
+                if ( input == 'sitio_web' && Object.prototype.toString.call(this.config[input]) === '[object Array]') {
+                    return true
+                }
                 // Se verifica si no es false
                 if(!this.config[input])
                     return false
@@ -407,6 +423,7 @@
                     this.loaded = 3
                     var self = this
                     setTimeout(() => {
+                        // this.loaded = 1
                         window.location.href = this.urlBack
                     }, 1000);
                 });

@@ -1,5 +1,7 @@
 <template>
-    <textarea v-model="value" ref="textarea"></textarea>
+	<div>
+		<textarea ref="textarea" :id="id"></textarea>
+	</div>
 </template>
 <script>
     export default {
@@ -9,13 +11,22 @@
                 default: null,
             },
         },
+		data() {
+			return {
+				editor: null,
+				body: '',
+				id: 'editor_' + _.random(10000, 99999)
+			};
+		},
         created() {},
         mounted () {
 			this.$nextTick(function () {
 				var useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 				tinymce.init({
-					selector: '#' + this.$refs.textarea.id,
-					plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+					// selector: '#' + this.$refs.textarea.id,
+					selector: '#' + this.id,
+					// add to plugins autosave for asking for confirmation on page exit
+					plugins: 'print preview paste importcss searchreplace autolink save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
 					imagetools_cors_hosts: ['picsum.photos'],
 					menubar: 'file edit view insert format tools table help',
 					toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
@@ -70,7 +81,21 @@
 					contextmenu: 'link image imagetools table',
 					skin: useDarkMode ? 'oxide-dark' : 'oxide',
 					content_css: useDarkMode ? 'dark' : 'default',
-					content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+					content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+					setup: (editor) => {
+						editor.on('init', (e) => {
+							editor.setContent(this.value)
+						})
+						editor.on('click', (e) => {
+							this.$emit('input', editor.getContent())
+						})
+						editor.on('blur', (e) => {
+							this.$emit('input', editor.getContent())
+						})
+						editor.on('keyup', (e) => {
+							this.$emit('input', editor.getContent())
+						})
+					}
 				});
 			})
         },
