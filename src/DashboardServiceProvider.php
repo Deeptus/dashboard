@@ -84,6 +84,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                   4 => 'Install package.json',
                   5 => 'Website basic scaffolding',
                   6 => 'Admin basic scaffolding',
+                  7 => 'Website client scaffolding',
                 ]
             );
             $bar = $this->output->createProgressBar(count($actions));
@@ -123,6 +124,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                     __DIR__ . '/Generators/templates/config/auth.php' => config_path('auth.php'),
                     __DIR__ . '/Generators/templates/config/laravellocalization.php' => config_path('laravellocalization.php'),
                     __DIR__ . '/Generators/templates/config/translatable.php' => config_path('translatable.php'),
+                    __DIR__ . '/Generators/templates/Middleware/RedirectIfAuthenticatedClient.php' => app_path('Http/Middleware/RedirectIfAuthenticatedClient.php'),
                 ];
                 foreach ($paths as $path => $destination) {
                     if (!file_exists(dirname($destination))) {
@@ -184,6 +186,12 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
                     'root'     => 1,
                 ]);
                 $bar->advance();
+            }
+            if (in_array('Website client scaffolding', $actions)) {
+                $path = app_path('Http/Kernel.php');
+                $content = file_get_contents($path);
+                $content = str_replace("'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class", "'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,\n\t\t'client' => \App\Http\Middleware\RedirectIfAuthenticatedClient::class", $content);
+                file_put_contents($path, $content);
             }
 
             $bar->finish();

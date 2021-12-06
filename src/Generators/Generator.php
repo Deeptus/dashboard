@@ -14,7 +14,7 @@ class Generator
         $this->inputs = $inputs;
     }
     public function model() {
-        if ( method_exists($this->table, 'model') && $this->table->model ) { 
+        if ( property_exists($this->table, 'model') && $this->table->model ) { 
             return true;
         }
         $path = realpath(__DIR__ . '/templates/model.php');

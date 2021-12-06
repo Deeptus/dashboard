@@ -197,11 +197,8 @@ trait CrudBase {
                         }
                     }
                     if ($input->valueoriginselector == 'table') {
-                        
-                        $className = str_replace(['_', '-', '.'], ' ', $input->tabledata);
-                        $className = ucwords($className);
-                        $className = str_replace(' ', '', $className);
-                        $subModel = "\\App\\Models\\" . $className;
+                        $info = __crudInfo($input->tabledata);
+                        $subModel = $info['model'];
                         $item = $subModel::where($input->tablekeycolumn, $this->getAttribute($column))->first();
                         try {
                             return $item->{ $input->tabletextcolumn };

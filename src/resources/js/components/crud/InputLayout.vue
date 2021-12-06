@@ -10,6 +10,7 @@
         <MultimediaFile :value="value" :input="input" v-if="input.type == 'multimedia_file'"></MultimediaFile>
         <InputCheckbox :relations="relations" :value="value" :input="input" v-if="input.type == 'checkbox'"></InputCheckbox>
         <wysiwyg :value="value" :input="input" v-if="input.type == 'wysiwyg'" :languages="languages"></wysiwyg>
+        <CustomComponent :content="content" :value="value" :input="input" v-if="input.type == 'custom_component'"></CustomComponent>
         <div v-if="displayDebug == 1">{{ value }} <button @click="reloadDebug">reload</button></div>
         <div v-if="input.type == 'card-header'" class="card-header">
             {{ input.columnname }}
@@ -22,6 +23,7 @@
     import InputDate   from './InputDate'
     import InputSelect from './InputSelect'
     import SubForm     from './SubForm'
+    import CustomComponent from './CustomComponent'
     import InputCheckbox   from './InputCheckbox.vue'
     import MapSelectLatLon from './MapSelectLatLon'
     import CustomGallery   from '../CustomGalleryComponent.vue'
@@ -44,6 +46,9 @@
             subForm: {
                 default: {}
             },
+            content: {
+                default: {}
+            },
             value: {
                 type: Object,
                 default: {}
@@ -59,6 +64,7 @@
             MapSelectLatLon,
             MultimediaFile,
             CustomGallery,
+            CustomComponent,
             Wysiwyg
         },
         data(){

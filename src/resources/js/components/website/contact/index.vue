@@ -3,6 +3,9 @@
         <template v-if="form.state == null">
             <contact-message :form="form" v-if="type == 'contact-message'"></contact-message>
             <budget :form="form" v-if="type == 'budget'"></budget>
+            <div class="col-md-12 text-end" v-if="app_debug">
+                <button type="button" class="badge bg-secondary" @click="faker()"><i class="fas fa-random"></i></button>
+            </div>
         </template>
         <div class="col-md-12" v-else>
             <state :componentState="form.state"></state>
@@ -15,6 +18,8 @@
     import ContactMessage from './ContactMessage.vue'
     import Budget from './Budget.vue'
     import State from './State.vue'
+    import faker from 'faker'
+
     export default {
         props: {
             endpoint: {},
@@ -30,6 +35,7 @@
         },
         data(){
             return {
+                app_debug: window.app_debug,
                 form: {
                     recaptcha_token: '',
                     state: null,
@@ -236,9 +242,23 @@
                 })
 
             },
+            faker() {
+                faker.locale = "es"
+                window.faker = faker
+                this.form.inputs.name.value    = faker.name.findName()
+                this.form.inputs.company.value = faker.company.companyName()
+                this.form.inputs.phone.value   = faker.phone.phoneNumber()
+                this.form.inputs.email.value   = faker.internet.email()
+                this.form.inputs.message.value = faker.lorem.paragraph()
+                                
+                return true
+            }
         }
   }
 </script>
 <style lang="scss" scoped>
-
+    .badge {
+        border: none;
+        font-size: 11px;
+    }
 </style>

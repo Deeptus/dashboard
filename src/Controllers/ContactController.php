@@ -19,6 +19,7 @@ use AporteWeb\Dashboard\Models\ContactRequest;
 use AporteWeb\Dashboard\Models\ContactRequestItems;
 use AporteWeb\Dashboard\Models\ContactRequestFile;
 use Illuminate\Support\Facades\Mail;
+
 use AporteWeb\Dashboard\Mail\ContactMessageMail;
 
 class ContactController extends Controller {

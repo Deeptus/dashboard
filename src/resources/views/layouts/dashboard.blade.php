@@ -44,6 +44,7 @@
             notification: "{{ route('admin.notification') }}",
             translate: "{{ route('admin.translate') }}",
             translation_manager: "{{ route('admin.translation-manager') }}",
+            marketplace: "{{ route('admin.marketplace') }}",
         }
     </script>
 </head>

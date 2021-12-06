@@ -412,7 +412,7 @@ if (! function_exists('__crudInfo')) {
         $className = str_replace(' ', '', $className);
         $info['model'] = "\\App\\Models\\" . $className;
         try {
-            if ( method_exists($content->table, 'model') && $content->table->model ) {
+            if ( property_exists($content->table, 'model') && $content->table->model ) {
                 $info['model'] = $content->table->model;
             }
         } catch (\Throwable $th) {

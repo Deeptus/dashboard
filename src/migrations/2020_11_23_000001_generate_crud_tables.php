@@ -23,6 +23,9 @@ class GenerateCrudTables extends Migration
         $dirPath = __crudFolder();
         $files = File::allFiles($dirPath);
         foreach ($files as $fileKey => $file) {
+            if ( $file->getExtension() != 'json' ) {
+                continue;
+            }
             $content = json_decode(file_get_contents($file->getPathname()));
             try {
                 if (Schema::hasTable($content->table->tablename)) {

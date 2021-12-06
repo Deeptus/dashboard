@@ -287,11 +287,12 @@
                                             <option value="checkbox">checkbox</option>
                                             <option value="select2">select2</option>
                                             <option value="select2multiple">select2multiple</option>
-                                            <option value="subForm">subForm</option>
                                         </optgroup>
                                         <optgroup label="Special">
                                             <option value="card-header">CARD Header</option>
                                             <option value="map-select-lat-lng">Map selector Lat-Lon</option>
+                                            <option value="subForm">subForm</option>
+                                            <option value="custom_component">Custom Component</option>
                                         </optgroup>
                                     </select>
                                     <label>TYPE</label>

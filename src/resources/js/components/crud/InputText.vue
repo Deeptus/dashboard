@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="state == 'show'">
         <template v-if="input.translatable == 1">
             <div class="block-translations">
                 <div class="row">
@@ -43,15 +43,17 @@
         components: {},
         data(){
             return{
+                state: ''
             }
         },
         created() {
             // if (typeof content.value === 'object' || content.value instanceof Object) {
             if ( this.input.translatable == 1 ) {
                 if (Object.prototype.toString.call( this.value.value ) !== '[object Object]') {
-                    this.value.value = {}
+                    this.$set(this.value, 'value', {})
                 }
             }
+            this.state = 'show'
         },
         mounted () {},
         watch: {},
@@ -61,7 +63,10 @@
             },
             translate() {
                 this.$root.translate(this.value.value[this.lang()]).then(response => {
-                    this.value.value = response.data
+                    Object.keys(response.data).forEach(key => {
+                        this.$set(this.value.value, key, response.data[key])
+                        this.$forceUpdate()
+                    })
                 })
             }
         },

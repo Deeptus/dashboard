@@ -7,19 +7,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 use AporteWeb\Dashboard\Models\CrudBase;
 
-class Products extends Model {
+class ClientProfiles extends Model {
     use SoftDeletes;
     use \AporteWeb\Dashboard\Traits\HasTranslations;
     use CrudBase;
 
-    protected $table = 'marketplace_products';
-    protected $fillable = [
-        'id',
+    protected $table = 'marketplace_client_profiles';
+	protected $fillable = [
+		'id',
         'uuid',
         'name',
         'slug',
-        'layout_slug',
-        'category_id',
+        'parent_id'
     ];
     public static function boot() {
         parent::boot();
@@ -28,5 +27,8 @@ class Products extends Model {
                 $model->uuid = __uuid();
             }
         });
+    }
+    public function client() {
+        return $this->belongsTo(Clients::class, 'client_id');
     }
 }

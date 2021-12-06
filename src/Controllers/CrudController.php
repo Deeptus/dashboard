@@ -214,6 +214,17 @@ class CrudController extends Controller
         }
 
         foreach ($this->inputs as $inputKey => $input) {
+            if ($input->type == 'custom_component') {
+                $className = str_replace(['_', '-', '.'], ' ', $input->columnname);
+                $className = ucwords($className);
+                $className = str_replace(' ', '', $className);
+                $className = "\\App\\Dashboard\\Components\\" . $className;            
+                $component = new $className;
+                $results = $component->get($item, $input, $content);
+                $input     = $results['input'];
+                $content   = $results['content'];    
+                continue;
+            }
             $results = $this->getInput(
                 $id,
                 $input,
@@ -492,22 +503,13 @@ class CrudController extends Controller
         $validatedData = $request->validate($validHelper);
         */
 
-        foreach ($this->inputs as $inputKey => $input) {
-            try {
-                if ($input->type != 'card-header' && $input->settable == 0) {
-                    $this->attachInput($item, $input, $request->all());
-                }
-            } catch (\Throwable $th) {
-                abort(500, json_encode([$input, $th]));
-            }
-        }
         try {
             if ($this->table->slug == 1 && ( $item->slug == null || $item->slug == '' ) ) {
                 $slug_col = $this->table->slug_col;
                 $colinfo = array_filter($this->inputs, function($input) use ($slug_col) {
                     return $input->columnname == $slug_col;
                 });
-                if(intval($input->translatable)) {
+                if( property_exists($colinfo[0], 'translatable') && intval($colinfo[0]->translatable)) {
                     $val = json_decode($request->{$slug_col}, true);
                     $slug = $val[App::getLocale()];
                     $slug = Str::slug($slug. ' ' . Str::random(6));
@@ -517,7 +519,26 @@ class CrudController extends Controller
                 $item->slug = $slug;
             }
         } catch (\Throwable $th) {
-            //throw $th;
+            dd($th->getMessage());
+        }
+
+        foreach ($this->inputs as $inputKey => $input) {
+            try {
+                if ($input->type == 'custom_component') {
+                    $className = str_replace(['_', '-', '.'], ' ', $input->columnname);
+                    $className = ucwords($className);
+                    $className = str_replace(' ', '', $className);
+                    $className = "\\App\\Dashboard\\Components\\" . $className;            
+                    $component = new $className;
+                    $component->store($item, $input, $request);
+                    continue;
+                }
+                if ($input->type != 'card-header' && $input->settable == 0) {
+                    $this->attachInput($item, $input, $request->all());
+                }
+            } catch (\Throwable $th) {
+                abort(500, $th->getMessage());
+            }
         }
         $item->save();
         return response()->json(['message' => 'Se ' . $action . ' un <strong>Usuario</strong> con éxito.']);

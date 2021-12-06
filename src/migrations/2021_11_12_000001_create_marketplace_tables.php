@@ -124,7 +124,7 @@ class CreateMarketplaceTables extends Migration {
             $table->bigIncrements('id');
             $table->uuid('uuid')->nullable();
             $table->string('username')->unique();
-            $table->string('fullname');
+            $table->string('full_name');
             $table->string('email')->unique();
             $table->string('avatar')->nullable();
             $table->string('website')->nullable();
@@ -287,7 +287,7 @@ class CreateMarketplaceTables extends Migration {
             $table->string('name');
             $table->string('slug');
             $table->string('layout_slug')->nullable();
-            $table->unsignedBigInteger('category_id')->unsigned();
+            $table->unsignedBigInteger('category_id')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
 

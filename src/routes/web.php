@@ -11,20 +11,28 @@
 |
 */
 
-Route::group([
-    'prefix' => 'contact',
-    'as' => 'contact',
-], function() {
-    Route::post('/submit', 'ContactController@submit')->name('.submit');
-});
-
-Route::group([
-    'prefix'     => config('adashboard.prefix', 'adm'),
-], function() {
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', 'Auth\LoginController@login');
-    Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
+    Route::group([
+        'prefix' => 'contact',
+        'as' => 'contact',
+    ], function() {
+        Route::post('/submit', 'ContactController@submit')->name('.submit');
+    });
+    Route::group([
+        'prefix' => 'api',
+        'as' => 'api',
+    ], function() {
+        Route::get ('/client/register/data', 'Api\Website\ClientRegisterController@data')->name('.client.register.data');
+        Route::post ('/client/register', 'Api\Website\ClientRegisterController@register')->name('.client.register');
+    });
+    Route::group([
+        'prefix'     => config('adashboard.prefix', 'adm'),
+    ], function() {
+        Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+        Route::post('login', 'Auth\LoginController@login');
+        Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+        Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+    });
 });
 
 Route::group(
@@ -92,6 +100,19 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/',      'TranslationManagerController@data');
             Route::post('store',  'TranslationManagerController@store') ->name('.store');
             Route::post('delete', 'TranslationManagerController@delete')->name('.delete');
+        });
+        Route::group([
+            'prefix' => 'api/feed',
+            'as' => '.feed',
+        ], function() {
+            Route::get ('/', 'FeedController@getInstagramFeedByAccount');
+        });
+        Route::group([
+            'prefix' => 'marketplace',
+            'as' => '.marketplace',
+        ], function() {
+            Route::get ('/',      'MarketplaceController@index');
+            Route::get('api/price-list',  'MarketplaceController@getPriceList') ->name('.price-list');
         });
         Route::group([
             'prefix' => 'email-layout',

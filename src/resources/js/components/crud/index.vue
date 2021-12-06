@@ -35,7 +35,7 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
-                        <InputLayout :languages="languages" :relations="relations" :subForm="subForm" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"></InputLayout>
+                        <InputLayout :languages="languages" :relations="relations" :subForm="subForm" :content="content" :value="content[input.columnname]" :input="input" v-for="(input, inputk) in inputs" :key="inputk"></InputLayout>
                     </div>
                 </div>
             </div>
@@ -119,6 +119,8 @@
                                 this.$set(this.content[input.columnname], 'value', {})
                                 this.$set(this.content[input.columnname].value, 'lat', parseFloat(response.data.content[input.columnname + '_lat']))
                                 this.$set(this.content[input.columnname].value, 'lng', parseFloat(response.data.content[input.columnname + '_lng']))
+                            } else if (input.type == 'custom_component') {
+                                this.content[input.columnname].data = response.data.content[input.columnname]
                             } else {
                                 this.content[input.columnname].value = response.data.content[input.columnname]
                             }
@@ -173,6 +175,9 @@
                     if (typeof content.value === 'object' || content.value instanceof Object) {
                         formData.append(input.columnname, content.value.id)
                     }
+                } else if (input.type == 'custom_component') {
+                    // Custom component store method
+                    content.methods.store(formData)
 
                 } else if (input.type == 'map-select-lat-lng') {
                     formData.append(input.columnname + '_lat', content.value.lat);
@@ -213,8 +218,8 @@
                 axios.post(this.urlAction, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
-                        // this.loaded = 1
-                        window.location.href = this.urlBack
+                        this.loaded = 1
+                        // window.location.href = this.urlBack
                     }, 1000);
                 }).catch((error) => {
                     if (error.response.data.message == 'CSRF token mismatch.') {
