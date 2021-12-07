@@ -175,4 +175,15 @@ class CrudGeneratorController extends Controller
         return DB::select('describe ' . request()->table);
         return DB::connection()->getDoctrineColumn(request()->table, 'name')->getType()->getName();
     }
+    public function seedGenerate($tablename = false) {
+        $exitCode = Artisan::call('iseed ' . $tablename);
+        return $exitCode;
+    }
+    public function seedRestore($tablename) {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::table($tablename)->truncate();
+        $exitCode = Artisan::call('db:seed --class=' . Str::studly($tablename) . 'TableSeeder');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        return $exitCode;
+    }
 }

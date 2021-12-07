@@ -143,11 +143,13 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             'as' => '.crud-generator',
         ], function() {
             Route::get ('/', 'CrudGeneratorController@index');
-            Route::get ('/create', 'CrudGeneratorController@create')->name('.create');
-            Route::post('/', 'CrudGeneratorController@store')->name('.store');
-            Route::get ('/{id}/edit', 'CrudGeneratorController@edit')->name('.edit');
-            Route::get ('/{id}/fix',  'CrudGeneratorController@fix') ->name('.fix');
-            Route::post('/{id}', 'CrudGeneratorController@update')->name('.update');
+            Route::get ('/create', 'CrudGeneratorController@create')       ->name('.create');
+            Route::post('/', 'CrudGeneratorController@store')              ->name('.store');
+            Route::get ('/{id}/edit', 'CrudGeneratorController@edit')      ->name('.edit');
+            Route::get ('/{id}/fix',  'CrudGeneratorController@fix')       ->name('.fix');
+            Route::get ('/{id}/seed-generate', 'CrudGeneratorController@seedGenerate')->name('.seed-generate');
+            Route::get ('/{id}/seed-restore', 'CrudGeneratorController@seedRestore')->name('.seed-restore');
+            Route::post('/{id}', 'CrudGeneratorController@update')         ->name('.update');
             //
             Route::get ('/{id}/delete', 'CrudGeneratorController@destroy')->name('.destroy');
             Route::get ('/trash', 'CrudGeneratorController@trash')->name('.trash');

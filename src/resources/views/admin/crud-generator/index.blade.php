@@ -43,15 +43,23 @@
                     <td>
                         <a href="{{ route('admin.crud-generator.edit', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-sm text-white-50 fa-edit"></i>
-                            Editar
+                            Edit
                         </a>
                         <a href="{{ route('admin.crud-generator.fix', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-danger btn-sm">
                             <i class="fas fa-sm text-white-50 fa-tools"></i>
                             Fix
                         </a>
-                        <a href="{{ route('admin.crud', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-warning btn-sm">
+                        <a href="{{ route('admin.crud-generator.seed-generate', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-sm text-white-50 fa-database"></i>
+                            Generate SEED
+                        </a>
+                        <a href="{{ route('admin.crud-generator.seed-restore', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-sm text-white-50 fa-database"></i>
+                            Restore SEED
+                        </a>
+                        <a href="{{ route('admin.crud', [pathinfo($item->getfilename(), PATHINFO_FILENAME)]) }}" class="btn btn-secondary btn-sm">
                             <i class="fas fa-sm text-white-50 fa-external-link-alt"></i>
-                            Ir
+                            Go
                         </a>
                     </td>
                 </tr>

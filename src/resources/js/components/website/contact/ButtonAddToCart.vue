@@ -17,7 +17,10 @@
             storage: {
                 type: String,
                 default: 'budget'
-            }
+            },
+            textSuccessBtnClose: {},
+            textSuccessBtnRedirect: {},
+            urlSuccessBtnRedirect: {}
         },
         components: {},
         data(){
@@ -58,14 +61,15 @@
                             html: "Producto <strong>" + this.name + "</strong> añadido al pedido",
                             icon: "success",
                             showCancelButton: true,
-                            confirmButtonText: "Ir a solicitar presupuesto",
+                            confirmButtonText: this.textSuccessBtnRedirect,
                             confirmButtonColor: '#3085d6',
                             cancelButtonColor: '#d33',
-                            cancelButtonText: "Seguir comprando",
+                            cancelButtonText: this.textSuccessBtnClose,
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                let publicPath = document.head.querySelector('meta[name="public-path"]').content
-                                window.location.href = publicPath + 'presupuesto'
+                                // let publicPath = document.head.querySelector('meta[name="public-path"]').content
+                                // window.location.href = publicPath + 'presupuesto'
+                                window.location.href = this.urlSuccessBtnRedirect
                             }
                         })
 
