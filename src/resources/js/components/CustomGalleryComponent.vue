@@ -50,7 +50,6 @@
 </template>
 <script>
     import draggable from 'vuedraggable'
-    var publicPATH = document.head.querySelector('meta[name="public-path"]').content;
     export default {
         props: {
             model: {
@@ -203,13 +202,13 @@
                             'application/zip',
                             'application/x-zip-compressed'
                         ],
-                        icon: publicPATH + '/images/icons/zip.svg'
+                        icon: this.publicPath('/images/icons/zip.svg')
                     },
                     {
                         ext: [
                             'application/pdf'
                         ],
-                        icon: publicPATH + '/images/icons/pdf.svg'
+                        icon: this.publicPath('/images/icons/pdf.svg')
                     },
                     {
                         ext: [
@@ -217,20 +216,20 @@
                             'text/xml',
                             'text/plain'
                         ],
-                        icon: publicPATH + '/images/icons/txt.svg'
+                        icon: this.publicPath('/images/icons/txt.svg')
                     },
                     {
                         ext: [
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                             'application/vnd.ms-excel'
                         ],
-                        icon: publicPATH + '/images/icons/xls.svg'
+                        icon: this.publicPath('/images/icons/xls.svg')
                     },
                     {
                         ext: [
                             'application/msword'
                         ],
-                        icon: publicPATH + '/images/icons/doc.svg'
+                        icon: this.publicPath('/images/icons/doc.svg')
                     },
                 ]
                 fileIcon.forEach(item => {
@@ -259,7 +258,7 @@
                         return file.url
                     }
                 }
-                return publicPATH + '/images/icons/raw.svg'
+                return this.publicPath('/images/icons/raw.svg')
                 if (typeof file === 'string' || file instanceof String) {
                     return this.storage_path(file)
                 }

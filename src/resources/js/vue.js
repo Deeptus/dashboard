@@ -11,6 +11,8 @@ Vue.component('crud-generator-form', require('./components/crud-generator/index.
 Vue.component('chat-area', require('./components/chat/index.vue').default);
 Vue.component('button-chat-open', require('./components/chat/buttonOpen.vue').default);
 
+Vue.component('btn-link', require('./components/BtnLinkComponent.vue').default);
+
 // Vue.component('company-data-form', require('./components/company-data/CompanyDataFormComponent.vue').default);
 
 Vue.component('crud-form', require('./components/crud/index.vue').default);
@@ -178,6 +180,13 @@ window.storagePath = (file) => {
     url = replaceAll(url, '\\', '/')
     return replaceAll(url, '//', '/')
 }
+window.publicPath = (file) => {
+    let publicPath = document.head.querySelector('meta[name="public-path"]').content
+    let url        = publicPath + '/\\' + file
+    url = replaceAll(url, '\\', '/')
+    //return replaceAll(url, '//', '/')
+    return url
+}
 // trim custon chars
 String.prototype.trimChars = function (c) {
     var re = new RegExp("^[" + c + "]+|[" + c + "]+$", "g");
@@ -224,6 +233,7 @@ Vue.filter('getPostMaxSize',     window.getPostMaxSize);
 Vue.filter('checkValidFileSize', window.checkValidFileSize);
 Vue.filter('getValidFileSize',   window.getValidFileSize);
 Vue.filter('storagePath',        window.storagePath);
+Vue.filter('publicPath',         window.publicPath);
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.mixin({
   methods: {
@@ -250,6 +260,9 @@ Vue.mixin({
     },
     storagePath(file) {
         return window.storagePath(file)
+    },
+    publicPath(file) {
+        return window.publicPath(file)
     },
     toCurrency(numero) {
         return window.toCurrency(numero)

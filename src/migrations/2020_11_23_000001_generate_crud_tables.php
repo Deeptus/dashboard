@@ -107,6 +107,39 @@ class GenerateCrudTables extends Migration
             if($input->type == 'card-header') {
                 continue;
             }
+            if($input->type == 'subForm') {
+                $subFolderPath = __crudFolder() . '/' . $input->tabledata . '.json';
+                $subFolder = json_decode(file_get_contents($subFolderPath));
+                if ( $subFolder->table->order_index != 1 ) {
+                    $subFolder->table->order_index = 1;
+                }
+                // search for subform inputs
+                $i = array_filter($subFolder->inputs, function($item) use ($input) {
+                    return $item->columnname == $input->tablekeycolumn;
+                });
+                if (count($i) == 0) {
+                    $subFolder->inputs[] = [
+                        "columnname" => $input->tablekeycolumn,
+                        "type" => "bigInteger",
+                        "label" => new \stdClass(),
+                        "unique" => 0,
+                        "precision" => 0,
+                        "scale" => 0,
+                        "default" => "",
+                        "nullable" => 1,
+                        "validate" => 0,
+                        "max" => "",
+                        "min" => "",
+                        "tabledata" => "",
+                        "tablekeycolumn" => "",
+                        "tabletextcolumn" => "",
+                        "settable" => "3",
+                        "listable" => 0,
+                        "translatable" => 0
+                    ];
+                }
+                file_put_contents($subFolderPath, json_encode($subFolder, JSON_PRETTY_PRINT));
+            }
             $change = false;
             if (Schema::hasColumn($content->table->tablename, $input->columnname)) {
                 $change = true;

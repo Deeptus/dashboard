@@ -75,13 +75,13 @@
                             'application/zip',
                             'application/x-zip-compressed'
                         ],
-                        icon: this.storagePath('/images/icons/zip.svg')
+                        icon: this.publicPath('/images/icons/zip.svg')
                     },
                     {
                         ext: [
                             'application/pdf'
                         ],
-                        icon: this.storagePath('/images/icons/pdf.svg')
+                        icon: this.publicPath('/images/icons/pdf.svg')
                     },
                     {
                         ext: [
@@ -89,20 +89,20 @@
                             'text/xml',
                             'text/plain'
                         ],
-                        icon: this.storagePath('/images/icons/txt.svg')
+                        icon: this.publicPath('/images/icons/txt.svg')
                     },
                     {
                         ext: [
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                             'application/vnd.ms-excel'
                         ],
-                        icon: this.storagePath('/images/icons/xls.svg')
+                        icon: this.publicPath('/images/icons/xls.svg')
                     },
                     {
                         ext: [
                             'application/msword'
                         ],
-                        icon: this.storagePath('/images/icons/doc.svg')
+                        icon: this.publicPath('/images/icons/doc.svg')
                     },
                 ]
                 fileIcon.forEach(item => {
@@ -118,7 +118,7 @@
                 }
                 let file = this.image
                 if (!this.$root.checkValidFileSize(file)) {
-                    return this.storagePath('/images/icons/Emblem-important-red.svg')
+                    return this.publicPath('/images/icons/Emblem-important-red.svg')
                 }
 
                 if (!file || !file.type) {
@@ -146,7 +146,7 @@
                         return file.url
                     }
                 }
-                return this.storagePath('/images/icons/raw.svg')
+                return this.publicPath('/images/icons/raw.svg')
                 if (typeof file === 'string' || file instanceof String) {
                     return this.storage_path(file)
                 }

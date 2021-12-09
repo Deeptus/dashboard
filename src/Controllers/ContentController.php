@@ -23,9 +23,19 @@ class ContentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function home($section)
-    {
-        $item = Content::firstOrCreate(['section' => $section]);
+    public function home($section) {
+        $dominios = config('dominios');
+        $server = request()->server();
+        $sitio_web = null;
+        if (array_key_exists('dominio', $dominios)) {
+            $sitio_web = array_search($server['SERVER_NAME'], $dominios['dominio']);
+            if (!$sitio_web) {
+                $sitio_web = array_key_first($dominios['dominio']);
+            }
+            $item = Content::firstOrCreate(['section' => $section, 'sitio_web' => $sitio_web]);
+        } else {
+            $item = Content::firstOrCreate(['section' => $section]);
+        }
         //$element_meta = $item->meta()->pluck('meta_value', 'meta_key')->toArray();
         $config = config('dynamic-content.' . $section);
         return view('Dashboard::admin.content.home', [
@@ -54,6 +64,9 @@ class ContentController extends Controller
         $item->subtitle  = $request->subtitle;
         $item->text      = $request->text;
         $item->url       = $request->url;
+        if($request->sitio_web){
+            $item->sitio_web  = $data->sitio_web;
+        }
         $item->save();
         $item->updateMeta($request);
 

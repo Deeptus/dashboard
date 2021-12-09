@@ -171,6 +171,7 @@
                                             <option value="crud_listing">CRUD Listing</option>
                                             <option value="disable_create">Disable Create</option>
                                             <option value="disable_edit">Disable Edit</option>
+                                            <option value="disable_delete">Disable Delete</option>
                                         </select>
                                         <label>Type</label>
                                     </div>
@@ -197,6 +198,7 @@
                             <li><strong>CRUD Listing(crud_listing):</strong> `set` = -1</li>
                             <li><strong>Disable Create(disable_create):</strong> always</li>
                             <li><strong>Disable Edit(disable_edit):</strong> always</li>
+                            <li><strong>Disable Delete(disable_delete):</strong> always</li>
                         </ul>
                     </div>
                 </div>
@@ -568,7 +570,6 @@
                             this.conditions = []
                         }
                     }
-                    console.log()
                     this.inputs.forEach(input => {
                         let types = ['text', 'textarea', 'wysiwyg']
                         if (input.translatable === undefined && types.includes(input.type)) {
@@ -874,8 +875,9 @@
                 axios.post(this.urlAction, formData).then((response) => {
                     this.loaded = 3
                     setTimeout(() => {
-                        this.loaded = 1
+                        // this.loaded = 1
                         // window.location.href = response.data.redirect
+                        window.location = this.urlBack
                     }, 1000);
                 }).catch((error) => {
                     if (error.response.data.message == 'CSRF token mismatch.') {

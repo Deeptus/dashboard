@@ -19,11 +19,45 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use AporteWeb\Dashboard\Generators\Generator;
 use Illuminate\Support\Facades\Artisan;
 
-class CrudGeneratorController extends Controller
-{
+use  Illuminate\Pagination\Paginator;
+use  Illuminate\Pagination\LengthAwarePaginator;
+use  Illuminate\Pagination\CursorPaginator;
+use Illuminate\Support\Collection;
+
+class CrudGeneratorController extends Controller {
+
+    public function paginate($items, $perPage = 15, $page = null, $options = []) {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+    }
     public function index() {
         $dirPath = __crudFolder();
-        $data = File::allFiles($dirPath);
+        $data = collect(File::allFiles($dirPath))->map(function ($file) {
+            $fileName = $file->getRelativePathname();
+            $fileName = str_replace('.php', '', $fileName);
+            //$fileName = str_replace('-', ' ', $fileName);
+            //$fileName = ucwords($fileName);
+            return [
+                'name' => $fileName,
+                'path' => $file->getRelativePathname(),
+                'fullPath' => $file->getPathname(),
+                'extension' => $file->getExtension(),
+                'size' => $file->getSize(),
+                'last_modified' => $file->getMTime(),
+                'last_modified_formatted' => date('d/m/Y H:i:s', $file->getMTime()),
+                'created_at' => $file->getCTime(),
+                'created_at_formatted' => date('d/m/Y H:i:s', $file->getCTime()),
+                'table_exist' => Schema::hasTable(strtolower(str_replace('.json', '', $fileName))),
+            ];
+        });
+        if ( request()->has('s') && request()->get('s') != '' ) {
+            $data = $data->filter(function ($item) {
+                return Str::contains($item['name'], request()->get('s'));
+            });
+        }
+        $data = $this->paginate($data, request()->paginate ?? 10, null, ['path' => 'crud-generator', 'query' => ['s' => request()->s, 'paginate' => request()->paginate]]);
+
         return view('Dashboard::admin.crud-generator.index', [
             'data'           => $data,
             '__admin_active' => 'admin.crud-generator'
@@ -56,6 +90,7 @@ class CrudGeneratorController extends Controller
             }
             $item->save();
         }
+        return redirect()->back()->with('success', 'Fix Success');
     }
     public function data($table = false) {
         $languages = [];
@@ -176,14 +211,15 @@ class CrudGeneratorController extends Controller
         return DB::connection()->getDoctrineColumn(request()->table, 'name')->getType()->getName();
     }
     public function seedGenerate($tablename = false) {
+        define('STDIN',fopen("php://stdin","r"));
         $exitCode = Artisan::call('iseed ' . $tablename);
-        return $exitCode;
+        return redirect()->back()->with('success', 'Seed Generated: <strong>' . $tablename . '</strong>');
     }
     public function seedRestore($tablename) {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table($tablename)->truncate();
         $exitCode = Artisan::call('db:seed --class=' . Str::studly($tablename) . 'TableSeeder');
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
-        return $exitCode;
+        return redirect()->back()->with('success', 'Seed Restored: <strong>' . $tablename . '</strong>');
     }
 }

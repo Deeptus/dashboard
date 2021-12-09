@@ -11,9 +11,9 @@
 </div>
 <x-dashboard-messages/>
 <crud-generator-form
-    form-name="Añadir"
+    form-name="Editar"
     url-data="{{ route('admin.crud-generator.data', [$table]) }}"
-    url-back="{{ route('admin.crud-generator') }}"
+    url-back="{{ route('admin.crud-generator', ['paginate' => request()->paginate, 's' => request()->s, 'page' => request()->page]) }}"
     url-action="{{ route('admin.crud-generator.store', [$table]) }}"
 ></crud-generator-form>
 @endsection

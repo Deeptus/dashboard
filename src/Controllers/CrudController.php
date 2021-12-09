@@ -256,6 +256,7 @@ class CrudController extends Controller
     public function index() {
         $appends = [];
         $enable_create = true;
+        $disable_delete = false;
         $data = new $this->model;
         if (intval($this->table->single_record)) {
             $item = $data->first();
@@ -283,6 +284,11 @@ class CrudController extends Controller
             if ($condition->type == 'disable_create') {
                 if ($condition->condition == 'always') {
                     $enable_create = false;
+                }
+            }
+            if ($condition->type == 'disable_delete') {
+                if ($condition->condition == 'always') {
+                    $disable_delete = true;
                 }
             }
         }
@@ -313,6 +319,7 @@ class CrudController extends Controller
             'table'          => $this->table,
             'inputs'         => $this->inputs,
             'enable_create'  => $enable_create,
+            'disable_delete'  => $disable_delete,
             '__admin_active' => 'admin.crud-' . $this->tablename
         ]);
     }
@@ -562,10 +569,12 @@ class CrudController extends Controller
     }
     public function trash($tablename) {
         $enable_create = true;
+        $disable_delete = true;
         $data = $this->model::onlyTrashed()->paginate(20);
         return view('Dashboard::admin.crud.index', [
             'trash'          => true,
             'enable_create'  => $enable_create,
+            'disable_delete' => $disable_delete,
             'data'           => $data,
             'tablename'      => $this->tablename,
             'table'          => $this->table,

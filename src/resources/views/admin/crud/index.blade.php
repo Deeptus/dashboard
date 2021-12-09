@@ -111,23 +111,38 @@
                     @endforeach
                     <td>
                         @if (!$item->trashed())
-                        <a href="{{ route('admin.crud.edit', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-primary btn-sm">
+                        <a
+                            href="{{ route('admin.crud.edit', ['tablename' => $tablename, 'id' => $item->pkv]) }}"
+                            class="btn btn-primary btn-sm">
                             <i class="fas fa-sm text-white-50 fa-edit"></i>
                             Editar
                         </a>
-                        <a href="{{ route('admin.crud.copy', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-warning btn-sm btn-confirm-copy">
+                        @if ($enable_create)
+                        <btn-link
+                            href="{{ route('admin.crud.copy', ['tablename' => $tablename, 'id' => $item->pkv]) }}"
+                            class="btn btn-warning btn-sm"
+                            confirm-text="¿Está seguro de duplicar este registro?">
                             <i class="fas fa-sm text-white-50 fa-copy"></i>
                             Duplicar
-                        </a>
-                        <a href="{{ route('admin.crud.destroy', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-danger btn-sm btn-confirm-delete">
+                        </btn-link>
+                        @endif
+                        @if (!$disable_delete)
+                        <btn-link
+                            href="{{ route('admin.crud.destroy', ['tablename' => $tablename, 'id' => $item->pkv]) }}"
+                            class="btn btn-danger btn-sm"
+                            confirm-text="¿Está seguro de eliminar este registro?">
                             <i class="fas fa-sm text-white-50 fa-trash-alt"></i>
                             Eliminar
-                        </a>
+                        </btn-link>
+                        @endif
                         @else
-                        <a href="{{ route('admin.crud.restore', ['tablename' => $tablename, 'id' => $item->pkv]) }}" class="btn btn-warning btn-sm">
+                        <btn-link
+                            href="{{ route('admin.crud.restore', ['tablename' => $tablename, 'id' => $item->pkv]) }}"
+                            class="btn btn-warning btn-sm"
+                            confirm-text="¿Está seguro de restaurar este registro?">
                             <i class="fas fa-sm text-white-50 fa-trash-restore"></i>
                             Restaurar
-                        </a>
+                        </btn-link>
                         @endif
                     </td>
                 </tr>

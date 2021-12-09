@@ -13,7 +13,7 @@
 <crud-generator-form
     form-name="Añadir"
     url-data="{{ route('admin.crud-generator.data') }}"
-    url-back="{{ route('admin.crud-generator') }}"
+    url-back="{{ route('admin.crud-generator', ['paginate' => request()->paginate, 's' => request()->s, 'page' => request()->page]) }}"
     url-action="{{ route('admin.crud-generator.store') }}"
 ></crud-generator-form>
 @endsection

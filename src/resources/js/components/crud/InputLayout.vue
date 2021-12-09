@@ -95,7 +95,9 @@
                 displayDebug: 0
             }
         },
-        created() {},
+        created() {
+            // console.log(this.content)
+        },
         mounted () {},
         watch: {},
         methods: {

@@ -8,7 +8,7 @@
                     <button class="btn btn-warning my-1" @click="copyItem(key)"><i class="fas fa-copy"></i></button>
                 </div>
                 <div class="row subform__row">
-                    <InputLayout :languages="languages" :relations="relations" :subForm="{}" :value="item.content[input.columnname]" :input="input" v-for="(input, inputk) in subForm[input.columnname].inputs" :key="inputk"></InputLayout>
+                    <InputLayout :languages="languages" :content="item" :relations="relations" :subForm="{}" :value="item.content[input.columnname]" :input="input" v-for="(input, inputk) in subForm[input.columnname].inputs" :key="inputk"></InputLayout>
                 </div>
                 <div class="subform__buttons-right">
                     <button @click="moveUp(key)" class="btn btn-warning" v-if="key > 0"><i class="fas fa-angle-up"></i></button>
@@ -58,6 +58,8 @@
             }
         },
         created() {
+            // console.log(this.value);
+            // aca hay un error porque llega primero como un objeto, pero en su lugar deberia llegar como un array
             this.inputs = this.subForm[this.input.columnname].inputs
             this.items = Array.isArray(this.value.value) ? this.value.value : []
             let newItem = {

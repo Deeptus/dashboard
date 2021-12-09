@@ -14,7 +14,8 @@ class GoogleTranslateController extends Controller {
         $this->middleware('auth');
     }
     public function getTranslate() {
-        $text = str_replace("\n", "", request()->text);
+        $text = request()->text;
+        $text = str_replace("\n", "",  $text);
         $text = str_replace("  ", " ", $text);
         $langs = LaravelLocalization::getLocalesOrder();
         $translated = [
@@ -39,6 +40,7 @@ class GoogleTranslateController extends Controller {
                 foreach ($response[0] as $key2 => $value) {
                     $translated[$key] .= $value[0];
                 }
+                $translated[$key] = str_replace("http: //", "http://",  $translated[$key]);
                 $cache[$url] = $translated[$key];
                 Storage::put($path_cache, json_encode($cache, JSON_PRETTY_PRINT));
             } else {
