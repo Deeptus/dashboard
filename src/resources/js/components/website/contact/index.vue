@@ -3,6 +3,8 @@
         <template v-if="form.state == null">
             <contact-message :form="form" v-if="type == 'contact-message'"></contact-message>
             <budget :form="form" v-if="type == 'budget'"></budget>
+            <shopping-cart :form="form" v-if="type == 'shopping-cart'"></shopping-cart>
+            <component :is="component" :form="form" v-if="type == 'custom-component'"></component>
             <div class="col-md-12 text-end" v-if="app_debug">
                 <button type="button" class="badge bg-secondary" @click="faker()"><i class="fas fa-random"></i></button>
             </div>
@@ -17,8 +19,10 @@
     import InputText from './inputs/text.vue'
     import ContactMessage from './ContactMessage.vue'
     import Budget from './Budget.vue'
+    import ShoppingCart from './ShoppingCart.vue'
     import State from './State.vue'
     import faker from 'faker'
+    import Swal from 'sweetalert2'
 
     export default {
         props: {
@@ -26,12 +30,16 @@
             type: {
                 default: 'contact-message'
             },
+            component: {
+                default: null
+            }
         },
         components: {
             'state': State,
             'input-text': InputText,
             'contact-message': ContactMessage,
             'budget': Budget,
+            'shopping-cart': ShoppingCart,
         },
         data(){
             return {
@@ -89,9 +97,37 @@
                             disabled: false
                         },
                     },
+                    rules:[
+                        {
+                            key: 'email',
+                            name: 'Correo Electrónico',
+                            rules: {
+                                required: true,
+                                email: true
+                            }
+                        },
+                        {
+                            key: 'name',
+                            name: 'Nombre',
+                            rules: {
+                                required: true
+                            }
+                        },
+                        {
+                            key: 'phone',
+                            name: 'Teléfono',
+                            rules: {
+                                required: true
+                            }
+                        },
+                    ],
                     cart: [],
+                    formData: new FormData(),
                     submit: () => {
                         this.recaptcha()
+                    },
+                    validateFile: (file) => {
+                        return this.validateFile(file)
                     }
                 }
             }
@@ -103,7 +139,7 @@
                     this.form.cart = Object.values(JSON.parse(cart))
                 }
 
-                if (window.getSpsi()) {
+                if (typeof window.getSpsi === "function" && window.getSpsi()) {
                     this.form.inputs.name.value     = window.getSpsi().fullname
                     this.form.inputs.company.value  = window.getSpsi().business_name
                     this.form.inputs.phone.value    = window.getSpsi().phone
@@ -115,6 +151,71 @@
             this.$nextTick(() => {})
         },
         methods: {
+            validateFile(file) {
+                const maxSize = 1.1 * 1024 * 1000
+                if (file.size > maxSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'El tamaño del archivo excede el maximo permitido',
+                        html: 'El archivo no puede exeder a <strong>1mb</strong>',
+                    })
+                    return false
+                }
+                const types = [
+                    {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        ext: 'xlsx',
+                        description: 'Excel'
+                    },
+                    {
+                        type: 'application/vnd.ms-excel',
+                        ext: 'xls',
+                        description: 'Excel'
+                    },
+                    {
+                        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        ext: 'docx',
+                        description: 'Word'
+                    },
+                    {
+                        type: 'application/msword',
+                        ext: 'doc',
+                        description: 'Word'
+                    },
+                    {
+                        type: 'application/pdf',
+                        ext: 'pdf',
+                        description: 'PDF'
+                    },
+                    {
+                        type: 'image/png',
+                        ext: 'png',
+                        description: 'Imagen'
+                    },
+                    {
+                        type: 'image/jpeg',
+                        ext: 'jpeg',
+                        description: 'Imagen'
+                    },
+                ]
+                let formatValid = false
+                let formatErrorMessage = []
+                types.forEach(t => {
+                    formatErrorMessage.push('<strong>' + t.description + '</strong>(.' + t.ext + ')')
+                    if (file.type == t.type) {
+                        formatValid = true
+                    }
+                })
+                if (!formatValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'El archivo seleccionado no es de formato valido',
+                        html: 'Puede subir cualquiera de los siguientes formatos: ' + formatErrorMessage.join(', '),
+                    })
+                    return false
+                }
+                return true
+            },
             validate() {
                 this.form.errors.hasErrors = false
                 const data = {
@@ -124,38 +225,7 @@
                     email: this.form.inputs.email.value,
                     message: this.form.inputs.message.value
                 };
-                const rules = [
-                    {
-                        key: 'email',
-                        name: 'Correo Electrónico',
-                        rules: {
-                            required: true,
-                            email: true
-                        }
-                    },
-                    {
-                        key: 'name',
-                        name: 'Nombre',
-                        rules: {
-                            required: true
-                        }
-                    },
-                    {
-                        key: 'phone',
-                        name: 'Teléfono',
-                        rules: {
-                            required: true
-                        }
-                    },
-                    {
-                        key: 'message',
-                        name: 'Consulta',
-                        rules: {
-                            required: true
-                        }
-                    }
-                ]
-                rules.forEach(rule => {
+                this.form.rules.forEach(rule => {
                     this.$set(this.form.errors.messages, rule.key, [])
                     this.$set(this.form.inputs[rule.key], 'errors', [])
                     if (rule.rules.required == true) {
@@ -193,24 +263,23 @@
                 this.postForm()
             },
             postForm() {
-                var formData = new FormData();
-                formData.append('name',            this.form.inputs.name.value);
-                formData.append('email',           this.form.inputs.email.value);
-                formData.append('phone',           this.form.inputs.phone.value);
-                formData.append('address',         this.form.inputs.address.value);
-                formData.append('company',         this.form.inputs.company.value);
-                formData.append('message',         this.form.inputs.message.value);
-                formData.append('type',            this.type);
-                formData.append('recaptcha_token', this.form.recaptcha_token);
-                formData.append('cart',            JSON.stringify(this.form.cart));
+                this.form.formData.append('name',            this.form.inputs.name.value);
+                this.form.formData.append('email',           this.form.inputs.email.value);
+                this.form.formData.append('phone',           this.form.inputs.phone.value);
+                this.form.formData.append('address',         this.form.inputs.address.value);
+                this.form.formData.append('company',         this.form.inputs.company.value);
+                this.form.formData.append('message',         this.form.inputs.message.value);
+                this.form.formData.append('type',            this.type);
+                this.form.formData.append('recaptcha_token', this.form.recaptcha_token);
+                this.form.formData.append('cart',            JSON.stringify(this.form.cart));
                 if (this.form.inputs.files.value.length) {
                     this.form.inputs.files.value.forEach((file, key) => {
                         if (file && file instanceof File) {
-                            formData.append('files['+key+']', file);
+                            this.form.formData.append('files['+key+']', file);
                         }
                     })
                 }
-                axios.post(this.endpoint + '/contact/submit', formData).then((response) => {
+                axios.post(this.endpoint + '/contact/submit', this.form.formData).then((response) => {
                     setTimeout(function(){
                         this.form.state = 'message-sent'
                        // window.location.href = this.urlBack
@@ -218,7 +287,6 @@
                 })
                 .catch((error) => {
                     this.form.state = null
-                    console.log('dio error')
                     setTimeout( () => {
                         if (error.response.data.errors) {
                             Object.assign(this.form.errors,  error.response.data.errors)
@@ -238,7 +306,6 @@
                             this.form.errors.messages.server_callback.push(message)
                         }
                     }, 1000 );
-                    // console.log(['error', error.response.data]);
                 })
 
             },

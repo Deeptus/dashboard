@@ -30,6 +30,17 @@ class ContactController extends Controller {
         if($g_response->success != true) {
             return ['status' => 'error'];
         }
+
+        if (request()->type == 'custom-component') {
+            // verif request()->component content only contains letters, numbers, dashes and underscores
+            if (!preg_match('/^[a-zA-Z0-9_-]+$/', request()->component)) {
+                return ['status' => 'error'];
+            }
+            $className = "\\App\\Dashboard\\Components\\" . request()->component;          
+            $component = new $className;
+            $component->store();
+        }
+
         if (request()->type == 'contact-message' || request()->type == 'budget') {
             $message          = new ContactRequest;
             $message->name    = request()->name;
@@ -58,17 +69,31 @@ class ContactController extends Controller {
         }
     }
     public function index($type) {
+        $inputs = [];
+        if ($type == 'custom-component') {
+            $className = "\\App\\Dashboard\\Components\\" . request()->component;          
+            $component = new $className;
+            $inputs = $component->inputs();
+        }
         $data = ContactRequest::where('type', $type)->orderBy('id', 'DESC')->paginate(20);
         return view('Dashboard::admin.contact.index', [
             'data'           => $data,
             'type'           => $type,
+            'inputs'         => $inputs,
             '__admin_active' => 'admin.contact-'.$type
         ]);
     }
     public function show($type, $uuid) {
         $message = ContactRequest::where('type', $type)->where('uuid', $uuid)->first();
+        $inputs = [];
+        if ($type == 'custom-component') {
+            $className = "\\App\\Dashboard\\Components\\" . $message->component;          
+            $component = new $className;
+            $inputs = $component->inputs();
+        }
         return view('Dashboard::admin.contact.show', [
-            'message'           => $message,
+            'message'        => $message,
+            'inputs'         => $inputs,
             '__admin_active' => 'admin.contact-'.$type
         ]);
     }

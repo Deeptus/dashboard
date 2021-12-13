@@ -56,10 +56,16 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Empresa</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
+                    @if(count($inputs) == 0)
+                        <th>Nombre</th>
+                        <th>Empresa</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                    @else 
+                        @foreach ($inputs as $input)
+                        <th>{{ $input['label'] }}</th>
+                        @endforeach
+                    @endif
                     <th>Fecha</th>
                 </tr>
             </thead>
@@ -67,36 +73,32 @@
                 @foreach ($data as $item)
                 <tr>
                     <td>{{ $item->id }}</td>
-                    <td>
-                        @if ($item->files && count($item->files))
-                        <i class="fas fa-paperclip"></i>
-                        @endif
-                        <a href="{{ route('admin.contact.show', ['type' => $item->type, 'id' => $item->uuid]) }}">{{ $item->name }}</a>
-                    </td>
-                    <td>{{ $item->company }}</td>
-                    <td>{{ $item->phone }}</td>
-                    <td>{{ $item->email }}</td>
-                    <td>{{ $item->created_at->format('d\/m\/Y') }}, {{ $item->created_at->ago() }}</td>
-                    {{--
-                    <td>
-                        @if (!$item->trashed())
-                        <a href="{{ route('admin.contact.show', ['type' => $item->type, 'id' => $item->uuid]) }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-sm text-white-50 fa-eye"></i>
-                            Ver
-                        </a>
-                        <a href="{{ route('admin.contact.destroy', ['type' => $item->type, 'id' => $item->uuid]) }}" class="btn btn-danger btn-sm btn-confirm-delete">
-                            <i class="fas fa-sm text-white-50 fa-trash-alt"></i>
-                            Eliminar
-                        </a>
+                        @if(count($inputs) == 0)
+                            <td>
+                                @if ($item->files && count($item->files))
+                                <i class="fas fa-paperclip"></i>
+                                @endif
+                                <a href="{{ route('admin.contact.show', ['type' => $item->type, 'id' => $item->uuid]) }}">{{ $item->name }}</a>
+                            </td>
+                            <td>{{ $item->company }}</td>
+                            <td>{{ $item->phone }}</td>
+                            <td>{{ $item->email }}</td>
                         @else
-                        <a href="{{ route('admin.contact.restore', ['type' => $item->type, 'id' => $item->uuid]) }}" class="btn btn-warning btn-sm">
-                            <i class="fas fa-sm text-white-50 fa-trash-restore"></i>
-                            Restaurar
-                        </a>
+                            @foreach ($inputs as $key => $input)
+                                @if($loop->first)
+                                <td>
+                                    @if ($item->files && count($item->files))
+                                    <i class="fas fa-paperclip"></i>
+                                    @endif
+                                    <a href="{{ route('admin.contact.show', ['type' => $item->type, 'id' => $item->uuid]) }}">{{ $item->{$key} }}</a>
+                                </td>
+                                @else
+                                    <td>{{ $item->{$key} }}</td>
+                                @endif
+                            @endforeach
                         @endif
-                    </td>
-                    --}}
-                </tr>
+                        <td>{{ $item->created_at->format('d\/m\/Y') }}, {{ $item->created_at->ago() }}</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>

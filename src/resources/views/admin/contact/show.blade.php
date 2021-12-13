@@ -1,35 +1,44 @@
 @extends('Dashboard::layouts.dashboard')
 @section('content')
-<table  class="table align-middle table-striped table-bordered">
+<table class="table align-middle table-striped table-bordered">
     <tbody>
-        <tr>
-            <td class="title">Nombre:</td>
-            <td>{{ $message->name }}</td>
-        </tr>
-        <tr>
-            <td class="title">Empresa:</td>
-            <td>{{ $message->company }}</td>
-        </tr>
-        <tr>
-            <td class="title">Teléfono:</td>
-            <td>{{ $message->phone }}</td>
-        </tr>
-        <tr>
-            <td class="title">Email:</td>
-            <td>{{ $message->email }}</td>
-        </tr>
-        @if($message->address)
-        <tr>
-            <td class="title">Dirección:</td>
-            <td>{{ $message->address }}</td>
-        </tr>
+        @if(count($inputs) == 0)
+            <tr>
+                <th>Nombre:</td>
+                <td>{{ $message->name }}</td>
+            </tr>
+            <tr>
+                <th>Empresa:</td>
+                <td>{{ $message->company }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono:</td>
+                <td>{{ $message->phone }}</td>
+            </tr>
+            <tr>
+                <th>Email:</td>
+                <td>{{ $message->email }}</td>
+            </tr>
+            @if($message->address)
+                <tr>
+                    <th>Dirección:</td>
+                    <td>{{ $message->address }}</td>
+                </tr>
+            @endif
+            <tr>
+                <th colspan="2">Consulta:</td>
+            </tr>
+            <tr>
+                <td colspan="2">{{ $message->message }}</td>
+            </tr>
+        @else
+            @foreach($inputs as $key => $input)
+                <tr>
+                    <th>{{ $input['label'] }}:</td>
+                    <td>{{ $message->{$key} }}</td>
+                </tr>
+            @endforeach
         @endif
-        <tr>
-            <td class="title" colspan="2">Consulta:</td>
-        </tr>
-        <tr>
-            <td colspan="2">{{ $message->message }}</td>
-        </tr>
     </tbody>
 </table>
 @if ($message->items && count($message->items) && $message->type == 'budget')

@@ -28,4 +28,8 @@ class Presentations extends Model {
     public function prices() {
         return $this->hasMany(PresentationPrices::class, 'presentation_id', 'id');
     }
+
+    public function product() {
+        return $this->belongsTo(Products::class, 'product_id', 'id');
+    }
 }

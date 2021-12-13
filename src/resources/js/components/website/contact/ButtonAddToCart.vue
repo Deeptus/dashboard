@@ -10,13 +10,21 @@
     export default {
         props: {
             ref_id: {},
-            code: {},
-            name: {},
-            image_url: {},
-            quantity: {},
             storage: {
                 type: String,
                 default: 'budget'
+            },
+            data: {
+                type: Object,
+                default: () => {
+                    return {
+                        category: '',
+                        code: '',
+                        name: '',
+                        image_url: '',
+                        quantity: 0
+                    }
+                }
             },
             textSuccessBtnClose: {},
             textSuccessBtnRedirect: {},
@@ -79,11 +87,8 @@
                         }
                         cart[this.ref_id] = {
                             ref_id: this.ref_id,
-                            code: this.code,
-                            name: this.name,
-                            image_url: this.image_url,
-                            quantity: this.quantity
                         }
+                        Object.assign(cart[this.ref_id], this.data)
                         localStorage.setItem(this.storage, JSON.stringify(cart))
                         this.displaySlot = false
                     }

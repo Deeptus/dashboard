@@ -29,4 +29,12 @@ class Products extends Model {
             }
         });
     }
+
+    public function presentations() {
+        return $this->hasMany(Presentations::class, 'product_id', 'id');
+    }
+
+    public function category() {
+        return $this->belongsTo(Categories::class, 'category_id', 'id');
+    }
 }
