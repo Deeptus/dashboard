@@ -52,75 +52,8 @@
                         messages: {}
                     },
                     inputs: {
-                        name: {
-                            value: '',
-                            label: 'Nombre (*)',
-                            errors: [],
-                            disabled: false
-                        },
-                        company: {
-                            value: '',
-                            label: 'Empresa',
-                            errors: [],
-                            disabled: false
-                        },
-                        phone: {
-                            value: '',
-                            label: 'Teléfono (*)',
-                            errors: [],
-                            disabled: false
-                        },
-                        email: {
-                            value: '',
-                            label: 'Email (*)',
-                            errors: [],
-                            disabled: false
-                        },
-                        message: {
-                            value: '',
-                            label: 'Escriba acá su mensaje',
-                            errors: [],
-                            disabled: false
-                        },
-                        address: {
-                            value: '',
-                            label: 'Dirección',
-                            errors: [],
-                            disabled: false
-                        },
-                        accept_conditions: {
-                            value: '',
-                            disabled: false
-                        },
-                        files: {
-                            value: [],
-                            disabled: false
-                        },
+                        
                     },
-                    rules:[
-                        {
-                            key: 'email',
-                            name: 'Correo Electrónico',
-                            rules: {
-                                required: true,
-                                email: true
-                            }
-                        },
-                        {
-                            key: 'name',
-                            name: 'Nombre',
-                            rules: {
-                                required: true
-                            }
-                        },
-                        {
-                            key: 'phone',
-                            name: 'Teléfono',
-                            rules: {
-                                required: true
-                            }
-                        },
-                    ],
                     cart: [],
                     formData: new FormData(),
                     submit: () => {
@@ -128,23 +61,30 @@
                     },
                     validateFile: (file) => {
                         return this.validateFile(file)
-                    }
+                    },
+                    addInput: (input) => {
+                        this.$set(this.form.inputs, input.key, {
+                            value: input.value,
+                            label: input.label,
+                            errors: [],
+                            disabled: false,
+                            rules: {},
+                            options: [],
+                        })
+                        Object.assign(this.form.inputs[input.key].rules, input.rules)
+                        if(
+                            input.options
+                            && Object.prototype.toString.call( input.options ) == '[object Array]'
+                            && input.options.length > 0
+                            ){
+                            this.form.inputs[input.key].options.push(...input.options)
+                        }
+                    },
                 }
             }
         },
         created() {
             this.$nextTick(() => {
-                let cart = localStorage.getItem('budget')
-                if (cart) {
-                    this.form.cart = Object.values(JSON.parse(cart))
-                }
-
-                if (typeof window.getSpsi === "function" && window.getSpsi()) {
-                    this.form.inputs.name.value     = window.getSpsi().fullname
-                    this.form.inputs.company.value  = window.getSpsi().business_name
-                    this.form.inputs.phone.value    = window.getSpsi().phone
-                    this.form.inputs.email.value    = window.getSpsi().email
-                }
             });
         },
         updated() {
@@ -218,28 +158,26 @@
             },
             validate() {
                 this.form.errors.hasErrors = false
-                const data = {
-                    name: this.form.inputs.name.value,
-                    company: this.form.inputs.company.value,
-                    phone: this.form.inputs.phone.value,
-                    email: this.form.inputs.email.value,
-                    message: this.form.inputs.message.value
-                };
-                this.form.rules.forEach(rule => {
-                    this.$set(this.form.errors.messages, rule.key, [])
-                    this.$set(this.form.inputs[rule.key], 'errors', [])
-                    if (rule.rules.required == true) {
-                        if (!data[rule.key] && !data[rule.key].length > 0) {
-                            this.form.errors.messages[rule.key].push('El campo <strong>' + rule.name + '</strong> no puede estar vacío')
-                            this.form.inputs[rule.key].errors.push('El campo <strong>' + rule.name + '</strong> no puede estar vacío')
-                            this.form.errors.hasErrors = true
-                        }
-                    }
-                    if (data[rule.key] && rule.rules.email == true) {
-                        if (!/\S+@\S+\.\S+/.test(data[rule.key])) {
-                            this.form.errors.messages[rule.key].push('El campo <strong>' + rule.name + '</strong> debe tener un formato de email valido')
-                            this.form.errors.hasErrors = true
-                        }
+                Object.keys(this.form.inputs).forEach(input => {
+                    if (this.form.inputs[input].rules && Object.prototype.toString.call( this.form.inputs[input].rules ) == '[object Object]') {
+                        Object.keys(this.form.inputs[input].rules).forEach(rule => {
+                            this.$set(this.form.errors.messages, rule, [])
+                            this.$set(this.form.inputs[input], 'errors', [])
+                            if (this.form.inputs[input].rules.required == true) {
+                                if ( !this.form.inputs[input].value && !this.form.inputs[input].value.length > 0) {
+                                    this.form.errors.messages[rule].push('El campo <strong>' + this.form.inputs[input].label + '</strong> no puede estar vacío')
+                                    this.form.inputs[input].errors.push('El campo <strong>' + this.form.inputs[input].label + '</strong> no puede estar vacío')
+                                    this.form.errors.hasErrors = true
+                                }
+                            }
+                            if (this.form.inputs[input].value && this.form.inputs[input].rules.email == true) {
+                                if (!/\S+@\S+\.\S+/.test(this.form.inputs[input].value)) {
+                                    this.form.errors.messages[rule].push('El campo <strong>' + this.form.inputs[input].label + '</strong> debe tener un formato de email valido')
+                                    this.form.inputs[input].errors.push('El campo <strong>' + this.form.inputs[input].label + '</strong> debe tener un formato de email valido')
+                                    this.form.errors.hasErrors = true
+                                }
+                            }
+                        })
                     }
                 })
             },
@@ -263,22 +201,7 @@
                 this.postForm()
             },
             postForm() {
-                this.form.formData.append('name',            this.form.inputs.name.value);
-                this.form.formData.append('email',           this.form.inputs.email.value);
-                this.form.formData.append('phone',           this.form.inputs.phone.value);
-                this.form.formData.append('address',         this.form.inputs.address.value);
-                this.form.formData.append('company',         this.form.inputs.company.value);
-                this.form.formData.append('message',         this.form.inputs.message.value);
-                this.form.formData.append('type',            this.type);
                 this.form.formData.append('recaptcha_token', this.form.recaptcha_token);
-                this.form.formData.append('cart',            JSON.stringify(this.form.cart));
-                if (this.form.inputs.files.value.length) {
-                    this.form.inputs.files.value.forEach((file, key) => {
-                        if (file && file instanceof File) {
-                            this.form.formData.append('files['+key+']', file);
-                        }
-                    })
-                }
                 axios.post(this.endpoint + '/contact/submit', this.form.formData).then((response) => {
                     setTimeout(function(){
                         this.form.state = 'message-sent'

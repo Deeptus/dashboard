@@ -46,37 +46,46 @@
     <h4>Mensaje de contacto:</h4>
     <table>
         <tbody>
+            @if(count($inputs) == 0)
             <tr>
                 <td class="title">Nombre:</td>
-                <td>{{ $data['name'] }}</td>
+                <td>{{ $data->name }}</td>
             </tr>
             <tr>
                 <td class="title">Empresa:</td>
-                <td>{{ $data['company'] }}</td>
+                <td>{{ $data->company }}</td>
             </tr>
             <tr>
                 <td class="title">Teléfono:</td>
-                <td>{{ $data['phone'] }}</td>
+                <td>{{ $data->phone }}</td>
             </tr>
             <tr>
                 <td class="title">Email:</td>
-                <td>{{ $data['email'] }}</td>
+                <td>{{ $data->email }}</td>
             </tr>
-            @if(array_key_exists('address', $data) && $data['address'])
+            @if(array_key_exists('address', $data) && $data->address)
             <tr>
                 <td class="title">Dirección:</td>
-                <td>{{ $data['address'] }}</td>
+                <td>{{ $data->address }}</td>
             </tr>
             @endif
             <tr>
                 <td class="title" colspan="2">Consulta:</td>
             </tr>
             <tr>
-                <td colspan="2">{{ $data['message'] }}</td>
+                <td colspan="2">{{ $data->message }}</td>
             </tr>
+            @else
+            @foreach($inputs as $key => $input)
+                <tr>
+                    <th class="title">{{ $input['label'] }}:</td>
+                    <td>{{ $data->{$key} }}</td>
+                </tr>
+            @endforeach
+            @endif            
         </tbody>
     </table>
-    @if ($cart && count($cart) && $data['type'] == 'budget')
+    @if ($cart && count($cart) && $data->type == 'budget')
     <table>
         <thead>
             <tr>

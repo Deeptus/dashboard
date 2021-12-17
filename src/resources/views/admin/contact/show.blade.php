@@ -4,24 +4,24 @@
     <tbody>
         @if(count($inputs) == 0)
             <tr>
-                <th>Nombre:</td>
+                <th>Nombre:</th>
                 <td>{{ $message->name }}</td>
             </tr>
             <tr>
-                <th>Empresa:</td>
+                <th>Empresa:</th>
                 <td>{{ $message->company }}</td>
             </tr>
             <tr>
-                <th>Teléfono:</td>
+                <th>Teléfono:</th>
                 <td>{{ $message->phone }}</td>
             </tr>
             <tr>
-                <th>Email:</td>
+                <th>Email:</th>
                 <td>{{ $message->email }}</td>
             </tr>
             @if($message->address)
                 <tr>
-                    <th>Dirección:</td>
+                    <th>Dirección:</th>
                     <td>{{ $message->address }}</td>
                 </tr>
             @endif
@@ -34,7 +34,7 @@
         @else
             @foreach($inputs as $key => $input)
                 <tr>
-                    <th>{{ $input['label'] }}:</td>
+                    <th>{{ $input['label'] }}:</th>
                     <td>{{ $message->{$key} }}</td>
                 </tr>
             @endforeach

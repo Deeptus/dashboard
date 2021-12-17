@@ -30,8 +30,13 @@
         <div class="col-md-12" v-if="loaded == 1">
             <div class="card">
                 <div class="card-header">
-                    <button type="button" class="btn btn-sm btn-primary" @click="importFromDatabse()"><i class="fas fa-database"></i> Import from Table</button>
                     Crud: {{ table.tablename }}
+                    <div class="card-header-btns">
+                        <div class="btn btn-danger" @click="pasteInputs()" v-if="clipboard_inputs.length > 0"><i class="fas fa-paste"></i> Paste Inputs</div>
+                        <div class="btn btn-primary" @click="copyInputs()"><i class="fas fa-copy"></i> Copy Inputs</div>
+                        <button type="button" class="btn btn-warning" @click="importFromDatabse()"><i class="fas fa-database"></i> Import from Table</button>
+                    </div>
+
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
@@ -235,6 +240,10 @@
                     <div class="card-header">
                         Input {{ input.columnname }}
                         <div class="card-header-btns">
+                            <div class="form-check form-switch" style="display: flex;justify-content: center;align-items: center;border-left: 1px solid #cdcdcd;">
+                                <input class="form-check-input" type="checkbox" role="switch" :id="'input-'+input.columnname" v-model="selected_inputs" :value="input.columnname">
+                                <label class="form-check-label" :for="'input-'+input.columnname"></label>
+                            </div>
                             <div class="btn btn-primary"  @click="duplicateInput(inputKey)"><i class="fas fa-copy"></i></div>
                             <div class="btn btn-warning" @click="inputUp(inputKey)" v-if="inputKey > 0"><i class="fas fa-angle-up"></i></div>
                             <div class="btn btn-warning" @click="inputDown(inputKey)" v-if="inputKey < ( inputs.length - 1 ) && inputs.length > 1"><i class="fas fa-angle-down"></i></div>
@@ -522,6 +531,8 @@
         data(){
             return{
                 languages: {},
+                selected_inputs: [],
+                clipboard_inputs: [],
                 table: {
                     id: 1,
                     single_record: 0,
@@ -552,6 +563,7 @@
             }
         },
         created() {
+            this.readClipboard();
             this.$nextTick(() => {
                 axios.get(this.urlData).then((response) => {
                     this.languages = response.data.languages
@@ -899,6 +911,45 @@
                     console.log(error.response.data)
                     this.loaded = 1
                 })
+            },
+            copyInputs() {
+                let data = {
+                    info: 'copy-inputs',
+                    data: [],
+                }
+                this.selected_inputs.forEach((input, key) => {
+                    let i = this.inputs.findIndex((item) => {
+                        return item.columnname == input
+                    })
+                    data.data.push(this.inputs[i])
+                })
+                data = JSON.stringify(data, null, "\t")
+                let textArea = document.createElement("textarea");
+                textArea.value = data;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                textArea.remove();
+                this.readClipboard()
+            },
+            readClipboard() {
+                navigator.clipboard.readText()
+                .then(text => {
+                    try {
+                        let data = JSON.parse(text)
+                        if (data.info == 'copy-inputs') {
+                            this.clipboard_inputs.push(...data.data)
+                        }
+                    } catch (e) {
+                        console.log(e)
+                    }
+                })
+                .catch(err => {
+                    console.error('Something went wrong', err);
+                });
+            },
+            pasteInputs() {
+                this.inputs.push(...this.clipboard_inputs)
             }
         },
         computed: {

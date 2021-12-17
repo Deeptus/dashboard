@@ -65,6 +65,63 @@
                 </template>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <table class="table table-striped align-middle table-total card-body mb-0">
+                    <tbody>
+                        <tr>
+                            <td>Subtotal</td>
+                            <td>{{ subtotal() | toCurrency }}</td>
+                        </tr>
+                        <tr>
+                            <td>Descuento del (10%)</td>
+                            <td>{{ discount() | toCurrency }}</td>
+                        </tr>
+                        <tr>
+                            <th>TOTAL (SIN IMPUESTOS)</th>
+                            <th>{{ total() | toCurrency }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-header">ENTREGA</div>
+                <div class="card-body">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                        <label class="form-check-label" for="exampleRadios1">
+                            RETIRO CLIENTE
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" :disabled="subtotal() < 85">
+                        <label class="form-check-label" for="exampleRadios2">
+                            REPARTO FKC-FURCON
+                            <br>
+                            <small style="padding-left: 14px; display: block;">*Para habilitar la opción Reparto FKC - FURCON, la compra deberá ser de mínimo $85,00</small>
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
+                        <label class="form-check-label" for="exampleRadios3">
+                            RETITO TRANSPORTE
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 mt-3">
+            <a class="btn btn-outline-primary" href="">
+                <i class="fas fa-shopping-cart"></i>
+                <span>AGREGAR MAS PRODUCTOS</span>
+            </a>
+        </div>
+        <div class="col-6 mt-3 d-flex justify-content-end">
+            <button class="btn btn-primary" @click="submit()">
+                <i class="fas fa-check"></i>
+                <span>CONFIRMAR</span>
+            </button>
+        </div>
     </div>
 </template>
 <script>
@@ -84,8 +141,15 @@
             return {}
         },
         created() {
+            this.form.addInput({
+                key: 'files',
+                value: [],
+                label: 'Archivos adjuntos',
+                rules: {
+                    required: false
+                }
+            })
             this.$nextTick(() => {
-                console.log(this.form)
                 let cart = localStorage.getItem('shopping-cart')
                 if (cart) {
                     this.form.cart = Object.values(JSON.parse(cart))
@@ -97,8 +161,56 @@
                 this.$refs.files.click()
             },
             uploadFiles() {
-                this.form.inputs.files.value = this.$refs.files.files
+                // this.form.inputs.files.value.splice(0, this.form.inputs.files.value.length);
+                [...this.$refs.files.files].forEach(file => {
+                    if (this.form.validateFile(file)) {
+                        this.form.inputs.files.value.push(file)
+                    }
+                })
+                this.$refs.files.value = ''
             },
+            removeFile(key) {
+                this.form.inputs.files.value.splice(key, 1)
+            },
+            subtotal() {
+                let subtotal = 0
+                this.form.cart.forEach(item => {
+                    subtotal += item.price * item.quantity
+                })
+                return subtotal
+            },
+            discount() {
+                return this.subtotal() * 0.1
+            },
+            total() {
+                return this.subtotal() - this.discount()
+            },
+            submit() {
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: '¿Está seguro que desea confirmar la compra?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, confirmar!'
+                }).then((result) => {
+                    if (result.value) {
+                        this.form.formData = new FormData(),
+                        this.form.formData.append('linkedin', this.form.inputs.linkedin.value)
+                        this.form.formData.append('component', 'FormCVRequest')
+                        if ( this.form.inputs.files.value.length > 0 ) {
+                            this.form.formData.append('file', this.form.inputs.files.value[0])
+                        }
+                        this.form.submit()
+                        Swal.fire(
+                            'Confirmado!',
+                            'La compra ha sido confirmada.',
+                            'success'
+                        )
+                    }
+                })
+            }
         }
     }
 </script>
@@ -170,6 +282,17 @@ li.page-item {
         bottom: 0;
         font-weight: 300;
         font-size: 14px;
+    }
+}
+.table-total {
+    table-layout: fixed;
+    th, td {
+        padding: 20px 20px;
+    }
+    th {
+        font-size: 17px;
+        color: #000 !important;
+        font-weight: 700;
     }
 }
 </style>

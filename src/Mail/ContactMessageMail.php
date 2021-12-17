@@ -15,16 +15,17 @@ class ContactMessageMail extends Mailable
     protected $data;
     protected $cart;
     protected $uploads;
+    protected $inputs;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $cart, $uploads)
-    {
-        $this->data = $data;
-        $this->cart = $cart;
+    public function __construct($data, $cart, $uploads, $inputs) {
+        $this->data    = $data;
+        $this->cart    = $cart;
         $this->uploads = $uploads;
+        $this->inputs  = $inputs;
     }
 
     /**
@@ -37,13 +38,14 @@ class ContactMessageMail extends Mailable
         // ini_set('max_execution_time', 0);
         $email = $this->view('Dashboard::emails.contact-message')
             ->with([
-                'data' => $this->data,
-                'cart' => $this->cart,
+                'data'   => $this->data,
+                'cart'   => $this->cart,
+                'inputs' => $this->inputs,
             ]);
-        if ($this->data['type'] == 'budget') {
+        if ($this->data->type == 'budget') {
             $email = $email->subject('Mensaje de presupuesto');
         }
-        if ($this->data['type'] == 'contact-message') {
+        if ($this->data->type == 'contact-message') {
             $email = $email->subject('Mensaje de contacto');
         }
         foreach ($this->uploads as $key => $file) {

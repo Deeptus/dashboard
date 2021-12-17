@@ -112,7 +112,12 @@
             }
         },
         created() {
-            this.$nextTick(() => {});
+            this.$nextTick(() => {
+                let cart = localStorage.getItem('budget')
+                if (cart) {
+                    this.form.cart = Object.values(JSON.parse(cart))
+                }
+            });
         },
         methods: {
             selectFile(event) {

@@ -28,13 +28,19 @@ class ContactController extends Controller {
         $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$config->recaptcha_private_key."&response=".request()->recaptcha_token."&remoteip=".$_SERVER['REMOTE_ADDR']);
         $g_response = json_decode($response);
         if($g_response->success != true) {
-            return ['status' => 'error'];
+            return [
+                'status'  => 'error',
+                'message' => 'El reCAPTCHA no es válido.'
+            ];
         }
 
         if (request()->type == 'custom-component') {
             // verif request()->component content only contains letters, numbers, dashes and underscores
             if (!preg_match('/^[a-zA-Z0-9_-]+$/', request()->component)) {
-                return ['status' => 'error'];
+                return [
+                    'status'  => 'error',
+                    'message' => 'El componente no es válido.'
+                ];
             }
             $className = "\\App\\Dashboard\\Components\\" . request()->component;          
             $component = new $className;
