@@ -41,7 +41,7 @@
                 this.cart  = JSON.parse(localStorage.getItem(this.storage))
                 this.keys  = Object.keys(this.cart)
                 this.items = Object.values(this.cart)
-                if (this.keys.find(i => i == this.ref_id)) {
+                if (this.items.filter(item => item && item.ref_id == this.ref_id).length > 0) {
                     this.displaySlot = false
                 }
             });
@@ -66,7 +66,7 @@
                 }).then((result) => {
                     if (result.value) {
                         Swal.fire({
-                            html: "Producto <strong>" + this.name + "</strong> añadido al pedido",
+                            html: "Producto <strong>" + this.data.name + "</strong> añadido al pedido",
                             icon: "success",
                             showCancelButton: true,
                             confirmButtonText: this.textSuccessBtnRedirect,
@@ -105,7 +105,7 @@
                 }).then((result) => {
                     if (result.value) {
                         Swal.fire({
-                            html: "Producto <strong>" + this.name + "</strong> quitado del pedido",
+                            html: "Producto <strong>" + this.data.name + "</strong> quitado del pedido",
                             icon: "success",
                             confirmButtonText: "Listo",
                         })

@@ -17,7 +17,6 @@
                 <tbody>
                     <tr v-for="(item, key) in form.cart" :key="key">
                         <td>
-                            <div class="thumbnail-product" :style="'background-image: url(\'' + item.image_url + '\');'"></div>
                         </td>
                         <td>{{ item.category }}</td>
                         <td>{{ item.name }}</td>
@@ -84,27 +83,26 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card">
-                <div class="card-header">ENTREGA</div>
+            <div class="card" v-if="select_delivery_method">
+                <div class="card-header">ENTREGA:</div>
                 <div class="card-body">
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                        <label class="form-check-label" for="exampleRadios1">
-                            RETIRO CLIENTE
-                        </label>
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" :disabled="subtotal() < 85">
-                        <label class="form-check-label" for="exampleRadios2">
-                            REPARTO FKC-FURCON
-                            <br>
-                            <small style="padding-left: 14px; display: block;">*Para habilitar la opción Reparto FKC - FURCON, la compra deberá ser de mínimo $85,00</small>
-                        </label>
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
-                        <label class="form-check-label" for="exampleRadios3">
-                            RETITO TRANSPORTE
+                    <div class="form-check mb-3" v-for="(method, key) in deliveryMethods" :key="key">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            :name="'delivery_method_' + key"
+                            :id="'delivery_method_' + key"
+                            :value="method.id"
+                            :disabled="method.disabled"
+                            :key="'delivery_method_' + key"
+                            v-model="form.inputs.delivery_method.value"
+                            >
+                        <label class="form-check-label" :for="'delivery_method_' + key">
+                            {{ method.name }}
+                            <template v-if="method.description">
+                                <br>
+                                <small style="padding-left: 14px; display: block;">{{ method.description }}</small>
+                            </template>
                         </label>
                     </div>
                 </div>
@@ -138,7 +136,29 @@
         components: {
             },
         data(){
-            return {}
+            return {
+                deliveryMethods: [
+                    {
+                        id: 1,
+                        name: 'Retiro Cliente',
+                        disabled: false,
+                        description: null
+                    },
+                    {
+                        id: 2,
+                        name: 'Reparto FKC-FURCON',
+                        disabled: false,
+                        description: '* Para habilitar la opción Reparto FKC - FURCON, la compra deberá ser de mínimo $85,00'
+                    },
+                    {
+                        id: 3,
+                        name: 'Retito Transporte',
+                        disabled: false,
+                        description: null
+                    }
+                ],
+                select_delivery_method: true
+            }
         },
         created() {
             this.form.addInput({
@@ -149,10 +169,25 @@
                     required: false
                 }
             })
+            this.form.addInput({
+                key: 'delivery_method',
+                value: 1,
+                label: ''
+            })
+            this.$watch('form.inputs.delivery_method.value', (value) => {
+                /*
+                this.select_delivery_method = false
+                setTimeout(() => {
+                    this.select_delivery_method = true
+                    this.$forceUpdate()
+                    console.log(value)
+                }, 1000)
+                */
+            })
             this.$nextTick(() => {
                 let cart = localStorage.getItem('shopping-cart')
                 if (cart) {
-                    this.form.cart = Object.values(JSON.parse(cart))
+                    this.form.cart = Object.values(JSON.parse(cart)).filter((i) => Object.prototype.toString.call( i ) == '[object Object]')
                 }
             });
         },
@@ -183,7 +218,16 @@
                 return this.subtotal() * 0.1
             },
             total() {
-                return this.subtotal() - this.discount()
+                let subtotal = this.subtotal()
+                if (subtotal >= 85) {
+                    this.deliveryMethods[1].disabled = false
+                } else {
+                    this.deliveryMethods[1].disabled = true
+                    if (this.form.inputs.delivery_method.value == 2) {
+                        this.form.inputs.delivery_method.value = 1
+                    }
+                }
+                return subtotal - this.discount()
             },
             submit() {
                 Swal.fire({
@@ -206,6 +250,27 @@
                         Swal.fire(
                             'Confirmado!',
                             'La compra ha sido confirmada.',
+                            'success'
+                        )
+                    }
+                })
+            },
+            removeItem(key) {
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: '¿Está seguro que desea eliminar el producto?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, eliminar!'
+                }).then((result) => {
+                    if (result.value) {
+                        this.form.cart.splice(key, 1)
+                        localStorage.setItem('shopping-cart', JSON.stringify(this.form.cart))
+                        Swal.fire(
+                            'Eliminado!',
+                            'El producto ha sido eliminado.',
                             'success'
                         )
                     }

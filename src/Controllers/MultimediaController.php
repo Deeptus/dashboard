@@ -19,6 +19,7 @@ class MultimediaController extends Controller {
     }
     public function index()
     {
+        /*
         $appends = [];
         $trash   = false;
         $data = new Multimedia;
@@ -42,13 +43,14 @@ class MultimediaController extends Controller {
             $data = $data->paginate(20);
         }
         $data->appends($appends);
-
+        */
         return view('Dashboard::admin.multimedia.index', [
-            'data' => $data,
-            'trash'          => $trash,
+            // 'data' => $data,
+            // 'trash'          => $trash,
             '__admin_active' => 'admin.multimedia'
         ]);
     }
+    /*
     public function destroy($id) {
         $item = Multimedia::find($id);
         $item->delete();
@@ -89,4 +91,5 @@ class MultimediaController extends Controller {
         }
         return response()->json($files);
     }
+    */
 }

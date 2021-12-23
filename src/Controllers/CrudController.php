@@ -516,6 +516,7 @@ class CrudController extends Controller
                 $colinfo = array_filter($this->inputs, function($input) use ($slug_col) {
                     return $input->columnname == $slug_col;
                 });
+                $colinfo = array_values($colinfo);
                 if( property_exists($colinfo[0], 'translatable') && intval($colinfo[0]->translatable)) {
                     $val = json_decode($request->{$slug_col}, true);
                     $slug = $val[App::getLocale()];
@@ -526,7 +527,16 @@ class CrudController extends Controller
                 $item->slug = $slug;
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            dd([
+                'slug_col' => $this->table->slug_col,
+                'colinfo' => $colinfo,
+                'message' => $th->getMessage(),
+                'line' => $th->getLine(),
+                'file' => $th->getFile(),
+                'trace' => $th->getTrace(),
+                'previous' => $th->getPrevious(),
+                'code' => $th->getCode()
+            ]);
         }
 
         foreach ($this->inputs as $inputKey => $input) {

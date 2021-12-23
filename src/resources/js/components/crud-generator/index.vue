@@ -933,20 +933,22 @@
                 this.readClipboard()
             },
             readClipboard() {
-                navigator.clipboard.readText()
-                .then(text => {
-                    try {
-                        let data = JSON.parse(text)
-                        if (data.info == 'copy-inputs') {
-                            this.clipboard_inputs.push(...data.data)
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.readText()
+                    .then(text => {
+                        try {
+                            let data = JSON.parse(text)
+                            if (data.info == 'copy-inputs') {
+                                this.clipboard_inputs.push(...data.data)
+                            }
+                        } catch (e) {
+                            console.log(e)
                         }
-                    } catch (e) {
-                        console.log(e)
-                    }
-                })
-                .catch(err => {
-                    console.error('Something went wrong', err);
-                });
+                    })
+                    .catch(err => {
+                        console.error('Something went wrong', err);
+                    });
+                }
             },
             pasteInputs() {
                 this.inputs.push(...this.clipboard_inputs)

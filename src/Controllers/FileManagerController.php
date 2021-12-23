@@ -20,7 +20,10 @@ class FileManagerController extends Controller {
     public function data() {
         $files = Multimedia::orderBy('id', 'desc')->get()->each->setAppends([
             'url',
-            'type'
+            'type',
+            'size',
+            'width',
+            'height'
         ]);
         return response()->json($files);
     }
@@ -33,16 +36,19 @@ class FileManagerController extends Controller {
                     $multimedia = new Multimedia;
                     $multimedia->path          = $path;
                     $multimedia->order         = null;
-                    $multimedia->filename      = null;
+                    $multimedia->filename      = basename($path);
                     $multimedia->alt           = null;
                     $multimedia->caption       = null;
-                    $multimedia->original_name = null;
-                    $multimedia->disk          = null;
+                    $multimedia->original_name = $item->getClientOriginalName();
+                    $multimedia->disk          = 'public';
                     $multimedia->meta_value    = null;
                     $multimedia->save();
                     $files[] = $multimedia->setAppends([
                         'url',
-                        'type'
+                        'type',
+                        'size',
+                        'width',
+                        'height'
                     ]);
                 }
             }
