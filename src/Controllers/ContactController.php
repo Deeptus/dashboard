@@ -47,7 +47,7 @@ class ContactController extends Controller {
             $component->store();
         }
 
-        if (request()->type == 'contact-message' || request()->type == 'budget') {
+        if (request()->type == 'contact-message' || request()->type == 'budget' || request()->type == 'shopping-cart') {
             $message          = new ContactRequest;
             $message->name    = request()->name;
             $message->email   = request()->email;
@@ -58,7 +58,7 @@ class ContactController extends Controller {
             $message->type    = request()->type;
             $message->save();
             $cart = json_decode(request()->cart, true);
-            if (count($cart) && request()->type == 'budget') {
+            if (count($cart) && (request()->type == 'budget' || request()->type == 'shopping-cart')) {
                 $message->items()->createMany($cart);
             }
             $uploads = [];
@@ -71,8 +71,38 @@ class ContactController extends Controller {
                 }
                 $message->files()->createMany($uploads);
             }
-            Mail::to($config->email_system)->send(new ContactMessageMail(request()->all(), $cart, $uploads));
+            Mail::to($config->email_system)->send(new ContactMessageMail($message, $cart, $uploads, [
+                'name' => [
+                    'type' => 'text',
+                    'label' => 'Nombre',
+                ],
+                'email' => [
+                    'type' => 'text',
+                    'label' => 'Email',
+                ],
+                'phone' => [
+                    'type' => 'text',
+                    'label' => 'Teléfono',
+                ],
+                'company' => [
+                    'type' => 'text',
+                    'label' => 'Empresa',
+                ],
+                'address' => [
+                    'type' => 'text',
+                    'label' => 'Dirección',
+                ],
+                'message' => [
+                    'type' => 'textarea',
+                    'label' => 'Mensaje',
+                ],
+            ]));
         }
+        return [
+            'status'  => 'success',
+            'message' => 'Mensaje enviado correctamente.',
+            'type'    => request()->type
+        ];
     }
     public function index($type) {
         $inputs = [];

@@ -51,6 +51,23 @@
                         </div>
                     </template>
                 </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item" :class="{'disabled': records.current_page == 1}">
+                            <a class="page-link" href="#" aria-label="Previous" @click.prevent="changePage(1)">
+                                &laquo; Primera
+                            </a>
+                        </li>
+                        <li class="page-item" v-for="page in records.last_page" :class="{'active': records.current_page == page}" :key="page">
+                            <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                        </li>
+                        <li class="page-item" :class="{'disabled': records.current_page == records.last_page}">
+                            <a class="page-link" href="#" aria-label="Next" @click.prevent="changePage(records.last_page)">
+                                Última &raquo;
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </template>
 
             <div class="file-manager__files" v-if="state == 'upload'">
@@ -132,6 +149,12 @@
                 excludeIds: [],
                 filesToSend: [],
                 search: '',
+                records: {
+                    current_page: 1,
+                    last_page: 1,
+                    per_page: 21,
+                    total: 0,
+                }
             }
         },
         created() {
@@ -315,17 +338,34 @@
                     size /= 1024
                     ++i
                 }
-                console.log(size)
+                // console.log(size)
                 return size.toFixed(1) + ' ' + units[i]
+            },
+            changePage(page) {
+                this.records.current_page = page
             },
             getFiles() {
                 // filter files by search
-                return this.files.filter(file => {
+                let files = this.files.filter(file => {
                     if (this.search && file.original_name) {
                         return file.original_name.toLowerCase().includes(this.search.toLowerCase())
                     }
                     return true
                 })
+                // paginate
+                let records = []
+                let page = this.records.current_page
+                let perPage = this.records.per_page
+                let start = (page - 1) * perPage
+                let end = page * perPage
+                for (let i = start; i < end; i++) {
+                    if (files[i]) {
+                        records.push(files[i])
+                    }
+                }
+                this.records.total = files.length
+                this.records.last_page = Math.ceil(files.length / perPage)
+                return records
             },
             drop(e) {
                 e.preventDefault()
@@ -359,7 +399,7 @@
             dragleave(e) {
                 e.preventDefault()
                 e.stopPropagation()
-            }
+            },
         }
     }
 </script>

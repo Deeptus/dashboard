@@ -85,8 +85,8 @@
             @endif            
         </tbody>
     </table>
-    @if ($cart && count($cart) && $data->type == 'budget')
-    <table>
+    @if ($data->items && count($data->items) && ($data->type == 'budget' || $data->type == 'shopping-cart'))
+    <table class="table align-middle table-striped table-bordered">
         <thead>
             <tr>
                 <th>Código</th>
@@ -95,11 +95,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($cart as $item)
+            @foreach ($data->items as $item)
             <tr>
-                <td>{{ $item['code'] }}</td>
-                <td>{{ $item['name'] }}</td>
-                <td>{{ $item['quantity'] }}</td>
+                <td>{{ $item->code }}</td>
+                <td>{{ $item->name }}</td>
+                <td>{{ $item->quantity }}</td>
             </tr>
             @endforeach
         </tbody>

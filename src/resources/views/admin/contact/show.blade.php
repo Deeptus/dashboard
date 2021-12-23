@@ -41,7 +41,7 @@
         @endif
     </tbody>
 </table>
-@if ($message->items && count($message->items) && $message->type == 'budget')
+@if ($message->items && count($message->items) && ($message->type == 'budget' || $message->type == 'shopping-cart'))
 <table class="table align-middle table-striped table-bordered">
     <thead>
         <tr>

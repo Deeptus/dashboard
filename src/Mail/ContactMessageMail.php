@@ -42,6 +42,10 @@ class ContactMessageMail extends Mailable
                 'cart'   => $this->cart,
                 'inputs' => $this->inputs,
             ]);
+        // dd($this->data);
+        if ($this->data->type == 'shopping-cart') {
+            $email = $email->subject('Mensaje de pedido del sitio web');
+        }
         if ($this->data->type == 'budget') {
             $email = $email->subject('Mensaje de presupuesto');
         }

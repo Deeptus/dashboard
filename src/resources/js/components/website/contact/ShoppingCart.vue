@@ -46,8 +46,13 @@
                     </ul>
                 </div>
                 <div class="card-header">VENTA SUJETA A DISPONIBILIDAD EN STOCK</div>
-                <textarea class="form-control card-body" v-model="form.notes" rows="3" placeholder="Días especiales para la entrega, cambios de domicilio, expresos, requerimientos especiales en la mercadería, etc."></textarea>
-                <div class="card-header">SUBIR ARCHIVOS <button class="btn btn-primary" @click="selectFiles()"><i class="fas fa-plus"></i> AÑADIR</button></div>
+                <textarea class="form-control card-body" v-model="form.inputs.message.value" rows="3" placeholder="Días especiales para la entrega, cambios de domicilio, expresos, requerimientos especiales en la mercadería, etc."></textarea>
+                <div class="card-header">SUBIR ARCHIVOS <small>({{ 3 - form.inputs.files.value.length }} archivos restastes)</small>
+                    <button class="btn btn-primary" @click="selectFiles()" v-if="form.inputs.files.value.length < 3">
+                        <i class="fas fa-plus"></i>
+                        AÑADIR
+                    </button>
+                </div>
                 <input type="file" style="display: none;" @change="uploadFiles()" multiple ref="files">
                 <template v-if="form.inputs.files.value.length > 0">
                     <div class="card-body list-group">
@@ -59,7 +64,7 @@
                 </template>
                 <template v-else>
                     <div class="card-body">
-                        No ha añaadido archivos.
+                        No ha añaadido archivos.<br>Puede subir un maximo de 3 archivos.
                     </div>
                 </template>
             </div>
@@ -162,17 +167,63 @@
         },
         created() {
             this.form.addInput({
+                key: 'delivery_method',
+                value: 1,
+                label: ''
+            })
+            this.form.addInput({
+                key: 'name',
+                value: '',
+                label: 'Nombre (*)',
+                rules: {
+                    // required: true,
+                }
+            })
+            this.form.addInput({
+                key: 'company',
+                value: '',
+                label: 'Empresa',
+                rules: {
+                    // required: false,
+                }
+            })
+            this.form.addInput({
+                key: 'phone',
+                value: '',
+                label: 'Teléfono (*)',
+                rules: {
+                    // required: true
+                }
+            })
+            this.form.addInput({
+                key: 'email',
+                value: '',
+                label: 'Email (*)',
+                rules: {
+                    // required: true,
+                    // email: true
+                }
+            })
+            this.form.addInput({
+                key: 'message',
+                value: '',
+                label: 'Escriba acá su mensaje',
+                rules: {
+                    // required: true
+                }
+            })
+            this.form.addInput({
+                key: 'address',
+                value: '',
+                label: 'Dirección'
+            })
+            this.form.addInput({
                 key: 'files',
                 value: [],
                 label: 'Archivos adjuntos',
                 rules: {
-                    required: false
+                    // required: false
                 }
-            })
-            this.form.addInput({
-                key: 'delivery_method',
-                value: 1,
-                label: ''
             })
             this.$watch('form.inputs.delivery_method.value', (value) => {
                 /*
@@ -189,7 +240,14 @@
                 if (cart) {
                     this.form.cart = Object.values(JSON.parse(cart)).filter((i) => Object.prototype.toString.call( i ) == '[object Object]')
                 }
+                if (typeof window.getSpsi === "function" && window.getSpsi()) {
+                    this.form.inputs.name.value     = window.getSpsi().fullname
+                    this.form.inputs.company.value  = window.getSpsi().business_name
+                    this.form.inputs.phone.value    = window.getSpsi().phone
+                    this.form.inputs.email.value    = window.getSpsi().email
+                }
             });
+
         },
         methods: {
             selectFiles() {
@@ -197,8 +255,10 @@
             },
             uploadFiles() {
                 // this.form.inputs.files.value.splice(0, this.form.inputs.files.value.length);
-                [...this.$refs.files.files].forEach(file => {
-                    if (this.form.validateFile(file)) {
+                let files = [...this.$refs.files.files]
+                let max = 3;
+                files.forEach(file => {
+                    if (this.form.validateFile(file) && this.form.inputs.files.value.length < max) {
                         this.form.inputs.files.value.push(file)
                     }
                 })
@@ -230,7 +290,7 @@
                 return subtotal - this.discount()
             },
             submit() {
-                Swal.fire({
+                /*Swal.fire({
                     title: '¿Está seguro?',
                     text: '¿Está seguro que desea confirmar la compra?',
                     type: 'warning',
@@ -239,21 +299,33 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Si, confirmar!'
                 }).then((result) => {
-                    if (result.value) {
-                        this.form.formData = new FormData(),
-                        this.form.formData.append('linkedin', this.form.inputs.linkedin.value)
-                        this.form.formData.append('component', 'FormCVRequest')
-                        if ( this.form.inputs.files.value.length > 0 ) {
-                            this.form.formData.append('file', this.form.inputs.files.value[0])
+                    if (result.value) {*/
+                        /////////////////////
+                        this.form.formData.append('name',            this.form.inputs.name.value);
+                        this.form.formData.append('email',           this.form.inputs.email.value);
+                        this.form.formData.append('phone',           this.form.inputs.phone.value);
+                        this.form.formData.append('address',         this.form.inputs.address.value);
+                        this.form.formData.append('company',         this.form.inputs.company.value);
+                        this.form.formData.append('message',         this.form.inputs.message.value);
+                        this.form.formData.append('type',            'shopping-cart');
+                        this.form.formData.append('cart',            JSON.stringify(this.form.cart));
+                        if (this.form.inputs.files.value.length) {
+                            this.form.inputs.files.value.forEach((file, key) => {
+                                if (file && file instanceof File) {
+                                    this.form.formData.append('files['+key+']', file);
+                                }
+                            })
                         }
                         this.form.submit()
-                        Swal.fire(
+                        console.log(this.form)
+                        /////////////////////
+                        /*Swal.fire(
                             'Confirmado!',
                             'La compra ha sido confirmada.',
                             'success'
                         )
                     }
-                })
+                })*/
             },
             removeItem(key) {
                 Swal.fire({

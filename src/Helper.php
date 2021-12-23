@@ -304,14 +304,14 @@ if (!function_exists('__getGallery')) {
     }
 }
 if (!function_exists('__getFirstGallery')) {
-    function __getFirstGallery($id = false) {
+    function __getFirstGallery($id = false, $default = null) {
         if ($id) {
             $gallery = Gallery::find($id);
             if ($gallery && $gallery->items()->count()) {
                 return $gallery->items()->first()->path;
             }
         }
-        return null;
+        return $default;
     }
 }
 if (!function_exists('__toSql')) {

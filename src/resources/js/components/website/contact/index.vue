@@ -180,6 +180,7 @@
                         })
                     }
                 })
+                // console.log(this.form.errors)
             },
             async recaptcha() {
                 this.validate()
