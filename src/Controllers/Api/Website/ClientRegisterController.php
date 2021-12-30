@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -44,27 +45,30 @@ class ClientRegisterController extends Controller {
     }
     public function register() {
         $inputNames = [
-            'full_name'      => '<strong>Persona de Contacto / Nombre y Apellido</strong>',
-            'dni'           => '<strong>DNI</strong>',
-            'phone'         => '<strong>Teléfono</strong>',
-            'address'       => '<strong>Dirección de Domicilio</strong>',
-            'business_name' => '<strong>Razón Social / Empresa</strong>',
-            'type_taxpayer_id'        => '<strong>Tipo de Contribuyente</strong>',
-            'cuit'          => '<strong>CUIT</strong>',
-            'location_1_id'  => '<strong>Provincia</strong>',
-            'location_2_id'  => '<strong>Localidad</strong>',
-            'zip' => '<strong>Código Postal</strong>',
-            'email'         => '<strong>Correo Electronico</strong>',
-            'password'      => '<strong>Contraseña</strong>',
+            'full_name'        => '<strong>Persona de Contacto / Nombre y Apellido</strong>',
+            'dni'              => '<strong>DNI</strong>',
+            'phone'            => '<strong>Teléfono</strong>',
+            'address'          => '<strong>Dirección de Domicilio</strong>',
+            'business_name'    => '<strong>Razón Social / Empresa</strong>',
+            'type_taxpayer_id' => '<strong>Tipo de Contribuyente</strong>',
+            'cuit'             => '<strong>CUIT</strong>',
+            'location_1_id'    => '<strong>Provincia</strong>',
+            'location_2_id'    => '<strong>Localidad</strong>',
+            'zip'              => '<strong>Código Postal</strong>',
+            'email'            => '<strong>Correo Electronico</strong>',
+            'password'         => '<strong>Contraseña</strong>',
         ];
         $validator = Validator::make(request()->all(), [
-            'full_name'      => ['required', 'string', 'max:190'],
-            'dni'           => ['required', 'integer'],
-            'phone'         => ['required', 'string', 'max:190'],
-            'address'       => ['required', 'string', 'max:190'],
-            'business_name' => ['required', 'string', 'max:190'],
-            'type_taxpayer_id'        => ['required', 'integer'],
-            'cuit'          => [
+            'full_name'        => ['required', 'string', 'max:190'],
+            'dni'              => [
+                Rule::requiredIf(request()->has('dni')),
+                'integer'
+            ],
+            'phone'            => ['required', 'string', 'max:190'],
+            'address'          => ['required', 'string', 'max:190'],
+            'business_name'    => ['required', 'string', 'max:190'],
+            'type_taxpayer_id' => ['required', 'integer'],
+            'cuit'             => [
                 'required',
                 'string',
                 'max:13',

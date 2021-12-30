@@ -289,7 +289,7 @@ export default {
                 location_2_id: null,
                 password: '',
                 password_confirmation: '',
-            },
+            }
 		};
 	},
     watch: {
@@ -319,7 +319,7 @@ export default {
 	methods: {
         updateSelectLocation2() {
             const locations_2 = this.filteredLocations2
-            this.input.location_2_id = locations_2[0].id
+            this.input.location_2_id = parseFloat(locations_2[0].id)
         },
 		async recaptcha() {
             this.errors = {}
@@ -407,7 +407,7 @@ export default {
 	},
     computed: {
         filteredLocations2: function () {
-            return this.locations_2.filter(l => l.location_1_id === this.input.location_1_id)
+            return this.locations_2.filter(l => parseFloat(l.location_1_id) === parseFloat(this.input.location_1_id))
         }
     }
 };

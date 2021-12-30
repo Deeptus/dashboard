@@ -11,8 +11,11 @@ use Junges\ACL\Models\Group;
 use Junges\ACL\Models\Permission;
 use Illuminate\Support\Str;
 
-class GrupoController extends Controller
-{
+class GrupoController extends Controller {
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *

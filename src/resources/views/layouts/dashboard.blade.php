@@ -86,7 +86,15 @@
 
                             <!-- Topbar Navbar -->
                             <ul class="navbar-nav ms-auto">
-
+                                @if( session()->has('prev_session_user_uuid') )
+                                <li class="nav-item no-arrow">
+                                    <a class="nav-link" style="color:Tomato" href="{{ route('admin.user.login-with', session()->get('prev_session_user_uuid')) }}">
+                                        <i class="fas fa-undo-alt me-2"></i>
+                                        Volver a la sesión anterior
+                                    </a>
+                                </li>
+                                <div class="topbar-divider d-none d-sm-block"></div>
+                                @endif
                                 <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                                 <li class="nav-item dropdown no-arrow d-sm-none">
                                     <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -15,5 +15,6 @@
     url-data="{{ route('admin.crud-generator.data') }}"
     url-back="{{ route('admin.crud-generator', ['paginate' => request()->paginate, 's' => request()->s, 'page' => request()->page]) }}"
     url-action="{{ route('admin.crud-generator.store') }}"
+    endpoint="{{ route('admin.crud-generator') }}"
 ></crud-generator-form>
 @endsection

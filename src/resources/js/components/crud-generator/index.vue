@@ -34,7 +34,7 @@
                     <div class="card-header-btns">
                         <div class="btn btn-danger" @click="pasteInputs()" v-if="clipboard_inputs.length > 0"><i class="fas fa-paste"></i> Paste Inputs</div>
                         <div class="btn btn-primary" @click="copyInputs()"><i class="fas fa-copy"></i> Copy Inputs</div>
-                        <button type="button" class="btn btn-warning" @click="importFromDatabse()"><i class="fas fa-database"></i> Import from Table</button>
+                        <button type="button" class="btn btn-warning" @click="importFromDatabase()"><i class="fas fa-database"></i> Import from Table</button>
                     </div>
 
                 </div>
@@ -503,7 +503,7 @@
     </div>
 </template>
 <script>
-    import ImportFromDatabse from './ImportFromDatabse.vue'
+    import ImportFromDatabase from './ImportFromDatabase.vue'
     import draggable from 'vuedraggable'
     import Swal from 'sweetalert2'
     
@@ -519,6 +519,10 @@
                 default: ''
             },
             urlBack: {
+                type: String,
+                default: ''
+            },
+            endpoint: {
                 type: String,
                 default: ''
             },
@@ -601,8 +605,8 @@
         mounted () {},
         watch: {},
         methods: {
-            importFromDatabse() {
-                am().openModal(ImportFromDatabse, { endpoint: this.urlAction }).then( response => {
+            importFromDatabase() {
+                am().openModal(ImportFromDatabase, { endpoint: this.endpoint }).then( response => {
                     // Table
                     this.table.id = 1
                     this.table.single_record = 0
