@@ -35,6 +35,9 @@ class CrudGeneratorController extends Controller {
         $dirPath = __crudFolder();
         $data = collect(File::allFiles($dirPath))->map(function ($file) {
             $fileName = $file->getRelativePathname();
+            // get file type
+            $fileType = File::extension($fileName);
+            $menu     = $fileType == 'json' ? 'crud' : null;
             $fileName = str_replace('.php', '', $fileName);
             //$fileName = str_replace('-', ' ', $fileName);
             //$fileName = ucwords($fileName);
@@ -49,6 +52,7 @@ class CrudGeneratorController extends Controller {
                 'created_at' => $file->getCTime(),
                 'created_at_formatted' => date('d/m/Y H:i:s', $file->getCTime()),
                 'table_exist' => Schema::hasTable(strtolower(str_replace('.json', '', $fileName))),
+                'menu' => $menu,
             ];
         });
         if ( request()->has('s') && request()->get('s') != '' ) {
@@ -56,7 +60,7 @@ class CrudGeneratorController extends Controller {
                 return Str::contains($item['name'], request()->get('s'));
             });
         }
-        $data = $this->paginate($data, request()->paginate ?? 10, null, ['path' => 'crud-generator', 'query' => ['s' => request()->s, 'paginate' => request()->paginate]]);
+        $data = $this->paginate($data, request()->paginate ?? 15, null, ['path' => 'crud-generator', 'query' => ['s' => request()->s, 'paginate' => request()->paginate]]);
 
         return view('Dashboard::admin.crud-generator.index', [
             'data'           => $data,
@@ -148,7 +152,7 @@ class CrudGeneratorController extends Controller {
         ], ['slug'], ['name', 'description']);
 
         (new Generator($data->table, $data->inputs))->crud();
-        return Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/2020_11_23_000001_generate_crud_tables.php');
+        return Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/9999_12_31_000001_generate_crud_tables.php');
         return 1;
         return redirect()->route('admin.crud-generator')->with('success', 'Se añadio un <strong>Groupo</strong> con éxito.');
     }

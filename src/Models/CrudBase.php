@@ -157,74 +157,94 @@ trait CrudBase {
         }
 
         if (Str::endsWith($key, '_rel_val')) {
-            // get info json
-            $column = str_replace('_rel_val', '', $key);
-            if (file_exists($filePath)) {
-                $content = json_decode(file_get_contents($filePath));
-                $table   = $content->table;
-                $input = array_filter(
-                    $content->inputs,
-                    function ($e) use (&$column) {
-                        return $e->columnname == $column;
-                    }
-                );
-                
-                $input = array_shift($input);
-                if ($input && $input->type == 'checkbox') {
-                    // return $input;
-                    $pivot_name = $content->table->tablename.'_'.$input->tabledata.'_'.$input->columnname;
-                    $ids = DB::table($pivot_name)->where($content->table->tablename.'_id', $this->id)->pluck($input->tabledata.'_id')->toArray();
-                    $items = DB::table($input->tabledata)->whereIn($input->tablekeycolumn, $ids)->get();
-                    return $items;
-                }
-                if (!$this->getAttribute($column)) {
-                    return '';
-                }
-    
-                if ($input->type == 'select' || $input->type == 'select_string') {
-                    if ($input->valueoriginselector == 'values') {
-                        $option = array_filter(
-                            $input->options,
-                            function ($e) use (&$column) {
-                                return $e->key == $this->getAttribute($column);
-                            }
-                        );
-                        $option = array_shift($option);
-                        try {
-                            return $option->text;
-                        } catch (\Throwable $th) {
-                            return null;
-                        }
-                    }
-                    if ($input->valueoriginselector == 'table') {
-                        $info = __crudInfo($input->tabledata);
-                        $subModel = $info['model'];
-                        $item = $subModel::where($input->tablekeycolumn, $this->getAttribute($column))->first();
-                        try {
-                            return $item->{ $input->tabletextcolumn };
-                        } catch (\Throwable $th) {
-                            return null;
-                        }
-                    }
-                    if ($input->valueoriginselector == 'model-nocrud') {
-                        $subModel = $input->tabledata;
-                        $item = $subModel::where($input->tablekeycolumn, $this->getAttribute($column))->first();
-                        try {
-                            return $item->{ $input->tabletextcolumn };
-                        } catch (\Throwable $th) {
-                            return null;
-                        }
-                    }
-                }
-                if ($input->type == 'gallery') {
-                    $column = str_replace('_rel_val', '', $key);
-                    return Gallery::with(['items'])->find($this->getAttribute($column))->items;
-                    return $this->belongsToMany(Multimedia::class, 'gallery_multimedia', 'gallery_id', 'multimedia_id');
-                }
-            }
+            return $this->getRelationCrud($key, $filePath, 'value');
+        }
+        if (Str::endsWith($key, '_rel')) {
+            return $this->getRelationCrud($key, $filePath, 'relation');
         }
         return $this->getAttribute($key);
     }
+
+    public function getRelationCrud($key, $filePath, $type) {
+        if ($type == 'relation') {
+            $column = str_replace('_rel', '', $key);
+        } else {
+            $column = str_replace('_rel_val', '', $key);
+        }
+        if (file_exists($filePath)) {
+            $content = json_decode(file_get_contents($filePath));
+            $table   = $content->table;
+            $input = array_filter(
+                $content->inputs,
+                function ($e) use (&$column) {
+                    return $e->columnname == $column;
+                }
+            );
+            
+            $input = array_shift($input);
+            if ($input && $input->type == 'checkbox') {
+                // return $input;
+                $pivot_name = $content->table->tablename.'_'.$input->tabledata.'_'.$input->columnname;
+                $ids = DB::table($pivot_name)->where($content->table->tablename.'_id', $this->id)->pluck($input->tabledata.'_id')->toArray();
+                $items = DB::table($input->tabledata)->whereIn($input->tablekeycolumn, $ids)->get();
+                return $items;
+            }
+            if (!$this->getAttribute($column)) {
+                return '';
+            }
+
+            if ($input->type == 'select' || $input->type == 'select_string') {
+                if ($input->valueoriginselector == 'values') {
+                    $option = array_filter(
+                        $input->options,
+                        function ($e) use (&$column) {
+                            return $e->key == $this->getAttribute($column);
+                        }
+                    );
+                    $option = array_shift($option);
+                    try {
+                        return $option->text;
+                    } catch (\Throwable $th) {
+                        return null;
+                    }
+                }
+                if ($input->valueoriginselector == 'table') {
+                    $info = __crudInfo($input->tabledata);
+                    $subModel = $info['model'];
+                    $item = $subModel::where($input->tablekeycolumn, $this->getAttribute($column))->first();
+                    try {
+                        if ( $type == 'value' ) {
+                            return $item->{ $input->tabletextcolumn };
+                        }
+                        if ( $type == 'relation' ) {
+                            return $item;
+                        }
+                    } catch (\Throwable $th) {
+                        return null;
+                    }
+                }
+                if ($input->valueoriginselector == 'model-nocrud') {
+                    $subModel = $input->tabledata;
+                    $item = $subModel::where($input->tablekeycolumn, $this->getAttribute($column))->first();
+                    try {
+                        if ( $type == 'value' ) {
+                            return $item->{ $input->tabletextcolumn };
+                        }
+                        if ( $type == 'relation' ) {
+                            return $item;
+                        }
+                    } catch (\Throwable $th) {
+                        return null;
+                    }
+                }
+            }
+            if ($input->type == 'gallery') {
+                return Gallery::with(['items'])->find($this->getAttribute($column))->items;
+                return $this->belongsToMany(Multimedia::class, 'gallery_multimedia', 'gallery_id', 'multimedia_id');
+            }
+        }
+    }
+
     public function getPkvAttribute() {
         if ($this->uuid) {
             return $this->uuid;

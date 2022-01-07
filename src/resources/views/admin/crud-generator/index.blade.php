@@ -62,6 +62,7 @@
                     <td>{{ $item['name'] }}</td>
                     <td>{{ $item['table_exist'] ? 'Yes' : 'No' }}</td>
                     <td>
+                        @if($item['menu'] == 'crud')
                         <a
                             href="{{ route('admin.crud-generator.edit', [pathinfo($item['name'], PATHINFO_FILENAME), 'paginate' => request()->paginate, 's' => request()->s, 'page' => request()->page]) }}"
                             class="btn btn-primary btn-sm">
@@ -96,6 +97,7 @@
                             <i class="fas fa-sm text-white-50 fa-external-link-alt"></i>
                             Go
                         </btn-link>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

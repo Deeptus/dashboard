@@ -382,6 +382,9 @@ class CrudController extends Controller
             } catch (\Throwable $th) {
                 if ( is_integer(intval($data[$input->columnname])) && intval($data[$input->columnname]) > 0) {
                     $item->{$input->columnname . '_id'} = intval($data[$input->columnname]);
+                } else {
+                    // si el usuario no selecciona nada, se guarda el id en null
+                    $item->{$input->columnname . '_id'} = NULL;
                 }
             }
             return true;

@@ -208,7 +208,7 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             $bar = $this->output->createProgressBar(2);
             $bar->start();
             $bar->advance();
-            Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/2020_11_23_000001_generate_crud_tables.php');
+            Artisan::call('migrate:refresh --path=vendor/aporteweb/dashboard/src/migrations/9999_12_31_000001_generate_crud_tables.php');
             $bar->advance();
             $bar->finish();
             $this->info("\nSe actualizaron las tablas del CRUD");

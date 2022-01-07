@@ -2,6 +2,11 @@ import Vue from 'vue'
 
 window.Vue = Vue
 
+Vue.prototype.permissions = window.permissions = {
+    enableButtonTranslate: true,
+}
+
+
 Vue.component('dynamic-content-form', require('./components/dynamic-content/DynamicContentFormComponent.vue').default);
 Vue.component('input-file-image', require('./components/InputFileImageComponent.vue').default);
 Vue.component('login-form-modal', require('./components/LoginFormModalComponent.vue').default);

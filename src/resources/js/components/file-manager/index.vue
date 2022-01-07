@@ -74,7 +74,7 @@
                 <template v-for="(file, key) in filesToSend">
                     <div class="file-manager__file" :key="'up'+key">
                         <div class="file-manager__img">
-                            <img :src="getPreviewImage(file)" alt="">
+                            <img :src="getPreviewImage(file)" alt="" v-if="filesToSend.length < 50">
                         </div>
                         <div class="file-manager__remove" @click="remove(key)" v-if="file.meta.state == 'pending'"><i class="fas fa-times"></i></div>
                         <div class="file-manager__details" @click="details(file, $event)">Detalles</div>
@@ -112,6 +112,7 @@
                 </template>
             </div>
             <div class="file-manager__controls">
+                <div class="btn btn-default me-auto" @click="returnNone()"><i class="fas fa-check"></i> No seleccionar nada</div>
                 <div class="btn btn-primary" @click="selected()" v-if="insideModal == true && state == 'library'"><i class="fas fa-check"></i> Seleccionar</div>
                 <div class="btn btn-primary" @click="sendFiles()" v-if="state == 'upload'"><i class="far fa-paper-plane"></i> Enviar</div>
             </div>
@@ -281,6 +282,10 @@
                         this.returnSelected = fileSelected
                     }
                 }
+                this.close()
+            },
+            returnNone() {
+                this.returnSelected = {}
                 this.close()
             },
             onFileChange(e) {

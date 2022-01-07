@@ -11,7 +11,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="badge bg-secondary block-translations__btn" @click="translate()">Traducir</button>
+                <button type="button" class="badge bg-secondary block-translations__btn" @click="translate()" v-if="permissions.enableButtonTranslate">Traducir</button>
             </div>
         </template>
         <template v-else>

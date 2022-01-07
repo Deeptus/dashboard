@@ -41,18 +41,22 @@
             async selectFile() {
                 await this.fileManager().open().then((callback) => {
                     this.image = {}
-                    if (callback) {
-                        this.$set(this.image, 'id',   callback.id)
-                        this.$set(this.image, 'path', callback.path)
-                        this.$set(this.image, 'type', callback.type)
-                        this.$set(this.image, 'url',  callback.url)
+                    if (Object.prototype.toString.call(callback) === '[object Object]') {
+                        if (callback.id) {
+                            this.$set(this.image, 'id',   callback.id)
+                            this.$set(this.image, 'path', callback.path)
+                            this.$set(this.image, 'type', callback.type)
+                            this.$set(this.image, 'url',  callback.url)
+                        } else {
+                            this.removeImage()
+                        }
                     }
                 })
             },
             lang() {
                 return document.documentElement.lang
             },
-            removeImage () {
+            removeImage() {
                 this.image      = {}
                 this.image.url  = ''
                 this.image.path = ''
