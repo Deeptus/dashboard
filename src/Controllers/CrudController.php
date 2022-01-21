@@ -63,7 +63,13 @@ class CrudController extends Controller
 
         if ( ( $input->type == 'select' || $input->type == 'select_string' ) && $input->valueoriginselector == 'model-nocrud') {
             $found = true;
-            $relations[$input->tabledata] = (new $input->tabledata)->whereNull('deleted_at')->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+            $relations[$input->tabledata] = new $input->tabledata;
+
+            if (Schema::hasColumn($relations[$input->tabledata]->getTable(), 'deleted_at')) {
+                $relations[$input->tabledata] = $relations[$input->tabledata]->whereNull('deleted_at');
+            }
+            $relations[$input->tabledata] = $relations[$input->tabledata]->pluck($input->tabletextcolumn, $input->tablekeycolumn);
+
             if ($item) {
                 $content[$input->columnname] = $item->{$input->columnname};
             }

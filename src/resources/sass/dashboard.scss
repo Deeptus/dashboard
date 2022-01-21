@@ -21,9 +21,9 @@
 .form-control {
     min-height: 33px;
 }
-body {
-    height: 100%;
-    overflow-x: hidden;
+html, body, #app, #app > main {
+    min-height: 100vh;
+    // overflow-x: hidden;
 }
 .headband {
     .navbar-nav {
@@ -231,4 +231,11 @@ button.badge {
 }
 .table-layout-fixed {
     table-layout: fixed;
+}
+
+.login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
 }

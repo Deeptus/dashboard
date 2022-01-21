@@ -429,3 +429,16 @@ if (! function_exists('__crudInfo')) {
         return $info;
     }
 }
+
+if (!function_exists('__dCache')) {
+    function __dCache($key, Closure $next) {
+        $seconds = 60 * 60 * 24;
+        $key = $key . '-'. app()->getLocale();
+        if( auth()->guard('client')->check() ) {
+            $key = $key . '-' . request()->session()->getId();
+        }
+        return Cache::remember($key, $seconds, function() use ($next) {
+            return $next();
+        });
+    }
+}
