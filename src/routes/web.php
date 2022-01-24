@@ -309,9 +309,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             'prefix' => 'tools',
             'as' => '.tools',
         ], function() {
-            Route::get ('/', 'ToolsController@index');
-            Route::get ('cache-clear', 'ToolsController@cacheClear')->name('.cache-clear');
-            Route::get ('cache-clear-all', 'ToolsController@cacheClearAll')->name('.cache-clear-all');
+            Route::get ('/',                     'ToolsController@index');
+            Route::get ('cache-clear',           'ToolsController@cacheClear')->name('.cache-clear');
+            Route::get ('cache-clear-all',       'ToolsController@cacheClearAll')->name('.cache-clear-all');
+            Route::get ('update-assets-version', 'ToolsController@updateAssetsVersion')->name('.update-assets-version');
         });
         
     });

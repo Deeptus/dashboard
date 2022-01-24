@@ -361,6 +361,9 @@
                     if (this.search && file.original_name) {
                         return file.original_name.toLowerCase().includes(this.search.toLowerCase())
                     }
+                    if (this.search && file.path) {
+                        return file.path.toLowerCase().includes(this.search.toLowerCase())
+                    }
                     return true
                 })
                 // paginate

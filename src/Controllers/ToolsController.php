@@ -35,5 +35,15 @@ class ToolsController extends Controller {
         $message .= 'config:clear<br>';
         return redirect()->back()->with('success', $message);
     }
-
+    public function updateAssetsVersion() {
+        $message = 'Assets version updated successfully<br>';
+        $assets_version = env('ASSETS_VERSION');
+        $assets_version = $assets_version + 1;
+        $path = base_path('.env');
+        if (file_exists($path)) {
+            file_put_contents($path, str_replace('ASSETS_VERSION='.env('ASSETS_VERSION'), 'ASSETS_VERSION='.$assets_version, file_get_contents($path)));
+        }
+        $message .= 'New assets version: ' . $assets_version . '<br>';
+        return redirect()->back()->with('success', $message);
+    }
 }

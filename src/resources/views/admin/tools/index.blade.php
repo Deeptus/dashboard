@@ -26,6 +26,13 @@
                 Limpia toda la cache de la aplicación
             </td>
         </tr>
+        <tr>
+            <td>
+                <a href="{{ route('admin.tools.update-assets-version') }}" class="btn btn-danger">Update ASSETS_VERSION</a>
+            </td>
+            <td>
+                Update ASSETS_VERSION, current version: {{ env('ASSETS_VERSION') }}
+            </td>
     </tbody>
 </table>
 @endsection
