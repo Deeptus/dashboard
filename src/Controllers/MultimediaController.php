@@ -17,8 +17,7 @@ class MultimediaController extends Controller {
     public function __construct() {
         $this->middleware('auth');
     }
-    public function index()
-    {
+    public function index() {
         /*
         $appends = [];
         $trash   = false;

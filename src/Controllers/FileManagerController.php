@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use AporteWeb\Dashboard\Models\Gallery;
 use AporteWeb\Dashboard\Models\Multimedia;
+use Tinify;
 
 class FileManagerController extends Controller {
     public function __construct() {
@@ -56,5 +57,65 @@ class FileManagerController extends Controller {
             //throw $th;
         }
         return response()->json($files);
+    }
+    public function optimize($id = false) {
+        set_time_limit(0);
+        if ($id) {
+            $files = Multimedia::where('id', $id)->get();
+        } else {
+            $files = Multimedia::get();
+        }
+        foreach ($files as $key => $file) {
+
+            if ( !Storage::exists($file->path) ) {
+                continue;
+            }
+
+            $path          = Storage::path($file->path);
+            $dirname       = pathinfo($path)['dirname'];
+            $basename      = pathinfo($path)['basename'];
+            $extension     = pathinfo($path)['extension'];
+            $filename      = pathinfo($path)['filename'];
+            $backup_folder = 'public/content/multimedia/backup/';
+            if ( !Storage::exists($backup_folder) ) {
+                Storage::makeDirectory($backup_folder);
+            }
+            $command = false;
+            if ($extension == 'jpg' || $extension == 'jpeg') {
+                $command = 'jpegoptim -m80 --strip-all ' . $path;
+            }
+            if ($extension == 'png') {
+                $command = 'optipng -o7 ' . $path;
+            }
+            if ($extension == 'gif') {
+                $command = 'gifsicle -O3 --lossy=80-100 ' . $path;
+            }
+            if ($command) {
+                exec($command, $output, $return);
+                $backup_path = $backup_folder . $filename . '.' . $extension;
+                Storage::move($file->path, $backup_path);
+                $file->setMeta('original_file', $backup_path);
+            }
+            if ($extension != 'webp') {
+                // convert file to webp
+                $webp = $dirname . '/' . $filename . '.webp';
+                $command = 'cwebp -q 100 -m 6 ' . Storage::path($backup_path) . ' -o ' . $webp;
+                exec($command, $output, $return);
+                // use Tinify to optimize webp
+                \Tinify\setKey("j2LD2pYV7B0xllLVBy4YCWrVDNH5cDdG");
+                $source = \Tinify\fromFile($webp);
+                $source->toFile($webp);
+                $file->setMeta('optimized_webp', true);
+                $file->path = 'public/content/multimedia/' . $filename . '.webp';
+                $file->save();
+            }
+            return response()->json($file->setAppends([
+                'url',
+                'type',
+                'size',
+                'width',
+                'height'
+            ]));
+        }
     }
 }

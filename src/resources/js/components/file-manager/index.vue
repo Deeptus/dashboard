@@ -37,7 +37,13 @@
                 </div>
                 <div class="file-manager__files">
                     <template v-for="(file, key) in getFiles()">
-                        <div class="file-manager__file" @click="selected_id = file.id" v-if="!excludeIds.includes(file.id) && (displayOnly=='all' || displayOnly==file.type)" :class="{ 'file-manager__file--selected': selected_id == file.id }" :key="key">
+                        <div
+                            class="file-manager__file"
+                            @click="selectFile(file)"
+                            v-if="!excludeIds.includes(file.id) && (displayOnly=='all' || displayOnly==file.type)"
+                            :class="{ 'file-manager__file--selected': selected_id == file.id }"
+                            :key="key"
+                        >
                             <div class="file-manager__img">
                                 <img :src="getPreviewImage(file)" alt="">
                             </div>
@@ -198,7 +204,7 @@
             },
             details(file, event) {
                 event.stopPropagation()
-                am().openModal(Details,{ file })
+                am().openModal(Details,{ file, endpoint: this.urlData })
             },
             remove(key) {
                 this.filesToSend.splice(key, 1)
@@ -252,7 +258,7 @@
             },
             getPreviewImage(file) {
                 // file.url
-                let imgExt = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/svg']
+                let imgExt = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/svg', 'image/webp', 'image/gif', 'image/bmp']
                 if (file && file instanceof File && imgExt.includes(file.type)) {
                     return URL.createObjectURL(file)
                 }
@@ -404,6 +410,11 @@
             dragleave(e) {
                 e.preventDefault()
                 e.stopPropagation()
+            },
+            selectFile(file) {
+                if ( this.insideModal ) {
+                    this.selected_id = file.id
+                }
             },
         }
     }

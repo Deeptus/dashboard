@@ -23,6 +23,7 @@
         "guzzlehttp/guzzle": "^7.4",
         "laravel/ui": "^3.4",
         "orangehill/iseed": "^3.0",
+        "tinify/tinify": "^1.5",
         "aporteweb/console-select": "dev-main"
     },
     "autoload": {

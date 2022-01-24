@@ -59,4 +59,28 @@ class Multimedia extends Model
         }
         return null;
     }
+
+    public function meta() {
+        return $this->hasMany(MultimediaMeta::class, 'multimedia_id', 'id');
+    }
+
+    public function setMeta($meta_key, $meta_value) {
+        $meta = $this->meta()->where('meta_key', $meta_key)->first();
+        if ( !$meta ) {
+            $meta = new MultimediaMeta;
+            $meta->multimedia_id = $this->id;
+            $meta->meta_key = $meta_key;
+        }
+        $meta->meta_value = $meta_value;
+        $meta->save();
+    }
+
+    public function getMeta($meta_key) {
+        $meta = $this->meta()->where('meta_key', $meta_key)->first();
+        if ( $meta ) {
+            return $meta->meta_value;
+        }
+        return null;
+    }
+    
 }

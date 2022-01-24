@@ -80,6 +80,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::post('chat-area',    'ChatAreaController@getMessages')->name('.chat-area');
         Route::get ('file-manager', 'FileManagerController@data')->name('.file-manager');
         Route::post('file-manager', 'FileManagerController@upload');
+        Route::post('file-manager/optimize/{id?}', 'FileManagerController@optimize')->name('.file-manager.optimize');
 
         Route::get('/', 'HomeController@index')->name('.home');
         
@@ -304,6 +305,15 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::post('/', 'CompanyDataController@update')->name('.update');
             Route::get('/api/data', 'CompanyDataController@data')->name('.data');
         });
+        Route::group([
+            'prefix' => 'tools',
+            'as' => '.tools',
+        ], function() {
+            Route::get ('/', 'ToolsController@index');
+            Route::get ('cache-clear', 'ToolsController@cacheClear')->name('.cache-clear');
+            Route::get ('cache-clear-all', 'ToolsController@cacheClearAll')->name('.cache-clear-all');
+        });
+        
     });
     /*
     Route::get ('test', function () {
