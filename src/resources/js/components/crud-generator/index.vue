@@ -735,6 +735,18 @@
                     listable: 0,
                     translatable: 0
                 })
+                this.inputs.forEach(input => {
+                    this.$watch(() => input.type, (newValue, oldValue) => {
+                        if ( input.tablekeycolumn == '' ) {
+                            if ( input.type == 'subForm' ) {
+                                input.tablekeycolumn = 'section_id'
+                            }
+                            if ( input.type == 'select' || input.type == 'select2' ) {
+                                input.tablekeycolumn = 'id'
+                            }
+                        }
+                    })
+                });
             },
             inputParams(input) {
                 let params = []
@@ -791,13 +803,13 @@
                 }
 
                 if (input.type == 'date') {
-                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'gridcols', 'nullable')
                 }
                 if (input.type == 'time') {
-                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'gridcols', 'nullable')
                 }
                 if (input.type == 'datetime') {
-                    params.push('listable', 'settable', 'validate', 'label', 'nullable')
+                    params.push('listable', 'settable', 'validate', 'label', 'gridcols', 'nullable')
                 }
                 if (input.type == 'week') {
                     params.push('listable', 'settable', 'validate', 'label', 'nullable')

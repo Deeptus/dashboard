@@ -21,7 +21,7 @@
                 <pre>{{ input }}</pre>
             </div>
         </div>
-        <component :is="input.columnname.replace('_', '-')" :value="value" :input="input" :content="content"></component>
+        <component :is="input.columnname.replaceAll('_', '-')" :value="value" :input="input" :content="content"></component>
     </div>
 </template>
 

@@ -215,7 +215,7 @@ class DynamicContentController extends Controller
             }
             $item->gallery  = $gallery;
         }
-        if($data->sitio_web){
+        if( property_exists($data, 'sitio_web') && $data->sitio_web){
             $item->sitio_web  = $data->sitio_web;
         }
         $item->setTranslations('image', (array) $image);

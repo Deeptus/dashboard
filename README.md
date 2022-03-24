@@ -1,5 +1,5 @@
 ## Upgrade Version
 
-- Junges\ACL\Models\Permission => Junges\ACL\Models\Permission
-- Junges\ACL\Models\Group => Junges\ACL\Models\Group
-- Junges\ACL\Concerns\UsersTrait => Junges\ACL\Concerns\UsersTrait
+- Junges\ACL\Http\Models\Permission => Junges\ACL\Models\Permission
+- Junges\ACL\Http\Models\Group => Junges\ACL\Models\Group
+- Junges\ACL\Traits\UsersTrait => Junges\ACL\Concerns\UsersTrait

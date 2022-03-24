@@ -141,7 +141,16 @@
                     return icon
                 }
 
-                let imgExt = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/svg']
+                let imgExt = [
+                    'image/jpeg',
+                    'image/png',
+                    'image/svg+xml',
+                    'image/svg',
+                    'image/gif',
+                    'image/bmp',
+                    'image/tiff',
+                    'image/webp'
+                ]
                 if (imgExt.includes(file.type)) {
                     if (file && file instanceof File) {
                         return URL.createObjectURL(file)

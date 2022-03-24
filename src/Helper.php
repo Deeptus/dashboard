@@ -196,10 +196,19 @@ if (!function_exists('__dolar')) {
 use Illuminate\Support\Facades\Schema;
 if (!function_exists('__primary_key_usage')) {
     function __primary_key_usage($model, $value, $returnItem = false, $with = false, $withTrashed = false) {
+        $check1 = Schema::hasColumn($model->getTable(), 'uuid');
+        $check2 = is_string($value);
+        $check3 = is_numeric($value);
+        // regex para validar que sea un uuid, example: 4d29eec0-0807-11eb-b416-fd25c6e4ad5d, eb0d1204-2384-4f9c-a243-10a8399717dc
+        // nota por primera vez me dio error validando un uuid, por eso lo valido con una expresion regular
+        // $check3 = preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$/', $value) === 1;
+        // $check4 = preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $value) === 1;
+        // $check5 = preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $value) === 1;
+        //dd($check1, $check2, $check3);
         if ( 
-            Schema::hasColumn($model->getTable(), 'uuid')
-            && is_string($value)
-            && preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $value) === 1
+            $check1
+            && $check2
+            && !$check3
             ) {
             $keyName = 'uuid';
         } else {
@@ -234,7 +243,11 @@ if (!function_exists('__dashboardTask')) {
                 $callback = $next();
                 Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'finish'] + $callback, JSON_PRETTY_PRINT));
             } catch (\Throwable $th) {
-                Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'failed', 'message' => $th->getMessage()], JSON_PRETTY_PRINT));
+                Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode([
+                    'status' => 'failed',
+                    'message' => $th->getMessage(),
+                    'trace' => $th->getTraceAsString(),
+                ], JSON_PRETTY_PRINT));
             }
         });
         return $uuid;

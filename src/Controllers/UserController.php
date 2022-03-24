@@ -115,7 +115,6 @@ class UserController extends Controller
         
         $element = __primary_key_usage(new User, $keyValue, true, ['groups']);
 
-        // dd($keyName, $keyValue);
         $user_groups = $element->groups()->pluck('id')->toArray();
         return view('Dashboard::admin.users.edit', [
             'groups' => $groups,

@@ -2,17 +2,17 @@
     <div>
         <label :for="id">{{ label }}</label>
         <div class="input-group">
-            <div class="input-group-prepend">
-                <label class="input-group-text" :for="id"><i class="fas fa-2x fa-images"></i></label>
+            <label class="input-group-text" :for="id"><i class="fas fa-2x fa-images"></i></label>
+            <div class="input-group-text px-4 remove-btn" @click="removeImage()" v-if="getPreviewImage()">
+                <i class="fas fa-2x fa-trash-alt mr-2"></i>
+                Quitar
             </div>
-            <div class="input-group-prepend" v-if="getPreviewImage()">
-                <div class="input-group-text px-4 remove-btn" @click="removeImage()"><i class="fas fa-2x fa-trash-alt mr-2"></i> Quitar</div>
-            </div>
-            <div class="input-group-prepend" v-if="getPreviewImage()">
-                <a style="pointer-events: all;" class="input-group-text px-4 remove-btn" :href="itemURL()" target="_blank"><i class="fas fa-2x fa-download mr-2"></i> Descargar</a>
-            </div>
+            <a style="pointer-events: all;" class="input-group-text px-4 remove-btn" :href="itemURL()" target="_blank" v-if="getPreviewImage()">
+                <i class="fas fa-2x fa-download mr-2"></i>
+                Descargar
+            </a>
             <div class="custom-file">
-                <input type="file" :name="name" class="custom-file-input" :id="id"  @change="onFileChange($event)">
+                <input type="file" :name="name" class="custom-file-input" :id="id" @change="onFileChange($event)">
                 <label class="custom-file-label2" :for="id">
                     <img :src="getPreviewImage()" v-if="displayImage" style="height: 100%;">
                 </label>
@@ -161,11 +161,13 @@
 </script>
 <style lang="scss" scoped>
     .custom-file-label2 {
+        /*
         position: absolute;
         top: 0;
         right: 0;
         left: 0;
         z-index: 1;
+        */
         padding: 0.375rem 0.75rem;
         font-weight: 400;
         line-height: 1.5;
@@ -187,7 +189,7 @@
         color: #444;
         background-color: #F9F8FC;
         border-left: inherit;
-        content: "Select File" !important;
+        content: "Seleccionar archivo" !important;
         height: auto !important;
         justify-content: center;
         align-items: center;
@@ -195,6 +197,10 @@
     }
     .custom-file {
         height: 100px !important;
+        flex-grow: 1;
+        input[type="file"] {
+            display: none;
+        }
     }
     .gallery-item {
         position: relative;

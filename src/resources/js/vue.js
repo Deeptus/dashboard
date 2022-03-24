@@ -42,6 +42,7 @@ Vue.component('awesome-alert', require('./components/awesome-alert').default);
 Vue.component('awesome-modal', require('./components/awesome-modal').default);
 
 Vue.component('input-switch', require('./components/crud/InputSwitch.vue').default);
+Vue.component('custom-select', require('./components/crud/CustomSelect.vue').default);
 
 Vue.component('email-layout-form', require('./components/EmailLayoutFormComponent.vue').default);
 
@@ -50,6 +51,76 @@ Vue.component('tinymce-editor', require('./components/TinyMCEComponent.vue').def
 window.aa = () => {
     return window.vueApp.$root.$refs['awesome-alert']
 }
+
+
+
+window.googleTranslate = (targetInput, targetOutput, sl, tl) => {
+    let endpoint = 'https://translate.googleapis.com/translate_a/single'
+    let client = 'gtx'
+    sl = sl || 'auto'
+    tl = tl || 'en'
+    let dt = 't'
+
+    let q = targetInput.value
+
+    // si utilizo la funcion encodeURIComponent no es necesario hacer lo siguiente
+    /*let scape = { 
+        '#': '%23',
+        '&': '%26',
+        '?': '%3F'
+    }
+    Object.keys(scape).forEach(key => {
+        q = q.replaceAll(key, scape[key])
+    })*/
+    // console.log(q)
+    // return true
+
+    // chunk the text into 4500 character chunks (Google Translate API limit)
+    let chunks = []
+    let start = 0
+    while (start < q.length) {
+        let chunk = q.substr(start, 4500)
+        chunks.push(chunk)
+        start += 4500
+    }
+
+    let results = []
+    let promises = []
+    // get the translation for each chunk
+    chunks.forEach((chunk, index) => {
+        // let url = endpoint + '?client=' + client + '&sl=' + sl + '&tl=' + tl + '&dt=' + dt + '&q=' + encodeURI(chunk)
+        let url = endpoint + '?client=' + client + '&sl=' + sl + '&tl=' + tl + '&dt=' + dt + '&q=' + encodeURIComponent(chunk)
+        promises.push(fetch(url).then(response => response.json()))
+    })
+
+    // wait for all the translations to come back, then show them
+    Promise.all(promises).then(responses => {
+        responses.forEach((response, index) => {
+            let translatedText = response[0].map(result => result[0]).join('')
+            results.push(translatedText)
+        })
+        let outputString = results.join('')
+        
+        // si utilizo la funcion encodeURIComponent no es necesario hacer lo siguiente
+        /*Object.keys(scape).forEach(key => {
+            outputString = outputString.replaceAll(scape[key], key)
+        })*/
+        targetOutput.value = outputString
+    })
+}
+/*
+<div class="row">
+    <div class="col-12">
+        <textarea id="text-input" class="form-control" rows="5"></textarea>
+    </div>
+    <div class="col-12">
+        <textarea id="text-output" class="form-control" rows="5"></textarea>
+    </div>
+</div>
+*/
+// test
+// window.googleTranslate(document.getElementById('text-input'), document.getElementById('text-output'), 'es', 'en')
+
 
 window.toCurrency = (numero) => {
     let decimales = 2
@@ -163,7 +234,6 @@ window.checkValidFileSize = (file) => {
     }
     return true
 }
-
 window.replaceAll = (str, searchStr, replaceStr) => {
     // no match exists in string?
     if (str.indexOf(searchStr) === -1) {
