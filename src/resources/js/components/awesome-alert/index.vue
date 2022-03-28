@@ -164,14 +164,17 @@ export default {
         justify-content: center;
         align-items: center;
         &__container {
-            width: 400px;
-            height: 240px;
+            min-width: 400px;
+            width: calc(100% - 60px);
+            max-width: fit-content;
+            min-height: 240px;
             background-color: #fff;
             box-shadow: 0 0 6px #000;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            padding: 18px;
         }
         &__icon {
             font-size: 44px;

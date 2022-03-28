@@ -273,6 +273,9 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
             }
             return "<?php if(auth()->check() && auth()->user()->hasAnyPermission({$permissions})){ ?>";
         });
+        Blade::directive('elsehap', function () {
+            return '<?php } else { ?>';
+        });
         Blade::directive('endhap', function () {
             return '<?php } ?>';
         });
