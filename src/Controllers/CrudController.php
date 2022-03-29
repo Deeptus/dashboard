@@ -550,7 +550,10 @@ class CrudController extends Controller
 
         foreach ($this->inputs as $inputKey => $input) {
             try {
+                // estoy hay que verlo, los custom_components deberian posponerse hasta el final para guardar antes
+                // pero bueno problema para mi yo del futuro
                 if ($input->type == 'custom_component') {
+                    $item->save();
                     $className = str_replace(['_', '-', '.'], ' ', $input->columnname);
                     $className = ucwords($className);
                     $className = str_replace(' ', '', $className);

@@ -103,18 +103,14 @@
                     this.relations = response.data.relations
                     this.subForm   = response.data.subForm
                     this.inputs.forEach(input => {
-                        this.content[input.columnname] = {
-                            value: input.default,
-                            errors: []
-                        }
+                        this.$set(this.content, input.columnname, {})
+                        this.$set(this.content[input.columnname], 'value', input.default)
+                        this.$set(this.content[input.columnname], 'errors', [])
                     });
                     if(response.data.content || Object.keys(response.data.galleries).length ) {
                         this.inputs.forEach(input => {
                             if (input.type == 'gallery') {
-                                this.content[input.columnname] = {
-                                    value: response.data.galleries[input.columnname],
-                                    errors: []
-                                }
+                                this.content[input.columnname].value = response.data.galleries[input.columnname]
                             } else if (input.type == 'map-select-lat-lng') {
                                 this.$set(this.content[input.columnname], 'value', {})
                                 this.$set(this.content[input.columnname].value, 'lat', parseFloat(response.data.content[input.columnname + '_lat']))

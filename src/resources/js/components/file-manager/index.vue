@@ -344,13 +344,17 @@
             },
             sizeHumanReadable(size) {
                 let units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-                let i = 0
-                while (size >= 1024) {
-                    size /= 1024
-                    ++i
+                try {
+                    let i = 0
+                    while (size >= 1024) {
+                        size /= 1024
+                        ++i
+                    }
+                    // console.log(size)
+                    return size.toFixed(1) + ' ' + units[i]
+                } catch (error) {
+                    console.log(size, units, error)
                 }
-                // console.log(size)
-                return size.toFixed(1) + ' ' + units[i]
             },
             changePage(page) {
                 this.records.current_page = page
