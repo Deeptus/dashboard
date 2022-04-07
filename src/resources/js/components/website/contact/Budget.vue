@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 d-flex align-items-end justify-content-end">
-                    <button class="btn btn-primary" :class="{ 'disabled': form.inputs.accept_conditions.value != 1 || form.state == 'saving' }" @click="form.submit()">Enviar consulta</button>
+                    <button class="btn btn-primary" :class="{ 'disabled': form.inputs.accept_conditions.value != 1 || form.state == 'saving' }" @click="submit()">Enviar consulta</button>
                 </div>
             </div>
         </div>
@@ -112,12 +112,73 @@
             }
         },
         created() {
+            this.form.addInput({
+                key: 'accept_conditions',
+                value: 0,
+                label: 'Acepto los términos y condiciones de privacidad'
+            })
+            this.form.addInput({
+                key: 'name',
+                value: '',
+                label: 'Nombre (*)',
+                rules: {
+                    required: true,
+                }
+            })
+            this.form.addInput({
+                key: 'company',
+                value: '',
+                label: 'Empresa',
+                rules: {
+                    required: false,
+                }
+            })
+            this.form.addInput({
+                key: 'phone',
+                value: '',
+                label: 'Teléfono (*)',
+                rules: {
+                    required: true
+                }
+            })
+            this.form.addInput({
+                key: 'email',
+                value: '',
+                label: 'Email (*)',
+                rules: {
+                    required: true,
+                    email: true
+                }
+            })
+
+            this.form.addInput({
+                key: 'message',
+                value: '',
+                label: 'Escriba acá su mensaje',
+                rules: {
+                    required: true
+                }
+            })
+            this.form.addInput({
+                key: 'address',
+                value: '',
+                label: 'Dirección'
+            })
+
             this.$nextTick(() => {
                 let cart = localStorage.getItem('budget')
                 if (cart) {
                     this.form.cart = Object.values(JSON.parse(cart))
                 }
             });
+            this.form.addInput({
+                key: 'files',
+                value: [],
+                label: 'Archivos adjuntos',
+                rules: {
+                    required: false
+                }
+            })
         },
         methods: {
             selectFile(event) {
@@ -132,6 +193,24 @@
             goStep2() {
                 this.step1 = 'gray'
                 this.step = 2
+            },
+            submit() {
+                this.form.formData.append('name',            this.form.inputs.name.value);
+                this.form.formData.append('email',           this.form.inputs.email.value);
+                this.form.formData.append('phone',           this.form.inputs.phone.value);
+                this.form.formData.append('address',         this.form.inputs.address.value);
+                this.form.formData.append('company',         this.form.inputs.company.value);
+                this.form.formData.append('message',         this.form.inputs.message.value);
+                this.form.formData.append('type',            'budget');
+                this.form.formData.append('cart',            JSON.stringify(this.form.cart));
+                if (this.form.inputs.files.value.length) {
+                    this.form.inputs.files.value.forEach((file, key) => {
+                        if (file && file instanceof File) {
+                            this.form.formData.append('files['+key+']', file);
+                        }
+                    })
+                }
+                this.form.submit()
             }
         }
     }
