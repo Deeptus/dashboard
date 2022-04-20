@@ -1,9 +1,15 @@
 <template>
     <div class="custom-select">
-        <div class="custom-select__input" @click="toggle" :class="{'custom-select__input--active': state == 'open'}">
-            <label class="custom-select__label">{{ label }}</label>
-            <div class="custom-select__selected">
-                {{ optionSelected.text }}
+        <div class="custom-select__input" @click.self="toggle" :class="{ 'custom-select__input--active': state == 'open', 'custom-select__input--multiple': multiple == true }">
+            <label class="custom-select__label" @click.self="toggle">{{ label }}</label>
+            <div class="custom-select__selected" @click.self="toggle">
+                <span v-if="optionSelected && multiple == false">{{ optionSelected.text }}</span>
+                <template v-if="multiple == true">
+                    <div v-for="(item, index) in optionSelected" :key="index" class="custom-select__selected-item">
+                        <div class="custom-select__selected-item-remove" @click="remove(item)"><i class="fas fa-trash-alt"></i></div>
+                        {{ item.text }}
+                    </div>
+                </template>
             </div>
             <input class="custom-select__select"
                 type="text"
@@ -70,26 +76,49 @@ export default {
         }
     },
     created() {
-        if (this.value) {
-            this.optionSelected = this.getOptionSelected(this.value);
+        if ( this.multiple == false ) {
+            if (this.value) {
+                this.optionSelected = this.getOptionSelected(this.value);
+            }
+        } else {
+            if ( Object.prototype.toString.call( this.optionSelected ) != '[object Array]' ) {
+                this.optionSelected = []
+                this.optionSelected.push( ...this.getOptionSelected(this.value) )
+                //
+                // Aca se escucha si cambian las opciones validas,
+                // para asi remover las opciones seleccionadas que no esten en las opciones validas
+                this.$watch('options', () => {
+                    this.optionSelected = this.optionSelected.filter( (option) => {
+                        return this.options.find( option2 => option2.key == option.key )
+                    })
+                    this.$emit('input', this.optionSelected.map(item => item.key))
+                })
+            }
         }
     },
     methods: {
         toggle() {
-            this.state = this.state == 'open' ? 'closed' : 'open'
-            if (this.state == 'open') {
-                setTimeout(() => {
-                    this.$refs.search.focus()
-                }, 100)
-            }
+            // if ( this.multiple == false ) {
+                this.state = this.state == 'open' ? 'closed' : 'open'
+                if (this.state == 'open') {
+                    setTimeout(() => {
+                        this.$refs.search.focus()
+                    }, 100)
+                }
+            // }
         },
         select(option) {
             if (option.disabled == true) {
                 return
             }
             this.state = 'closed'
-            this.optionSelected = option
-            this.$emit('input', option.key)
+            if ( this.multiple == false ) {
+                this.optionSelected = option
+                this.$emit('input', option.key)
+            } else {
+                this.optionSelected.push(option)
+                this.$emit('input', this.optionSelected.map(item => item.key))
+            }
         },
         up() {
             let index = this.optionsFiltered.indexOf(this.optionSelected)
@@ -105,15 +134,35 @@ export default {
             }
             this.optionSelected = this.optionsFiltered[index + 1]
         },
+        remove(option) {
+            this.optionSelected = this.optionSelected.filter(item => item.key != option.key)
+            this.$emit('input', this.optionSelected.map(item => item.key))
+        },
         getOptionSelected(value) {
-            let option = this.options.find(option => option.key == value)
+            let option
+            if (this.multiple == false) {
+                option = this.options.find( o => o.key == value )
+            } else {
+                //
+                // el value lo verifico con filter y no con includes,
+                // porque includes no ignora el tipo de dato
+                option = this.options.filter( o => value.filter( v => v == o.key ).length > 0 )
+            }
             return option
         },
     },
     computed: {
         optionsFiltered() {
             return this.options.filter(option => {
-                return option.text.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+                if ( this.multiple == false ) {
+                    try {
+                        return option.text.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+                    } catch (error) {
+                        console.log(option)
+                    }
+                } else {
+                    return option.text.toLowerCase().indexOf(this.search.toLowerCase()) > -1 && this.optionSelected.find(item => item.key == option.key) == undefined
+                }
             })
         }
     }
@@ -140,6 +189,10 @@ export default {
                 border-color: #007bff;
                 outline: 0;
                 box-shadow: 0 0 0 0.25rem rgb(0 123 255 / 25%);
+            }
+            &--multiple {
+                // icon multiple checks
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3C!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --%3E%3Cpath d='M505 174.8l-39.6-39.6c-9.4-9.4-24.6-9.4-33.9 0L192 374.7 80.6 263.2c-9.4-9.4-24.6-9.4-33.9 0L7 302.9c-9.4 9.4-9.4 24.6 0 34L175 505c9.4 9.4 24.6 9.4 33.9 0l296-296.2c9.4-9.5 9.4-24.7.1-34zm-324.3 106c6.2 6.3 16.4 6.3 22.6 0l208-208.2c6.2-6.3 6.2-16.4 0-22.6L366.1 4.7c-6.2-6.3-16.4-6.3-22.6 0L192 156.2l-55.4-55.5c-6.2-6.3-16.4-6.3-22.6 0L68.7 146c-6.2 6.3-6.2 16.4 0 22.6l112 112.2z'/%3E%3C/svg%3E");
             }
         }
         &__label {
@@ -199,6 +252,27 @@ export default {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-height: 21px;
+            &-item {
+                padding: 0 8px 0 0;
+                border: 1px solid #cbc8d0;
+                margin: 0 1.5px;
+                cursor: auto;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                &-remove {
+                    padding: 5px 8px;
+                    cursor: pointer;
+                    border-right: 1px solid #cbc8d0;
+                    margin-right: 8px;
+                    color: #343a40;
+                    &:hover {
+                        background: #c5c5c5;
+                        color: #000;
+                    }
+                }
+            }
         }
         &__select {
             opacity: 0;

@@ -37,4 +37,8 @@ class Products extends Model {
     public function category() {
         return $this->belongsTo(Categories::class, 'category_id', 'id');
     }
+    public function categories() {
+        return $this->belongsToMany(Categories::class, 'marketplace_product_categories', 'product_id', 'category_id');
+        // return $this->belongsToMany(Multimedia::class, 'gallery_multimedia', 'gallery_id', 'multimedia_id')->withTimestamps()->withPivot('order')->orderBy('gallery_multimedia.order');
+    }
 }

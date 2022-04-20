@@ -64,8 +64,19 @@
                                 &laquo; Primera
                             </a>
                         </li>
-                        <li class="page-item" v-for="page in records.last_page" :class="{'active': records.current_page == page}" :key="page">
-                            <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                        <li
+                            class="page-item"
+                            v-for="page in paginator"
+                            :class="{'active': records.current_page == page}"
+                            :key="page"
+                        >
+                            <a
+                                class="page-link"
+                                href="#"
+                                @click.prevent="changePage(page)"
+                            >
+                                {{ page }}
+                            </a>
                         </li>
                         <li class="page-item" :class="{'disabled': records.current_page == records.last_page}">
                             <a class="page-link" href="#" aria-label="Next" @click.prevent="changePage(records.last_page)">
@@ -422,6 +433,29 @@
                 if ( this.insideModal ) {
                     this.selected_id = file.id
                 }
+            },
+        },
+        computed: {
+            paginator() {
+                let pages = []
+                let maxPages = 14
+                let page = this.records.current_page
+                let lastPage = this.records.last_page
+                let start = page - maxPages / 2
+                let end = page + maxPages / 2
+                if (start < 1) {
+                    start = 1
+                    end = maxPages
+                }
+                if (end > lastPage) {
+                    end = lastPage
+                    start = lastPage - maxPages + 1
+                }
+                for (let i = start; i <= end; i++) {
+                    pages.push(i)
+                }
+                console.log(pages)
+                return pages
             },
         }
     }

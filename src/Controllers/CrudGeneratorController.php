@@ -81,7 +81,7 @@ class CrudGeneratorController extends Controller {
         $className = ucwords($className);
         $className = str_replace(' ', '', $className);
         $model = "\\App\\Models\\" . $className;
-        if ( $table->model ) { 
+        if ( property_exists($table, 'model') && $table->model ) { 
             $model = $table->model;
         }
         foreach ($model::get() as $key => $item) {

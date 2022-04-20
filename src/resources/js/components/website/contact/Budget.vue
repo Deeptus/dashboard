@@ -165,18 +165,26 @@
                 label: 'Dirección'
             })
 
-            this.$nextTick(() => {
-                let cart = localStorage.getItem('budget')
-                if (cart) {
-                    this.form.cart = Object.values(JSON.parse(cart))
-                }
-            });
             this.form.addInput({
                 key: 'files',
                 value: [],
                 label: 'Archivos adjuntos',
                 rules: {
                     required: false
+                }
+            })
+            this.$nextTick(() => {
+                let cart = localStorage.getItem('cart')
+                console.log(cart)
+                if (cart) {
+                    this.form.cart = Object.values(JSON.parse(cart)).filter((i) => Object.prototype.toString.call( i ) == '[object Object]')
+                }
+                if (typeof window.getSpsi === "function" && window.getSpsi()) {
+                    this.form.inputs.name.value     = window.getSpsi().fullname
+                    this.form.inputs.company.value  = window.getSpsi().business_name
+                    this.form.inputs.phone.value    = window.getSpsi().phone
+                    this.form.inputs.email.value    = window.getSpsi().email
+                    this.form.inputs.address.value  = window.getSpsi().address
                 }
             })
         },
