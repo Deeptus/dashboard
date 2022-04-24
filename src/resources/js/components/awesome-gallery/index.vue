@@ -337,10 +337,10 @@
                 this.gallery.splice(index, 1);
             },
             itemURL(file) {
-                if (file && file instanceof File) {
-                    return URL.createObjectURL(file)
-                }
                 if (typeof file === 'object' || file instanceof Object) {
+                    if (file.file && file.file instanceof File) {
+                        return URL.createObjectURL(file.file)
+                    }
                     return file.url
                 }
             }

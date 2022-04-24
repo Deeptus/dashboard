@@ -455,3 +455,26 @@ if (!function_exists('__dCache')) {
         });
     }
 }
+
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+
+if (!function_exists('__paginate')) {
+    function __paginate($items, $perPage = 15, $page = null, $baseUrl = null, $options = []) {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+
+        $items = $items instanceof Collection ? 
+                       $items : Collection::make($items);
+
+        $lap = new LengthAwarePaginator($items->forPage($page, $perPage), 
+                           $items->count(),
+                           $perPage, $page, $options);
+
+        if ($baseUrl) {
+            $lap->setPath($baseUrl);
+        }
+
+        return $lap;
+    }
+}

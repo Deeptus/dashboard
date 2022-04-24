@@ -114,6 +114,7 @@
                                         </form>
                                     </div>
                                 </li>
+                                {{--
                                 <li class="nav-item dropdown no-arrow">
                                     <a class="nav-link dropdown-toggle" href="#" id="homeworkDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-tasks img-profile"></i>
@@ -128,6 +129,7 @@
                                     </a>
                                     <notifications></notifications>
                                 </li>
+                                --}}
                                 <!-- Nav Item - User Information -->
                                 @if(count(LaravelLocalization::getSupportedLocales()) > 1)
                                 <li class="nav-item dropdown no-arrow">
