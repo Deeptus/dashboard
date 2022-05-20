@@ -24,11 +24,11 @@
 </div>
 <x-dashboard-messages/>
 <form class="row mb-3">
-    <div class="form-group offset-md-4 col-md-4">
+    <div class="form-group ms-auto col-md-4">
         <label for="search_s">Buscar</label>
         <input id="search_s" type="text" class="form-control" value="{{ request()->has('s')?request()->s:'' }}" name="s">
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-auto">
         <label>Mostrar</label>
         <select class="form-select" name="paginate">
             @foreach ([10, 20, 50, 100] as $paginate)
@@ -36,12 +36,19 @@
             @endforeach
         </select>
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-auto">
         <label for="search_p" style="opacity: 0">s</label> <br>
         <button class="btn btn-outline-secondary w-100 text-nowrap" type="submit">
             <i class="fas fa-search"></i>
             Buscar
         </button>
+    </div>
+    <div class="form-group col-auto">
+        <label for="search_p" style="opacity: 0">s</label> <br>
+        <a class="btn btn-outline-danger w-100 text-nowrap" href="{{ isset($trash) && $trash == true ? route('admin.crud.trash', ['tablename' => $tablename, 'clear-filter' => 1 ]) : route('admin.crud', ['tablename' => $tablename, 'clear-filter' => 1 ]) }}">
+            <i class="fas fa-eraser"></i>
+            Limpiar Filtros
+        </a>
     </div>
 </form>
 
@@ -110,13 +117,13 @@
                     <?php } ?>
                     @endforeach
                     <td>
-                        @if (!$item->trashed())
                         <a
                             href="{{ route('admin.crud.edit', ['tablename' => $tablename, 'id' => $item->pkv]) }}"
                             class="btn btn-primary btn-sm">
                             <i class="fas fa-sm text-white-50 fa-edit"></i>
                             Editar
                         </a>
+                        @if (!$item->trashed())
                         @if ($enable_create)
                         <btn-link
                             href="{{ route('admin.crud.copy', ['tablename' => $tablename, 'id' => $item->pkv]) }}"
@@ -143,6 +150,15 @@
                             <i class="fas fa-sm text-white-50 fa-trash-restore"></i>
                             Restaurar
                         </btn-link>
+                        @if ($enable_permanent_delete)
+                            <btn-link
+                                href="{{ route('admin.crud.permanent-destroy', ['tablename' => $tablename, 'id' => $item->pkv]) }}"
+                                class="btn btn-danger btn-sm"
+                                confirm-text="¿Está seguro de eliminar este registro permanentemente?">
+                                <i class="fas fa-sm text-white-50 fa-trash-alt"></i>
+                                Eliminar permanentemente
+                            </btn-link>
+                        @endif
                         @endif
                     </td>
                 </tr>

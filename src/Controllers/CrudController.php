@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use AporteWeb\Dashboard\Models\Gallery;
 use AporteWeb\Dashboard\Models\Multimedia;
+use AporteWeb\Dashboard\Models\RecycleBin;
 use Illuminate\Support\Facades\Schema;
 
 class CrudController extends Controller
@@ -216,7 +217,11 @@ class CrudController extends Controller
             $languages[$key] = $value['name'];
         }
         if ($id) {
-            $item = $this->model::findByPKOrFail($id);
+            // $item = $this->model::findByPKOrFail($id);
+            $item = $this->model::withTrashed()->findByPK($id)->first();
+            if ( !$item ) {
+                abort(404);
+            }    
         }
 
         foreach ($this->inputs as $inputKey => $input) {
@@ -263,6 +268,7 @@ class CrudController extends Controller
         $appends = [];
         $enable_create = true;
         $disable_delete = false;
+        $enable_permanent_delete = false;
         $data = new $this->model;
         if (intval($this->table->single_record)) {
             $item = $data->first();
@@ -271,6 +277,7 @@ class CrudController extends Controller
                     'item'           => $item,
                     'tablename'      => $this->tablename,
                     'table'          => $this->table,
+                    'urlBack'        => $item->trashed() ? route('admin.crud.trash', ['tablename' => $this->tablename]) : route('admin.crud', ['tablename' => $this->tablename]),
                     'inputs'         => $this->inputs,
                     '__admin_active' => 'admin.crud-' . $this->tablename
                 ]);
@@ -281,6 +288,17 @@ class CrudController extends Controller
                     'inputs'         => $this->inputs,
                     '__admin_active' => 'admin.crud-' . $this->tablename
                 ]);
+            }
+        }
+        if ( request()->has('clear-filter') ) {
+            session()->forget('filter-index-'.$this->tablename);
+        }
+        $filters = session('filter-index-'.$this->tablename);
+        if ( $filters ) {
+            $filters = json_decode($filters, true);            
+            if (is_array($filters) && count($filters) > 0 && !request()->has('s') && !request()->has('paginate') && !request()->has('page')) {
+                $filters['tablename'] = $this->tablename;
+                return redirect()->route('admin.crud', $filters);
             }
         }
         foreach ($this->conditions as $key => $condition) {
@@ -314,19 +332,24 @@ class CrudController extends Controller
             $data = $data->paginate(20);
         }
         $data->appends($appends);
+        if (request()->has('page')) {
+            $appends['page'] = request()->page;
+        }
+        session()->put('filter-index-'.$this->tablename, json_encode($appends));
         // $data = $data->toSql();
         // dd($data);
         // 😒
         // $data = $this->model::get();
         // return response()->json($this->model::first());
         return view('Dashboard::admin.crud.index', [
-            'data'           => $data,
-            'tablename'      => $this->tablename,
-            'table'          => $this->table,
-            'inputs'         => $this->inputs,
-            'enable_create'  => $enable_create,
-            'disable_delete'  => $disable_delete,
-            '__admin_active' => 'admin.crud-' . $this->tablename
+            'data'                    => $data,
+            'tablename'               => $this->tablename,
+            'table'                   => $this->table,
+            'inputs'                  => $this->inputs,
+            'enable_create'           => $enable_create,
+            'disable_delete'          => $disable_delete,
+            'enable_permanent_delete' => $enable_permanent_delete,
+            '__admin_active'          => 'admin.crud-' . $this->tablename
         ]);
     }
 
@@ -497,7 +520,11 @@ class CrudController extends Controller
     }
     public function store(Request $request, $tablename, $id = false) {
         if($id){
-            $item       = $this->model::findByPKOrFail($id);
+            // $item = $this->model::findByPKOrFail($id);
+            $item = $this->model::withTrashed()->findByPK($id)->first();
+            if ( !$item ) {
+                abort(404);
+            }    
             $action     = 'edito';
         } else {
             $item       = new $this->model;
@@ -574,12 +601,17 @@ class CrudController extends Controller
     }
 
     public function edit($tablename, $id) {
-        $item = $this->model::findByPKOrFail($id);
+        // $item = $this->model::findByPKOrFail($id);
+        $item = $this->model::withTrashed()->findByPK($id)->first();
+        if ( !$item ) {
+            abort(404);
+        }
         return view('Dashboard::admin.crud.edit', [
             'item'           => $item,
             'tablename'      => $this->tablename,
             'table'          => $this->table,
             'inputs'         => $this->inputs,
+            'urlBack'        => $item->trashed() ? route('admin.crud.trash', ['tablename' => $tablename]) : route('admin.crud', ['tablename' => $tablename]),
             '__admin_active' => 'admin.crud-' . $this->tablename
         ]);
     }
@@ -589,10 +621,61 @@ class CrudController extends Controller
         $item->delete();
         return redirect()->route('admin.crud', ['tablename' => $tablename])->with('status', 'Se elimino un <strong>item</strong> con éxito.');
     }
+    public function permanentDestroy($tablename, $id) {
+        $item = $this->model::withTrashed()->findByPK($id)->first();
+        $item->forceDelete();
+        RecycleBin::create([
+            'table'      => $this->table->tablename,
+            'data'       => $item->toJson(JSON_PRETTY_PRINT),
+            'user_id'    => auth()->user()->id,
+            'deleted_by' => auth()->user()->username
+        ]);
+        return redirect()->route('admin.crud.trash', ['tablename' => $tablename])->with('status', 'Se elimino un <strong>item</strong> permanentemente con éxito.');
+    }
     public function trash($tablename) {
         $enable_create = true;
         $disable_delete = true;
-        $data = $this->model::onlyTrashed()->paginate(20);
+        $enable_permanent_delete = false;
+        $appends = [];
+
+        if ( request()->has('clear-filter') ) {
+            session()->forget('filter-trash-'.$this->tablename);
+        }
+        $filters = session('filter-trash-'.$this->tablename);
+        if ( $filters ) {
+            $filters = json_decode($filters, true);            
+            if (is_array($filters) && count($filters) > 0 && !request()->has('s') && !request()->has('paginate') && !request()->has('page')) {
+                $filters['tablename'] = $this->tablename;
+                return redirect()->route('admin.crud.trash', $filters);
+            }
+        }
+
+        if ( property_exists($this->table, 'permanent_destroy') && $this->table->permanent_destroy == 1 ) {
+            $enable_permanent_delete = true;
+        }
+        $data = $this->model::onlyTrashed();
+        if (request()->has('s')) {
+            $appends['s'] = request()->s;
+            $cols = \DB::getSchemaBuilder()->getColumnListing((new $this->model)->getTable());
+            $data = $data->where(function ($query) use ($cols) {
+                foreach ($cols as $col) {
+                    $query->orWhere($col, 'like', '%'.request()->s.'%');
+                }
+            });
+        }
+        if (request()->has('paginate')) {
+            $data = $data->paginate(request()->paginate);
+            $appends['paginate'] = request()->paginate;
+        } else {
+            $data = $data->paginate(20);
+        }
+        $data->appends($appends);
+
+        if (request()->has('page')) {
+            $appends['page'] = request()->page;
+        }
+        session()->put('filter-trash-'.$this->tablename, json_encode($appends));
+
         return view('Dashboard::admin.crud.index', [
             'trash'          => true,
             'enable_create'  => $enable_create,
@@ -601,6 +684,7 @@ class CrudController extends Controller
             'tablename'      => $this->tablename,
             'table'          => $this->table,
             'inputs'         => $this->inputs,
+            'enable_permanent_delete' => $enable_permanent_delete,
             '__admin_active' => 'admin.crud-' . $this->tablename
         ]);
     }

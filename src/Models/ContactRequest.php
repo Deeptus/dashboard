@@ -33,6 +33,9 @@ class ContactRequest extends Model {
         'read_at',
         'notified_at'
     ];
+    protected $appends = [
+        'created_at_formatted',
+    ];
     public static function boot() {
         parent::boot();
         self::creating(function ($model) {
@@ -46,5 +49,8 @@ class ContactRequest extends Model {
     }
     public function files() {
         return $this->hasMany(ContactRequestFile::class, 'contact_request_id', 'id');
+    }
+    public function getCreatedAtFormattedAttribute() {
+        return $this->created_at->format('d/m/Y h:i A');
     }
 }

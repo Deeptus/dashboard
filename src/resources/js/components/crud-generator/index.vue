@@ -81,6 +81,15 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating">
+                                        <select class="form-select" id="permanent_destroy" v-model="table.permanent_destroy">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                        <label for="permanent_destroy">Permanent Destroy</label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating">
                                         <select class="form-select" id="id" v-model="table.translation_method">
                                             <option value="none">None</option>
                                             <option value="spatie-laravel-translatable">spatie/laravel-translatable</option>
@@ -540,6 +549,7 @@
                 table: {
                     id: 1,
                     single_record: 0,
+                    permanent_destroy: 0,
                     translation_method: 'none',
                     uuid: 1,
                     order_index: 0,

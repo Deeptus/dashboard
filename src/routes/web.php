@@ -174,6 +174,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/{tablename}/{id}/delete', 'CrudController@destroy')->name('.destroy');
             Route::get ('/{tablename}/trash', 'CrudController@trash')->name('.trash');
             Route::get ('/{tablename}/{id}/restore', 'CrudController@restore')->name('.restore');
+            Route::get ('/{tablename}/{id}/permanent-destroy', 'CrudController@permanentDestroy')->name('.permanent-destroy');
             //
             Route::get ('/{tablename}/api/data/{id?}', 'CrudController@data')->name('.data');
             Route::get ('/{tablename}/{id}/copy', 'CrudController@copy')->name('.copy');
@@ -188,6 +189,12 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get ('/{type}/{id}/delete',  'ContactController@destroy')->name('.destroy');
             Route::get ('/{type}/trash',        'ContactController@trash')  ->name('.trash');
             Route::get ('/{type}/{id}/restore', 'ContactController@restore')->name('.restore');
+        });
+        Route::group([
+            'prefix' => 'recycle-bin',
+            'as' => '.recycle-bin',
+        ], function() {
+            Route::get ('/', 'RecycleBinController@index');
         });
         Route::group([
             'prefix' => 'user',

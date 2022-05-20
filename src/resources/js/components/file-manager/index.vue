@@ -443,18 +443,18 @@
                 let lastPage = this.records.last_page
                 let start = page - maxPages / 2
                 let end = page + maxPages / 2
-                if (start < 1) {
-                    start = 1
-                    end = maxPages
-                }
                 if (end > lastPage) {
                     end = lastPage
                     start = lastPage - maxPages + 1
                 }
+                if (start < 1) {
+                    start = 1
+                    // end = maxPages
+                }
                 for (let i = start; i <= end; i++) {
                     pages.push(i)
                 }
-                console.log(pages)
+                // console.log(pages)
                 return pages
             },
         }
