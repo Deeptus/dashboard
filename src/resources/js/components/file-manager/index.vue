@@ -86,7 +86,19 @@
                     </ul>
                 </nav>
             </template>
-
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 12px;" v-if="state == 'upload'">
+                <div class="form-floating mx-2" style="max-width: 200px; width: 100%;">
+                    <div class="form-control">{{ filesToSend.length }}</div>
+                    <label>Total de archivos a Subir</label>
+                </div>
+                <div class="form-floating mx-2" style="max-width: 300px; width: 100%;">
+                    <select class="form-select" id="uploadMode" v-model="uploadMode" aria-label="Modo de subida">
+                        <option value="normal" :key="'normal'">Normal</option>
+                        <option value="replace-same-name" :key="'replace-same-name'">Remplazar Archivos con el mismo nombre</option>
+                    </select>
+                    <label for="uploadMode">Modo de subida</label>
+                </div>
+            </div>
             <div class="file-manager__files" v-if="state == 'upload'">
                 <template v-for="(file, key) in filesToSend">
                     <div class="file-manager__file" :key="'up'+key">
@@ -107,11 +119,17 @@
                             </div>
                             <div class="file-manager__state-text">Error</div>
                         </div>
-                        <div class="file-manager__state file-manager__state--success" v-if="file.meta.state == 'success'">
+                        <div class="file-manager__state file-manager__state--success" v-if="file.meta.state == 'success-new'">
                             <div class="file-manager__state-icon">
                                 <i class="fas fa-check"></i>
                             </div>
                             <div class="file-manager__state-text">Subido</div>
+                        </div>
+                        <div class="file-manager__state file-manager__state--success" v-if="file.meta.state == 'success-replace'">
+                            <div class="file-manager__state-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <div class="file-manager__state-text">Remplazado</div>
                         </div>
                         <div class="file-manager__state file-manager__state--pending" v-if="file.meta.state == 'pending'">
                             <div class="file-manager__state-icon">
@@ -167,6 +185,7 @@
                 excludeIds: [],
                 filesToSend: [],
                 search: '',
+                uploadMode: 'normal',
                 records: {
                     current_page: 1,
                     last_page: 1,
@@ -319,10 +338,11 @@
                                 setTimeout(() => {
                                     let formData = new FormData()
                                     formData.append('items[0]', file)
+                                    formData.append('upload_mode', this.uploadMode)
                                     axios.post(this.urlData, formData).then((response) => {
-                                        file.meta.state = 'success'
                                         response.data.forEach(f => {
                                             this.files.unshift(f)
+                                            file.meta.state = f.message
                                         })
                                         this.$forceUpdate()
                                         resolve()

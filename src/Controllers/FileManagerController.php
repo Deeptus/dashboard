@@ -34,7 +34,18 @@ class FileManagerController extends Controller {
             foreach ($request->items as $key => $item) {
                 if($item->isValid()) {
                     $path = $item->store('public/content/multimedia/');
-                    $multimedia = new Multimedia;
+                    if ( $request->upload_mode == 'normal' ) {
+                        $multimedia = new Multimedia;
+                        $message = 'success-new';
+                    }
+                    if ( $request->upload_mode == 'replace-same-name' ) {
+                        $multimedia = Multimedia::where('original_name', $item->getClientOriginalName())->first();
+                        $message = 'success-replace';
+                        if ( !$multimedia ) {
+                            $multimedia = new Multimedia;
+                            $message = 'success-new';
+                        }
+                    }
                     $multimedia->path          = $path;
                     $multimedia->order         = null;
                     $multimedia->filename      = basename($path);
@@ -44,13 +55,14 @@ class FileManagerController extends Controller {
                     $multimedia->disk          = 'public';
                     $multimedia->meta_value    = null;
                     $multimedia->save();
-                    $files[] = $multimedia->setAppends([
+                    $files[$key] = $multimedia->setAppends([
                         'url',
                         'type',
                         'size',
                         'width',
                         'height'
                     ]);
+                    $files[$key]['message'] = $message;
                 }
             }
         } catch (\Throwable $th) {
