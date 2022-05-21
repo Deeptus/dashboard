@@ -51,6 +51,10 @@
                         <i class="fas fa-sync-alt"></i>
                         Optimizar
                     </button>
+                    <button type="button" class="btn btn-danger btn-block" @click="deleteFile()">
+                        <i class="fas fa-trash"></i>
+                        Eliminar
+                    </button>
                 </div>
             </div>
         </div>
@@ -123,6 +127,34 @@ export default {
                 aa().open({style: 'success', title: 'Se optimizo el archivo', sleep: 1000 })
             }).catch((error) => {
                 
+            })
+        },
+        deleteFile() {
+            aa().open({
+                style: 'question',
+                title: '¿Esta seguro de eliminar el archivo?',
+                buttons: [
+                    {
+                        key: 1,
+                        text: 'Si',
+                        class: 'btn btn-success',
+                        action: () => {
+                            aa().open({style: 'loading'})
+                            axios.post(this.endpoint + '/delete/' + this.file.id).then((response) => {
+                                this.componentCallback.resolve(response.data)
+                                aa().open({style: 'success', title: 'Se elimino el archivo', sleep: 1000 })
+                            }).catch((error) => {
+                                
+                            })
+                        }
+                    },
+                    {
+                        key: 0,
+                        text: 'No',
+                        class: 'btn btn-danger',
+                        closeModal: true
+                    }
+                ]
             })
         }
     }

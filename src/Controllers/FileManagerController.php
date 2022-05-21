@@ -130,4 +130,12 @@ class FileManagerController extends Controller {
             ]));
         }
     }
+    public function delete($id) {
+        $file = Multimedia::find($id);
+        if ( $file ) {
+            $file->delete();
+            return response()->json(['message' => 'success-delete']);
+        }
+        return response()->json(['message' => 'error-delete']);
+    }
 }
