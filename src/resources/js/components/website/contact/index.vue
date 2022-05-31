@@ -21,7 +21,7 @@
     import Budget from './Budget.vue'
     import ShoppingCart from './ShoppingCart.vue'
     import State from './State.vue'
-    import faker from '@faker-js/faker'
+    import { faker } from '@faker-js/faker'
     import Swal from 'sweetalert2'
 
     export default {
