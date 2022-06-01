@@ -30,7 +30,7 @@
                 Swal.fire({
                     title: this.confirmText,
                     text: '',
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
