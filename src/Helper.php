@@ -443,10 +443,13 @@ if (! function_exists('__crudInfo')) {
     }
 }
 
+use Illuminate\Pagination\Paginator;
+
 if (!function_exists('__dCache')) {
     function __dCache($key, Closure $next) {
+        $page = Paginator::resolveCurrentPage();
         $seconds = 60 * 60 * 24;
-        $key = $key . '-'. app()->getLocale();
+        $key = $key . '-' . $page . '-' . app()->getLocale();
         if( auth()->guard('client')->check() ) {
             $key = $key . '-' . request()->session()->getId();
         }
@@ -456,7 +459,6 @@ if (!function_exists('__dCache')) {
     }
 }
 
-use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
