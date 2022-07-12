@@ -175,7 +175,7 @@
         data(){
             return{
                 display: false,
-                state: 'library',
+                state: 'upload',
                 displayOnly: 'all',
                 types: [],
                 files: [],

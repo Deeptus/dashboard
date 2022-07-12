@@ -47,9 +47,17 @@
                             </tr>
                         </tbody>
                     </table>
+                    <!--
                     <button type="button" class="btn btn-primary btn-block" @click="optimizeFile()" v-if="file.type != 'image/svg+xml' && file.type != 'image/svg' && file.type != 'image/webp'">
                         <i class="fas fa-sync-alt"></i>
                         Optimizar
+                    </button>
+                    -->
+                    <button type="button" class="btn btn-primary btn-block" @click="ImageRotate('left')" v-if="file.type == 'image/jpeg' || file.type == 'image/png'">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-block" @click="ImageRotate('right')" v-if="file.type == 'image/jpeg' || file.type == 'image/png'">
+                        <i class="fas fa-redo"></i>
                     </button>
                     <button type="button" class="btn btn-danger btn-block" @click="deleteFile()">
                         <i class="fas fa-trash"></i>
@@ -125,6 +133,17 @@ export default {
                 Object.assign(this.file, response.data)
                 this.$forceUpdate()
                 aa().open({style: 'success', title: 'Se optimizo el archivo', sleep: 1000 })
+            }).catch((error) => {
+                
+            })
+        },
+        ImageRotate(direction) {
+            aa().open({style: 'loading'})
+            axios.post(this.endpoint + '/rotate/' + this.file.id + '/' + direction).then((response) => {
+                Object.assign(this.file, response.data)
+                // this.file.url = this.file.url + '?t=' + new Date().getTime()
+                this.$forceUpdate()
+                aa().open({style: 'success', title: 'Se roto la imagen', sleep: 1000 })
             }).catch((error) => {
                 
             })

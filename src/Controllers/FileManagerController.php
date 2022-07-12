@@ -4,6 +4,7 @@ namespace AporteWeb\Dashboard\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use AporteWeb\Dashboard\Models\Content;
 use AporteWeb\Dashboard\Models\ContentMeta;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use AporteWeb\Dashboard\Models\Gallery;
 use AporteWeb\Dashboard\Models\Multimedia;
+
 use Tinify;
 
 class FileManagerController extends Controller {
@@ -135,6 +137,58 @@ class FileManagerController extends Controller {
         if ( $file ) {
             $file->delete();
             return response()->json(['message' => 'success-delete']);
+        }
+        return response()->json(['message' => 'error-delete']);
+    }
+    public function rotate($id, $direction) {
+        $file = Multimedia::find($id);
+        if ( $file ) {
+            if ( $direction == 'left' ) {
+                $degrees = 90;
+            }
+            if ( $direction == 'right' ) {
+                $degrees = -90;
+            }
+            $path = Storage::path($file->path);
+            // rotate image, using imagerotate
+            $extension = pathinfo($path)['extension'];
+            if ( $extension == 'jpg' || $extension == 'jpeg' ) {
+                $image = @imagecreatefromjpeg($path);
+                $rotate = imagerotate($image, $degrees, 0);
+                imagejpeg($rotate, $path);
+            }
+            if ( $extension == 'png' ) {
+                $image = @imagecreatefrompng($path);
+                $rotate = imagerotate($image, $degrees, 0);
+                imagepng($rotate, $path);
+            }
+            if ( $extension == 'gif' ) {
+                $image = @imagecreatefromgif($path);
+                $rotate = imagerotate($image, $degrees, 0);
+                imagegif($rotate, $path);
+            }
+            if ( $extension == 'webp' ) {
+                $image = @imagecreatefromwebp($path);
+                $rotate = imagerotate($image, $degrees, 0);
+                imagewebp($rotate, $path);
+            }
+            // update basename on path
+            $basename = pathinfo($path)['basename'];
+            // get new basename
+            $new_basename = Str::random(30) . '.' . $extension;
+            // set new path
+            $new_path = str_replace($basename, $new_basename, $file->path);
+            Storage::move($file->path, $new_path);
+            $file->path = $new_path;
+            $file->save();
+            $file->setAppends([
+                'url',
+                'type',
+                'size',
+                'width',
+                'height'
+            ]);
+            return response()->json($file);
         }
         return response()->json(['message' => 'error-delete']);
     }

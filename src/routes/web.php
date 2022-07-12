@@ -81,6 +81,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get ('file-manager', 'FileManagerController@data')->name('.file-manager');
         Route::post('file-manager', 'FileManagerController@upload');
         Route::post('file-manager/optimize/{id?}', 'FileManagerController@optimize')->name('.file-manager.optimize');
+        Route::post('file-manager/rotate/{id}/{direction}', 'FileManagerController@rotate')->name('.file-manager.rotate');
         Route::post('file-manager/delete/{id}', 'FileManagerController@delete')->name('.file-manager.delete');
 
         Route::get('/', 'HomeController@index')->name('.home');
