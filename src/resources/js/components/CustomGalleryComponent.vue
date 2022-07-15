@@ -129,10 +129,13 @@
                 await this.fileManager().open({ excludeIds: ids }).then((callback) => {
                     this.image = {}
                     if (callback) {
+                        // console.clear()
+                        // console.log('este es el callback', callback)
                         this.gallery.push({
                             id:   callback.id,
                             path: callback.path,
                             type: callback.type,
+                            original_name: callback.original_name,
                             url:  callback.url
                         })
                         // console.log(this.gallery)
@@ -264,6 +267,7 @@
                 }
             },
             createImageName(file) {
+                console.log(file)
                 if (file && file instanceof File) {
                     return file.name
                 }
@@ -271,6 +275,9 @@
                     return file.split('/').pop()
                 }
                 if (typeof file === 'object' || file instanceof Object) {
+                    if (file.original_name && file.original_name != '' && file.original_name != 'undefined' && file.original_name.length > 0) {
+                        return file.original_name
+                    }
                     if(file.url) {
                         return file.url.split('/').pop()
                     }

@@ -104,10 +104,11 @@ class CrudController extends Controller
                 $file = Multimedia::find($item->{$input->columnname . '_id'});
                 if ($file) {
                     $content[$input->columnname] = [
-                        'url'  => asset(Storage::url($file->path)),
-                        'path' => $file->path,
-                        'id'   => $file->id,
-                        'type' => Storage::mimeType($file->path)
+                        'url'           => asset(Storage::url($file->path)),
+                        'path'          => $file->path,
+                        'id'            => $file->id,
+                        'original_name' => $file->original_name,
+                        'type'          => Storage::mimeType($file->path)
                     ];
                 }
             }
@@ -120,10 +121,11 @@ class CrudController extends Controller
             if ($gallery) {
                 foreach ($gallery->items as $key => $item) {
                     $galleries[$input->columnname][] = [
-                        'url'  => asset(Storage::url($item->path)),
-                        'path' => $item->path,
-                        'id'   => $item->id,
-                        'type' => Storage::mimeType($item->path)
+                        'url'           => asset(Storage::url($item->path)),
+                        'path'          => $item->path,
+                        'id'            => $item->id,
+                        'original_name' => $item->original_name,
+                        'type'          => Storage::mimeType($item->path)
                     ];
                 }
             }

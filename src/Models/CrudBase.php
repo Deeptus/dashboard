@@ -125,7 +125,12 @@ trait CrudBase {
                                 'url'  => asset(Storage::url($file->path)),
                                 'path' => $file->path,
                                 'id'   => $file->id,
-                                'type' => Storage::mimeType($file->path)
+                                // Multimedia deberia tener un campo Multimedia
+                                'uuid' => $file->uuid,
+                                'type' => Storage::mimeType($file->path),
+                                'original_name' => $file->original_name,
+                                'download_url' => route('admin.multimedia.download', ['id' => $file->id, 'original_name' => $file->original_name]),
+                                'stream_url' => route('admin.multimedia.stream', ['id' => $file->id, 'original_name' => $file->original_name]),
                             ];
                         }
                     }

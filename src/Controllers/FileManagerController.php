@@ -50,7 +50,8 @@ class FileManagerController extends Controller {
                     }
                     $multimedia->path          = $path;
                     $multimedia->order         = null;
-                    $multimedia->filename      = basename($path);
+                    // $multimedia->filename      = basename($path);
+                    $multimedia->filename      = $item->getClientOriginalName();
                     $multimedia->alt           = null;
                     $multimedia->caption       = null;
                     $multimedia->original_name = $item->getClientOriginalName();

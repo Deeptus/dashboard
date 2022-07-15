@@ -47,6 +47,7 @@
                             this.$set(this.image, 'path', callback.path)
                             this.$set(this.image, 'type', callback.type)
                             this.$set(this.image, 'url',  callback.url)
+                            this.$set(this.image, 'original_name',  callback.original_name)
                         } else {
                             this.removeImage()
                         }
@@ -170,6 +171,9 @@
                 }
                 if (!this.image) {
                     return ''
+                }
+                if (this.image.original_name && this.image.original_name != '' && this.image.original_name != 'undefined' && this.image.original_name.length > 0) {
+                    return this.image.original_name
                 }
                 return this.image.path.split('/').pop()
             },

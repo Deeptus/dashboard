@@ -91,4 +91,60 @@ class MultimediaController extends Controller {
         return response()->json($files);
     }
     */
+    public function download($id, $original_name) {
+        $multimedia = Multimedia::where('id', $id)->where('original_name', $original_name)->first();
+        if ($multimedia) {
+            $path = $multimedia->path;
+            $file = Storage::get($path);
+            return response()->make($file, 200, [
+                'Content-Type' => Storage::mimeType($path),
+                'Content-Length' => Storage::size($path),
+                'Content-Disposition' => 'attachment; filename="'.$multimedia->original_name.'"'
+            ]);
+        } else {
+            return response()->json([
+                'error' => 'No se encontro el archivo'
+            ], 404);
+        }
+    }
+    public function stream($id, $original_name) {
+        $multimedia = Multimedia::where('id', $id)->where('original_name', $original_name)->first();
+        // display the file y stream it to the browser
+        if ($multimedia) {
+            $path = $multimedia->path;
+            $file = Storage::get($path);
+            return response()->make($file, 200, [
+                'Content-Type' => Storage::mimeType($path),
+                'Content-Length' => Storage::size($path),
+                'Content-Disposition' => 'inline; filename="'.$multimedia->original_name.'"'
+            ]);
+            /*
+            header("Content-Length: " . Storage::size($path));
+            header('Content-Type: ' . Storage::mimeType($path));
+            header('Content-Disposition: inline; filename="' . $multimedia->original_name.'"');
+            header('Content-Length: '.Storage::size($path));
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            readfile(Storage::path($path));
+            /*
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream'); // Storage::mimeType($path)
+            header('Content-Disposition: attachment; filename="'.$multimedia->original_name.'"');
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            header('Content-Length: ' . Storage::size($path));
+            ob_clean();
+            flush();
+            readfile($path);
+            exit;
+            */
+            // dd($path, Storage::url($path), Storage::path($path));
+        } else {
+            return response()->json([
+                'error' => 'No se encontro el archivo'
+            ], 404);
+        }
+    }
 }
