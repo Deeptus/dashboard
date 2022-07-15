@@ -443,13 +443,10 @@ if (! function_exists('__crudInfo')) {
     }
 }
 
-use Illuminate\Pagination\Paginator;
-
 if (!function_exists('__dCache')) {
     function __dCache($key, Closure $next) {
-        $page = Paginator::resolveCurrentPage();
         $seconds = 60 * 60 * 24;
-        $key = $key . '-' . $page . '-' . app()->getLocale();
+        $key = $key . '-'. app()->getLocale();
         if( auth()->guard('client')->check() ) {
             $key = $key . '-' . request()->session()->getId();
         }
@@ -459,6 +456,7 @@ if (!function_exists('__dCache')) {
     }
 }
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -478,5 +476,11 @@ if (!function_exists('__paginate')) {
         }
 
         return $lap;
+    }
+}
+
+if (!function_exists('__pdfpath')) {
+    function __pdfpath($path) {
+        return 'data:image/png;base64,' . base64_encode(file_get_contents(realpath(base_path('../public_html/' . $path))));
     }
 }
