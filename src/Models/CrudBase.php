@@ -121,17 +121,22 @@ trait CrudBase {
                     ];
                     if ($file) {
                         if (Storage::exists($file->path)) {
-                            $image = [
-                                'url'  => asset(Storage::url($file->path)),
-                                'path' => $file->path,
-                                'id'   => $file->id,
-                                // Multimedia deberia tener un campo Multimedia
-                                'uuid' => $file->uuid,
-                                'type' => Storage::mimeType($file->path),
-                                'original_name' => $file->original_name,
-                                'download_url' => route('admin.multimedia.download', ['id' => $file->id, 'original_name' => $file->original_name]),
-                                'stream_url' => route('admin.multimedia.stream', ['id' => $file->id, 'original_name' => $file->original_name]),
-                            ];
+                            try {
+                                $image = [
+                                    'url'  => asset(Storage::url($file->path)),
+                                    'path' => $file->path,
+                                    'id'   => $file->id,
+                                    // Multimedia deberia tener un campo Multimedia
+                                    'uuid' => $file->uuid,
+                                    'type' => Storage::mimeType($file->path),
+                                    'original_name' => $file->original_name,
+                                ];
+                                if ( $file->original_name && strlen($file->original_name) > 0 ) {
+                                    $image['download_url'] = route('admin.multimedia.download', ['id' => $file->id, 'original_name' => $file->original_name]);
+                                    $image['stream_url']   = route('admin.multimedia.stream',   ['id' => $file->id, 'original_name' => $file->original_name]);
+                                }
+                            } catch (\Throwable $th) {
+                            }
                         }
                     }
                     return $image;

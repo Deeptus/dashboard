@@ -28,8 +28,12 @@ class Categories extends Model {
             }
         });
     }
+    // products with pivot table *pproducts*
     public function products() {
         return $this->belongsToMany(Products::class, 'marketplace_product_categories', 'category_id', 'product_id');
-        // return $this->hasMany(Products::class, 'category_id');
+    }
+    // direct products *dproducts*
+    public function dproducts() {
+        return $this->hasMany(Products::class, 'category_id');
     }
 }
