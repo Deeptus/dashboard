@@ -34,13 +34,6 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get('logout', 'Auth\LoginController@logout')->name('logout');
     });
 });
-Route::group([
-    'prefix' => 'multimedia',
-    'as' => 'admin.multimedia',
-], function() {
-    Route::get ('/download/{id}/{original_name}', 'MultimediaController@download')->name('.download');
-    Route::get ('/stream/{id}/{original_name}', 'MultimediaController@stream')->name('.stream');
-});
 Route::group(
     [
         "prefix" => config('adashboard.prefix', 'adm') . "/log-viewer",
@@ -351,4 +344,12 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         ]);
     });
     */
+});
+
+Route::group([
+    'prefix' => 'multimedia',
+    'as' => 'admin.multimedia'
+], function() {
+    Route::get ('/download/{id}/{original_name}', 'MultimediaController@download')->withoutMiddleware(['auth'])->name('.download');
+    Route::get ('/stream/{id}/{original_name}',   'MultimediaController@stream')  ->withoutMiddleware(['auth'])->name('.stream');
 });
