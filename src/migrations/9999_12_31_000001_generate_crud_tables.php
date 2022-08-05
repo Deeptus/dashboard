@@ -90,7 +90,7 @@ class GenerateCrudTables extends Migration
             $outputStyle = new OutputFormatterStyle('white', 'red', ['bold', 'blink']);
             $output = new ConsoleOutput();
             $output->getFormatter()->setStyle('error', $outputStyle);
-            $output->writeln('<error>' . $content->table->tablename . ' is_authenticatable undifined</>');
+            $output->writeln('<error>' . $content->table->tablename . ' is_authenticatable undefined</>');
         }
         try {
             if ($content->table->order_index) {
