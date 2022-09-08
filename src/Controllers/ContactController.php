@@ -48,14 +48,17 @@ class ContactController extends Controller {
         }
 
         if (request()->type == 'contact-message' || request()->type == 'budget' || request()->type == 'shopping-cart') {
-            $message          = new ContactRequest;
-            $message->name    = request()->name;
-            $message->email   = request()->email;
-            $message->phone   = request()->phone;
-            $message->company = request()->company;
-            $message->address = request()->address;
-            $message->message = request()->message;
-            $message->type    = request()->type;
+            $message            = new ContactRequest;
+            $message->name      = request()->name;
+            $message->email     = request()->email;
+            $message->phone     = request()->phone;
+            $message->company   = request()->company;
+            $message->address   = request()->address;
+            $message->message   = request()->message;
+            $message->type      = request()->type;
+            $message->provincia = request()->provincia;
+            $message->localidad = request()->localidad;
+            $message->direccion = request()->direccion;
             $message->save();
             $cart = json_decode(request()->cart, true);
             if (count($cart) && (request()->type == 'budget' || request()->type == 'shopping-cart')) {

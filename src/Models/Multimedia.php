@@ -45,17 +45,25 @@ class Multimedia extends Model
     }
 
     public function getWidthAttribute() {
-        if (Storage::exists($this->getAttribute('path'))) {
-            list($width, $height, $type, $attr) = getimagesize(Storage::path($this->getAttribute('path')));
-            return $width;
+        try {
+            if (Storage::exists($this->getAttribute('path'))) {
+                list($width, $height, $type, $attr) = getimagesize(Storage::path($this->getAttribute('path')));
+                return $width;
+            }
+        } catch (\Throwable $th) {
+            return null;
         }
         return null;
     }
 
     public function getHeightAttribute() {
-        if (Storage::exists($this->getAttribute('path'))) {
-            list($width, $height, $type, $attr) = getimagesize(Storage::path($this->getAttribute('path')));
-            return $height;
+        try {
+            if (Storage::exists($this->getAttribute('path'))) {
+                list($width, $height, $type, $attr) = getimagesize(Storage::path($this->getAttribute('path')));
+                return $height;
+            }
+        } catch (\Throwable $th) {
+            return null;
         }
         return null;
     }

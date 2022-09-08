@@ -656,6 +656,21 @@ class CrudController extends Controller
             $enable_permanent_delete = true;
         }
         $data = $this->model::onlyTrashed();
+        foreach ($this->conditions as $key => $condition) {
+            if ($condition->type == 'crud_listing') {
+                $data = $data->whereRaw($condition->condition);
+            }
+            if ($condition->type == 'disable_create') {
+                if ($condition->condition == 'always') {
+                    $enable_create = false;
+                }
+            }
+            if ($condition->type == 'disable_delete') {
+                if ($condition->condition == 'always') {
+                    $disable_delete = true;
+                }
+            }
+        }
         if (request()->has('s')) {
             $appends['s'] = request()->s;
             $cols = \DB::getSchemaBuilder()->getColumnListing((new $this->model)->getTable());

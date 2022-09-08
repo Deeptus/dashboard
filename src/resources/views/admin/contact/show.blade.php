@@ -25,6 +25,24 @@
                     <td>{{ $message->address }}</td>
                 </tr>
             @endif
+            @if($message->provincia)
+                <tr>
+                    <th>Provincia:</th>
+                    <td>{{ $message->provincia }}</td>
+                </tr>
+            @endif
+            @if($message->localidad)
+                <tr>
+                    <th>Localidad:</th>
+                    <td>{{ $message->localidad }}</td>
+                </tr>
+            @endif
+            @if($message->direccion)
+                <tr>
+                    <th>Dirección:</th>
+                    <td>{{ $message->direccion }}</td>
+                </tr>
+            @endif
             <tr>
                 <th colspan="2">Consulta:</td>
             </tr>

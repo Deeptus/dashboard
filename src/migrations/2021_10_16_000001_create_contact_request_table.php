@@ -23,6 +23,9 @@ class CreateContactRequestTable extends Migration
             $table->string('postal_code')->nullable();
             $table->string('address')->nullable();
             $table->string('email')->nullable();
+            $table->string('provincia')->nullable();
+            $table->string('localidad')->nullable();
+            $table->string('direccion')->nullable();
             $table->longText('message')->nullable();
             $table->longText('observation')->nullable();
             // purchase

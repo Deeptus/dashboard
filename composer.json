@@ -9,10 +9,10 @@
     "minimum-stability": "stable",
     "require": {
         "barryvdh/laravel-dompdf": "^1.0.2",
-        "doctrine/dbal": "^3.2",
+        "doctrine/dbal": "^3.4",
         "diglactic/laravel-breadcrumbs": "7.x",
-        "mcamara/laravel-localization": "^1.6",
-        "phpoffice/phpspreadsheet": "^1.20",
+        "mcamara/laravel-localization": "^1.7",
+        "phpoffice/phpspreadsheet": "^1.24",
         "mateusjunges/laravel-acl": "^3.0",
         "spatie/laravel-translatable": "^4.6",
         "barryvdh/laravel-debugbar": "^3.6",

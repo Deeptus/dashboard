@@ -481,6 +481,11 @@ if (!function_exists('__paginate')) {
 
 if (!function_exists('__pdfpath')) {
     function __pdfpath($path) {
-        return 'data:image/png;base64,' . base64_encode(file_get_contents(realpath(base_path('../public_html/' . $path))));
+        try {
+            //code...
+            return 'data:image/png;base64,' . base64_encode(file_get_contents(realpath(base_path('../public_html/' . $path))));
+        } catch (\Throwable $th) {
+            return '';
+        }
     }
 }
