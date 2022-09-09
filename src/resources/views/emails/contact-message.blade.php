@@ -69,6 +69,24 @@
                 <td>{{ $data->address }}</td>
             </tr>
             @endif
+            @if(array_key_exists('provincia', $data) && $data->provincia)
+                <tr>
+                    <th>Provincia:</th>
+                    <td>{{ $data->provincia }}</td>
+                </tr>
+            @endif
+            @if(array_key_exists('localidad', $data) && $data->localidad)
+                <tr>
+                    <th>Localidad:</th>
+                    <td>{{ $data->localidad }}</td>
+                </tr>
+            @endif
+            @if(array_key_exists('direccion', $data) && $data->direccion)
+                <tr>
+                    <th>Dirección:</th>
+                    <td>{{ $data->direccion }}</td>
+                </tr>
+            @endif
             <tr>
                 <td class="title" colspan="2">Consulta:</td>
             </tr>
