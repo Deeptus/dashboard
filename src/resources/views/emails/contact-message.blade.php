@@ -95,10 +95,12 @@
             </tr>
             @else
             @foreach($inputs as $key => $input)
-                <tr>
-                    <th class="title">{{ $input['label'] }}:</td>
-                    <td>{{ $data->{$key} }}</td>
-                </tr>
+                @if($data->{$key} && strlen($data->{$key}) > 0)
+                    <tr>
+                        <th class="title">{{ $input['label'] }}:</td>
+                        <td>{{ $data->{$key} }}</td>
+                    </tr>
+                @endif
             @endforeach
             @endif            
         </tbody>

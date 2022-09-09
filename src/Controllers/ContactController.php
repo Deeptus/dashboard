@@ -99,6 +99,18 @@ class ContactController extends Controller {
                     'type' => 'textarea',
                     'label' => 'Mensaje',
                 ],
+                'provincia' => [
+                    'type' => 'text',
+                    'label' => 'Provincia',
+                ],
+                'localidad' => [
+                    'type' => 'text',
+                    'label' => 'Localidad',
+                ],
+                'direccion' => [
+                    'type' => 'text',
+                    'label' => 'Dirección',
+                ],
             ]));
         }
         return [
