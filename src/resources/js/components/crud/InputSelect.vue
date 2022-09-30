@@ -1,6 +1,9 @@
 <template>
     <div class="form-floating mb-3">
         <select class="form-select" v-model="value.value">
+            <option :value="null">
+                N/A
+            </option>
             <template v-if="mode == 'table'">
                 <option :value="key" v-for="(option, key) in options" :key="key">{{ option }}</option>
             </template>

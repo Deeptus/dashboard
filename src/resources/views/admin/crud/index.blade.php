@@ -168,6 +168,16 @@
             @endif
         @endforeach
         {{ $data->links() }}
+        <table class="table table-bordered w-auto ms-auto">
+            <tr>
+                <th>Total:</th>
+                <td>{{ $data->total() }}</td>
+                <th>Por pagina:</th>
+                <td>{{ $data->perPage() }}</td>
+                <th>Pagina:</th>
+                <td>{{ $data->currentPage() }}/{{ $data->lastPage() }}</td>
+            </tr>
+        </table>
     </div>
 </div>
 @endsection
