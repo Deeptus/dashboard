@@ -322,8 +322,13 @@ class CrudController extends Controller
             $appends['s'] = request()->s;
             $cols = \DB::getSchemaBuilder()->getColumnListing((new $this->model)->getTable());
             $data = $data->where(function ($query) use ($cols) {
+                $params = explode(' ', request()->s);
                 foreach ($cols as $col) {
-                    $query->orWhere($col, 'like', '%'.request()->s.'%');
+                    $query->orWhere(function ($query) use ($col, $params) {
+                        foreach ($params as $param) {
+                            $query->where($col, 'like', '%' . $param . '%');
+                        }
+                    });
                 }
             });
         }

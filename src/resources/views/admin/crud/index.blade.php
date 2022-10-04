@@ -109,7 +109,7 @@
                     @elseif($input->type == 'subForm')
                         <td>{{ $item->{$input->columnname}->count() }}</td>
                     @else
-                        <td>{{ $item->{$input->columnname} }}</td>
+                        <td>@highlight($item->{$input->columnname})</td>
                     @endif
                     <?php } catch (\Throwable $th) { ?>
                         @dump($th->getMessage())

@@ -293,6 +293,11 @@ class DashboardServiceProvider extends \Illuminate\Support\ServiceProvider
         Blade::directive('endexception', function () {
             return '<?php } ?>';
         });
+
+        // directiva para imprimir y resaltar resultados de busqueda
+        Blade::directive('highlight', function ($expression) {
+            return '<?php echo highlight('.$expression.'); ?>';
+        });
         // Load Routes
         if(file_exists(__DIR__.'/routes/web.php')) {
             Route::middleware('web')

@@ -489,3 +489,26 @@ if (!function_exists('__pdfpath')) {
         }
     }
 }
+/**
+ * resaltar resultados de busqueda
+ * 
+ * @param  string  $text
+ * 
+ */
+// 
+if (!function_exists('highlight')) {
+    function highlight($text) {
+        if (request()->has('s')) {
+            $params = explode(' ', request()->s);
+            foreach ($params as $param) {
+                /**
+                 * string replace preserve case
+                 */
+                $text = preg_replace_callback('/(' . $param . ')/i', function($matches) {
+                    return '<span class="highlight">' . $matches[0] . '</span>';
+                }, $text);
+            }
+        }
+        return $text;
+    }
+}
