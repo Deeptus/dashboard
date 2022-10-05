@@ -40,13 +40,21 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-7">
                             <div class="input-group mb-3">
                                 <div class="form-floating flex-grow-1">
                                     <input type="text" class="form-control" v-model="table.tablename" @blur="table.tablename = slugify(table.tablename, '_')">
                                     <label for="floatingInput">Table name</label>
                                 </div>
                                 <button class="btn btn-outline-secondary" type="button" @click="table.tablename = slugify(table.tablename, '_')"><i class="fas fa-hand-scissors"></i> Slug</button>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <div class="form-floating flex-grow-1">
+                                    <input type="text" class="form-control" v-model="table.custom_home_path">
+                                    <label for="floatingInput">Custom Home Path</label>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -61,7 +69,7 @@
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="row">
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="id" v-model="table.id" disabled>
                                             <option value="1">Yes</option>
@@ -70,7 +78,7 @@
                                         <label for="id">ID</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="id" v-model="table.single_record">
                                             <option value="1">Yes</option>
@@ -79,7 +87,7 @@
                                         <label for="id">Single Record</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="permanent_destroy" v-model="table.permanent_destroy">
                                             <option value="1">Yes</option>
@@ -88,7 +96,7 @@
                                         <label for="permanent_destroy">Permanent Destroy</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="id" v-model="table.translation_method">
                                             <option value="none">None</option>
@@ -97,7 +105,7 @@
                                         <label for="id">Translation Method</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="order_index" v-model="table.order_index">
                                             <option value="1">Yes</option>
@@ -106,7 +114,7 @@
                                         <label for="order_index">Order Index</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="uuid" v-model="table.uuid" disabled>
                                             <option value="1">Yes</option>
@@ -115,7 +123,7 @@
                                         <label for="uuid">UUID</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="timestamps" v-model="table.timestamps" disabled>
                                             <option value="1">Yes</option>
@@ -124,7 +132,7 @@
                                         <label for="timestamps">TIMESTAMPS</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="softDeletes" v-model="table.softDeletes" disabled>
                                             <option value="1">Yes</option>
@@ -133,7 +141,7 @@
                                         <label for="softDeletes">softDeletes</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="slug" v-model="table.slug">
                                             <option value="1">Yes</option>
@@ -142,13 +150,13 @@
                                         <label for="slug">SLUG</label>
                                     </div>
                                 </div>
-                                <div class="col-md" v-if="table.slug == 1">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3" v-if="table.slug == 1">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" v-model="table.slug_col">
                                         <label for="floatingInput">Slug Col</label>
                                     </div>
                                 </div>
-                                <div class="col-md" v-if="table.slug == 1">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3" v-if="table.slug == 1">
                                     <div class="form-floating">
                                         <select class="form-select" id="slug_global" v-model="table.slug_global">
                                             <option value="1">Yes</option>
@@ -157,7 +165,7 @@
                                         <label for="slug_global">SLUG GLOBAL</label>
                                     </div>
                                 </div>
-                                <div class="col-md">
+                                <div class="col-12 col-md-3 col-lg-2 mb-3">
                                     <div class="form-floating">
                                         <select class="form-select" id="is_authenticatable" v-model="table.is_authenticatable">
                                             <option value="1">Yes</option>
@@ -554,6 +562,7 @@
                     uuid: 1,
                     order_index: 0,
                     tablename: '',
+                    custom_home_path: '',
                     name: {},
                     timestamps: 1,
                     softDeletes: 1,
@@ -624,6 +633,7 @@
                     this.table.uuid = 1
                     this.table.order_index = 0
                     this.table.tablename = response.info.name
+                    this.table.custom_home_path = ''
                     this.table.name = {
                         'es': response.info.name
                     }

@@ -272,6 +272,10 @@ class CrudController extends Controller
         $disable_delete = false;
         $enable_permanent_delete = false;
         $data = new $this->model;
+        $view_path = 'Dashboard::admin.crud.index';
+        if (optional($this->table)->custom_home_path && strlen($this->table->custom_home_path) > 0) {
+            $view_path = $this->table->custom_home_path;
+        }
         if (intval($this->table->single_record)) {
             $item = $data->first();
             if ($item) {
@@ -348,7 +352,7 @@ class CrudController extends Controller
         // 😒
         // $data = $this->model::get();
         // return response()->json($this->model::first());
-        return view('Dashboard::admin.crud.index', [
+        return view($view_path, [
             'data'                    => $data,
             'tablename'               => $this->tablename,
             'table'                   => $this->table,
