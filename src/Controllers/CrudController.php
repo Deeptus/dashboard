@@ -648,6 +648,10 @@ class CrudController extends Controller
         $disable_delete = true;
         $enable_permanent_delete = false;
         $appends = [];
+        $view_path = 'Dashboard::admin.crud.index';
+        if (optional($this->table)->custom_home_path && strlen($this->table->custom_home_path) > 0) {
+            $view_path = $this->table->custom_home_path;
+        }
 
         if ( request()->has('clear-filter') ) {
             session()->forget('filter-trash-'.$this->tablename);
@@ -702,7 +706,7 @@ class CrudController extends Controller
         }
         session()->put('filter-trash-'.$this->tablename, json_encode($appends));
 
-        return view('Dashboard::admin.crud.index', [
+        return view($view_path, [
             'trash'          => true,
             'enable_create'  => $enable_create,
             'disable_delete' => $disable_delete,
