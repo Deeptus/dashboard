@@ -668,7 +668,7 @@ class CrudController extends Controller
         if ( property_exists($this->table, 'permanent_destroy') && $this->table->permanent_destroy == 1 ) {
             $enable_permanent_delete = true;
         }
-        $data = $this->model::onlyTrashed();
+        $data = $this->model::onlyTrashed()->orderBy('deleted_at', 'desc');
         foreach ($this->conditions as $key => $condition) {
             if ($condition->type == 'crud_listing') {
                 $data = $data->whereRaw($condition->condition);
