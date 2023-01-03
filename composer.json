@@ -14,7 +14,7 @@
         "mcamara/laravel-localization": "^1.7",
         "phpoffice/phpspreadsheet": "^1.24",
         "mateusjunges/laravel-acl": "^3.0",
-        "spatie/laravel-translatable": "^5.2",
+        "spatie/laravel-translatable": "^4.6|^5.2",
         "barryvdh/laravel-debugbar": "^3.6",
         "arcanedev/log-viewer": "^8.3|^9.0",
         "webpatser/laravel-uuid": "^4.0",
