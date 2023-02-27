@@ -120,6 +120,11 @@ class CrudController extends Controller
             $gallery = Gallery::find($item->{$input->columnname});
             if ($gallery) {
                 foreach ($gallery->items as $key => $item) {
+                    // verifico si el archivo existe
+                    // dd(Storage::exists($item->path), $item->path);
+                    if (!Storage::exists($item->path)) {
+                        continue;
+                    }
                     $galleries[$input->columnname][] = [
                         'url'           => asset(Storage::url($item->path)),
                         'path'          => $item->path,

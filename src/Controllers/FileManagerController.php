@@ -35,7 +35,17 @@ class FileManagerController extends Controller {
         try {
             foreach ($request->items as $key => $item) {
                 if($item->isValid()) {
-                    $path = $item->store('public/content/multimedia/');
+                    // el nombre va a estar compuesto por el nombre original y un hash de 5 caracteres aleatorios
+                    // por ejemplo, si el nombre es "imagen.jpg", el nombre final va a ser "imagen_12345.jpg"
+                    $name = $item->getClientOriginalName();
+                    // remover la extensión del nombre
+                    $name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $name);
+                    $name = $name . '-' . Str::random(5) . '.' . $item->getClientOriginalExtension();
+                    // y guardamos el archivo en la carpeta "public/content/multimedia" 
+                    $path = $item->storeAs(
+                        'public/content/multimedia/',
+                        $name
+                    );
                     if ( $request->upload_mode == 'normal' ) {
                         $multimedia = new Multimedia;
                         $message = 'success-new';
