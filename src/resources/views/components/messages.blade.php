@@ -43,7 +43,7 @@
 </div>
 <hr>
 @endif
-@if (session('danger'))
+@if (session('danger') || session('error'))
 <div class="row">
     <div class="col-xl-12 col-md-12 mb-12">
         <div class="card border-left-danger shadow h-100 py-2">
@@ -52,7 +52,8 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">{{ __('Dashboard::message.message') }}</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        {!! session('danger') !!}
+                            {!! session('danger') !!}
+                            {!! session('error') !!}
                         </div>
                     </div>
                     <div class="col-auto">
