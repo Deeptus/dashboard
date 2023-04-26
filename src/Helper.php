@@ -31,7 +31,7 @@ if (!function_exists('__file_url')) {
 if (!function_exists('__t')) {
     function __t($key) {
 
-        $data = Cache::remember('seo', env('CACHE_DURATION', 0), function () {
+        $data = Cache::remember('__t', env('CACHE_DURATION', 0), function () {
             return \AporteWeb\Dashboard\Models\Translation::get();
         });
         if ($data) {
@@ -76,7 +76,7 @@ if (!function_exists('__meta')) {
      * */
     function __meta($section, $key)
     {
-        $meta = Cache::remember('seo', env('CACHE_DURATION', 0), function () {
+        $meta = Cache::remember('__meta', env('CACHE_DURATION', 0), function () {
             return AporteWeb\Dashboard\Models\Seo::get();
         });
         if ($meta) {
