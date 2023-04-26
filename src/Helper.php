@@ -445,7 +445,7 @@ if (! function_exists('__crudInfo')) {
 
 if (!function_exists('__dCache')) {
     function __dCache($key, Closure $next) {
-        $seconds = 60 * 60 * 24;
+        $seconds = env('CACHE_DURATION', 60 * 60 * 24);
         $key = $key . '-'. app()->getLocale();
         if( auth()->guard('client')->check() ) {
             $key = $key . '-' . request()->session()->getId();
