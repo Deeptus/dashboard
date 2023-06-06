@@ -40,7 +40,7 @@ class FileManagerController extends Controller {
                     $name = $item->getClientOriginalName();
                     // remover la extensión del nombre
                     $name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $name);
-                    $name = $name . '-' . Str::random(5) . '.' . $item->getClientOriginalExtension();
+                    $name = Str::slug($name) . '-' . Str::random(6) . '.' . $item->getClientOriginalExtension();
                     // y guardamos el archivo en la carpeta "public/content/multimedia" 
                     $path = $item->storeAs(
                         'public/content/multimedia/',

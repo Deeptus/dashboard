@@ -237,7 +237,7 @@ if (!function_exists('__dashboardTask')) {
 
         $uuid = (string) Str::uuid();
         Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'waiting'], JSON_PRETTY_PRINT));
-        dispatch(function () use ($uuid, $next) {
+        $dispatch = dispatch(function () use ($uuid, $next) {
             Storage::disk('local')->put('dashboard-task/' . $uuid . '.json', json_encode(['status' => 'running'], JSON_PRETTY_PRINT));
             try {
                 $callback = $next();
@@ -250,7 +250,10 @@ if (!function_exists('__dashboardTask')) {
                 ], JSON_PRETTY_PRINT));
             }
         });
-        return $uuid;
+        return [
+            'uuid' => $uuid,
+            'dispatch' => $dispatch,
+        ];
     }
 }
 
